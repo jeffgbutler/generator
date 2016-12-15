@@ -25,21 +25,32 @@ import java.util.Set;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.Annotation;
+import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
+import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.IDocElement;
 import org.eclipse.jdt.core.dom.IExtendedModifier;
+import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.TagElement;
 import org.eclipse.jdt.core.dom.TextElement;
+import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
 /**
  * This visitor deletes generated code from an existing Java file.
+ * 
+ * The visitor will descend into the public top level class/interface/enum in the file.  Within
+ * that element, the visitor will delete any first level generated element.
+ * 
+ *  The visitor will also delete any non-public top level generated element.
  * 
  * @author Jeff Butler
  *
@@ -49,7 +60,10 @@ public class GeneratedCodeDeletingVisitor extends ASTVisitor {
     private Set<String> javadocTags = new HashSet<String>();
     private Map<String, List<Annotation>> fieldAnnotations = new HashMap<String, List<Annotation>>();
     private Map<String, List<Annotation>> methodAnnotations = new HashMap<String, List<Annotation>>();
-    private TypeDeclaration typeDeclaration;
+    private AbstractTypeDeclaration typeDeclaration;
+    private List<String> imports = new ArrayList<String>();
+    private List<String> superInterfaces = new ArrayList<String>();
+    private String superClass;
 
     public GeneratedCodeDeletingVisitor(String[] javadocTags) {
         this.javadocTags.addAll(Arrays.asList(javadocTags));
@@ -93,23 +107,69 @@ public class GeneratedCodeDeletingVisitor extends ASTVisitor {
         return false;
     }
 
-    /**
-     * Find any generated inner types and delete them
-     */
+    @Override
+    public boolean visit(EnumConstantDeclaration node) {
+        if (nodeShouldBeDeleted(node)) {
+            node.delete();
+        }
+        return false;
+    }
+    
+    @Override
+    public boolean visit(ImportDeclaration node) {
+        ImportDeclarationStringifier ids = new ImportDeclarationStringifier();
+        node.accept(ids);
+        imports.add(ids.toString());
+        return false;
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public boolean visit(TypeDeclaration node) {
-        // make sure we only pick up the top level type
-        if (node.getParent().getNodeType() == ASTNode.COMPILATION_UNIT) {
-            if (node.isInterface()) {
-                compilationUnitType = CompilationUnitType.INTERFACE;
-            } else {
-                compilationUnitType = CompilationUnitType.CLASS;
-            }
-            
-            typeDeclaration = node;
+        if (deleteOrDescend(node)) {
+            compilationUnitType = node.isInterface() ? CompilationUnitType.INTERFACE : CompilationUnitType.CLASS;
+            collectSuperInterfaces(node.superInterfaceTypes());
+            collectSuperClass(node.getSuperclassType());
             return true;
         } else {
-            // is this a generated inner class? If so, then delete
+            return false;
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean visit(EnumDeclaration node) {
+        if (deleteOrDescend(node)) {
+            compilationUnitType = CompilationUnitType.ENUM;
+            collectSuperInterfaces(node.superInterfaceTypes());
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    @Override
+    public boolean visit(AnnotationTypeDeclaration node) {
+        if (deleteOrDescend(node)) {
+            compilationUnitType = CompilationUnitType.ANNOTATION;
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * If this is a public top level type, then descend into it.
+     * 
+     * Otherwise, if the node is generated then delete it.
+     */
+    private boolean deleteOrDescend(AbstractTypeDeclaration node) {
+        if (isTopLevel(node) && isPublic(node)) {
+            typeDeclaration = node;
+            // descend
+            return true;
+        } else {
+            // is this a generated inner or non-public top level type? If so, then delete
             if (nodeShouldBeDeleted(node)) {
                 node.delete();
             }
@@ -117,14 +177,32 @@ public class GeneratedCodeDeletingVisitor extends ASTVisitor {
             return false;
         }
     }
+    
+    private boolean isPublic(BodyDeclaration node) {
+        return Modifier.isPublic(node.getModifiers());
+    }
 
-    @Override
-    public boolean visit(EnumDeclaration node) {
-        if (nodeShouldBeDeleted(node)) {
-            node.delete();
+    private boolean isTopLevel(ASTNode node) {
+        ASTNode parent = node.getParent();
+        return parent != null && parent.getNodeType() == ASTNode.COMPILATION_UNIT;
+    }
+    
+    private void collectSuperInterfaces(List<Type> superinterfaceTypes) {
+        for (Type type : superinterfaceTypes) {
+            this.superInterfaces.add(stringify(type));
         }
-
-        return false;
+    }
+    
+    private void collectSuperClass(Type superclassType) {
+        if (superclassType != null) {
+            superClass = stringify(superclassType);
+        }
+    }
+    
+    private String stringify(Type type) {
+        TypeStringifier ts = new TypeStringifier();
+        type.accept(ts);
+        return ts.toString();
     }
     
     private boolean nodeShouldBeDeleted(BodyDeclaration node) {
