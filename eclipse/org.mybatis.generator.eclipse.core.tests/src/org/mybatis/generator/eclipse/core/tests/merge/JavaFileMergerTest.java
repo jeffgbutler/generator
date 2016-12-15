@@ -19,11 +19,28 @@ import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mybatis.generator.eclipse.core.tests.merge.support.TestResourceGenerator.simpleClassWithAllGeneratedItems;
 import static org.mybatis.generator.eclipse.core.tests.merge.support.TestResourceGenerator.simpleClassWithGeneratedAndCustomItems;
+import static org.mybatis.generator.eclipse.core.tests.merge.support.TestResourceGenerator.simpleEnumWithAllGeneratedItems;
+import static org.mybatis.generator.eclipse.core.tests.merge.support.TestResourceGenerator.simpleEnumWithGeneratedAndCustomItems;
 import static org.mybatis.generator.eclipse.core.tests.merge.support.TestResourceGenerator.simpleInterfaceWithAllGeneratedItems;
 import static org.mybatis.generator.eclipse.core.tests.merge.support.TestResourceGenerator.simpleInterfaceWithGeneratedAndCustomItems;
 import static org.mybatis.generator.eclipse.tests.harness.Utilities.getCompilationUnitSummaryFromSource;
-import static org.mybatis.generator.eclipse.tests.harness.matchers.Matchers.*;
+import static org.mybatis.generator.eclipse.tests.harness.matchers.Matchers.hasClass;
+import static org.mybatis.generator.eclipse.tests.harness.matchers.Matchers.hasClassCount;
+import static org.mybatis.generator.eclipse.tests.harness.matchers.Matchers.hasEnum;
+import static org.mybatis.generator.eclipse.tests.harness.matchers.Matchers.hasEnumCount;
+import static org.mybatis.generator.eclipse.tests.harness.matchers.Matchers.hasImport;
+import static org.mybatis.generator.eclipse.tests.harness.matchers.Matchers.hasImportCount;
+import static org.mybatis.generator.eclipse.tests.harness.matchers.Matchers.hasInterface;
+import static org.mybatis.generator.eclipse.tests.harness.matchers.Matchers.hasInterfaceCount;
+import static org.mybatis.generator.eclipse.tests.harness.matchers.Matchers.withEnumConstantCount;
+import static org.mybatis.generator.eclipse.tests.harness.matchers.Matchers.withField;
+import static org.mybatis.generator.eclipse.tests.harness.matchers.Matchers.withFieldCount;
+import static org.mybatis.generator.eclipse.tests.harness.matchers.Matchers.withMethod;
+import static org.mybatis.generator.eclipse.tests.harness.matchers.Matchers.withMethodCount;
+import static org.mybatis.generator.eclipse.tests.harness.matchers.Matchers.withSuperClass;
+import static org.mybatis.generator.eclipse.tests.harness.matchers.Matchers.withSuperInterfaceCount;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mybatis.generator.config.MergeConstants;
 import org.mybatis.generator.eclipse.core.merge.JavaFileMerger;
@@ -77,5 +94,28 @@ public class JavaFileMergerTest {
         assertThat(summary, hasInterface("SimpleInterface", withMethod("add(int,int)")));
         assertThat(summary, hasInterface("SimpleInterface", withMethod("count()")));
         assertThat(summary, hasInterface("SimpleInterface", withMethod("nonGeneratedMethod()")));
+   }
+
+    @Test
+    @Ignore
+    public void testMergeOnRegularEnums() throws Exception {
+        String newJavaSource = simpleEnumWithAllGeneratedItems();
+        String existingJavaSource = simpleEnumWithGeneratedAndCustomItems();
+        JavaFileMerger merger = new JavaFileMerger(newJavaSource, existingJavaSource, MergeConstants.OLD_ELEMENT_TAGS);
+        String mergedSource = merger.getMergedSource();
+        
+        CompilationUnitSummary summary = getCompilationUnitSummaryFromSource(mergedSource);
+        
+        assertThat(summary, hasImportCount(0));
+        
+        assertThat(summary, hasEnumCount(1));
+        assertThat(summary, hasEnum("SimpleEnum", withSuperInterfaceCount(0)));
+
+        assertThat(summary, hasEnum("SimpleEnum", withMethodCount(2)));
+        assertThat(summary, hasEnum("SimpleEnum", withMethod("getCount()")));
+        assertThat(summary, hasEnum("SimpleEnum", withMethod("getCountAgain()")));
+        assertThat(summary, hasEnum("SimpleEnum", withFieldCount(1)));
+        assertThat(summary, hasEnum("SimpleEnum", withField("counter")));
+        assertThat(summary, hasEnum("SimpleEnum", withEnumConstantCount(5)));
    }
 }

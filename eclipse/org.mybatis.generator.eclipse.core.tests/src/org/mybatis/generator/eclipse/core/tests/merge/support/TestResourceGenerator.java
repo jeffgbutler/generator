@@ -22,6 +22,7 @@ import org.mybatis.generator.api.dom.java.JavaVisibility;
 import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.Parameter;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
+import org.mybatis.generator.api.dom.java.TopLevelEnumeration;
 
 public class TestResourceGenerator {
 
@@ -133,5 +134,60 @@ public class TestResourceGenerator {
         itf.addMethod(method);
 
         return itf.getFormattedContent();
+    }
+    
+    public static String simpleEnumWithAllGeneratedItems() {
+        TopLevelEnumeration enumm = new TopLevelEnumeration(new FullyQualifiedJavaType("org.mybatis.test.SimpleEnum"));
+        enumm.setVisibility(JavaVisibility.PUBLIC);
+        
+        enumm.addEnumConstant("FRED");
+        enumm.addEnumConstant("WILMA");
+        enumm.addEnumConstant("PEBBLES");
+        
+        Field field = new Field("counter", FullyQualifiedJavaType.getIntInstance());
+        field.setVisibility(JavaVisibility.PRIVATE);
+        commentGenerator.addFieldComment(field);
+        enumm.addField(field);
+        
+        Method method = new Method("getCount");
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setReturnType(FullyQualifiedJavaType.getIntInstance());
+        method.addBodyLine("return counter++;");
+        commentGenerator.addMethodComment(method);
+        enumm.addMethod(method);
+        
+        return enumm.getFormattedContent();
+    }
+
+    public static String simpleEnumWithGeneratedAndCustomItems() {
+        TopLevelEnumeration enumm = new TopLevelEnumeration(new FullyQualifiedJavaType("org.mybatis.test.SimpleEnum"));
+        enumm.setVisibility(JavaVisibility.PUBLIC);
+        
+        enumm.addEnumConstant("FRED");
+        enumm.addEnumConstant("WILMA");
+        enumm.addEnumConstant("PEBBLES");
+        enumm.addEnumConstant("BARNEY");
+        enumm.addEnumConstant("BETTY");
+        enumm.addEnumConstant("BAMMBAMM");
+        
+        Field field = new Field("counter", FullyQualifiedJavaType.getIntInstance());
+        field.setVisibility(JavaVisibility.PRIVATE);
+        commentGenerator.addFieldComment(field);
+        enumm.addField(field);
+        
+        Method method = new Method("getCount");
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setReturnType(FullyQualifiedJavaType.getIntInstance());
+        method.addBodyLine("return counter++;");
+        commentGenerator.addMethodComment(method);
+        enumm.addMethod(method);
+        
+        method = new Method("getCountAgain");
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setReturnType(FullyQualifiedJavaType.getIntInstance());
+        method.addBodyLine("return counter++;");
+        enumm.addMethod(method);
+        
+        return enumm.getFormattedContent();
     }
 }
