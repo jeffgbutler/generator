@@ -29,6 +29,7 @@ public class InterfaceSummary extends AbstractTypeOrEnumSummary {
         
         return new Builder()
             .withName(summarizer.getName())
+            .withModifiers(summarizer.getModifiers())
             .withSuperInterfaces(summarizer.getSuperInterfaces())
             .withFields(summarizer.getFieldSummaries())
             .withMethods(summarizer.getMethodSignatures())

@@ -16,7 +16,6 @@
 package org.mybatis.generator.eclipse.tests.harness.matchers;
 
 import org.hamcrest.Matcher;
-import org.mybatis.generator.eclipse.tests.harness.summary.FieldSummary;
 
 /**
  * This class holds static methods that create matchers.  This is in keeping
@@ -66,11 +65,11 @@ public class Matchers {
         return hasField(field);
     }
 
-    public static HasFieldWithValue hasField(String field, Matcher<FieldSummary> matcher) {
+    public static HasFieldWithValue hasField(String field, Matcher<?> matcher) {
         return new HasFieldWithValue(field, matcher);
     }
 
-    public static HasFieldWithValue withField(String field, Matcher<FieldSummary> matcher) {
+    public static HasFieldWithValue withField(String field, Matcher<?> matcher) {
         return hasField(field, matcher);
     }
 
@@ -260,5 +259,13 @@ public class Matchers {
     
     public static HasSuperInterfaceCount withSuperInterfaceCount(int count) {
         return hasSuperInterfaceCount(count);
+    }
+
+    public static HasModifier hasModifier(Modifier modifier) {
+        return new HasModifier(modifier);
+    }
+    
+    public static HasModifier withModifier(Modifier modifier) {
+        return hasModifier(modifier);
     }
 }

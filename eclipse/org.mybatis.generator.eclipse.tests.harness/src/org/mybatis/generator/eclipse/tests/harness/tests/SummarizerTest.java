@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.Test;
+import org.mybatis.generator.eclipse.tests.harness.matchers.Modifier;
 import org.mybatis.generator.eclipse.tests.harness.summary.AbstractSummary;
 import org.mybatis.generator.eclipse.tests.harness.summary.AnnotationSummary;
 import org.mybatis.generator.eclipse.tests.harness.summary.ClassSummary;
@@ -48,8 +49,8 @@ public class SummarizerTest {
         assertThat(cuSummary, hasImport("import java.lang.annotation.Target"));
 
         assertThat(cuSummary, hasAnnotationCount(2));
-        assertThat(cuSummary, hasAnnotation("OuterAnnotation"));
-        assertThat(cuSummary, hasAnnotation("SecondOuterAnnotation"));
+        assertThat(cuSummary, hasAnnotation("OuterAnnotation", withModifier(Modifier.PUBLIC)));
+        assertThat(cuSummary, hasAnnotation("SecondOuterAnnotation", withModifier(Modifier.NONE)));
         
         assertThat(cuSummary, hasClassCount(0));
         assertThat(cuSummary, hasEnumCount(0));
@@ -61,6 +62,9 @@ public class SummarizerTest {
         assertThat(annotationSummary, hasAnnotationMemberCount(1));
         
         assertThat(annotationSummary, hasField("id", ofType("int")));
+        assertThat(annotationSummary, hasField("id", withModifier(Modifier.PUBLIC)));
+        assertThat(annotationSummary, hasField("id", withModifier(Modifier.STATIC)));
+        assertThat(annotationSummary, hasField("id", withModifier(Modifier.FINAL)));
         assertThat(annotationSummary, hasField("id2", ofType("int")));
         assertThat(annotationSummary, hasField("name", ofType("int")));
         assertThat(annotationSummary, hasFieldCount(3));

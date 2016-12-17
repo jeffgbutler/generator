@@ -27,10 +27,11 @@ import java.util.Map;
  * @author Jeff Butler
  *
  */
-public abstract class AbstractBodyElementSummary extends AbstractSummary {
+public abstract class AbstractBodyElementSummary extends AbstractSummary implements Modifiable {
 
     private Map<String, FieldSummary> fields = new HashMap<String, FieldSummary>();
     private String name;
+    private int modifiers;
 
     public FieldSummary getField(String fieldName) {
         return fields.get(fieldName);
@@ -42,6 +43,11 @@ public abstract class AbstractBodyElementSummary extends AbstractSummary {
 
     public String getName() {
         return name;
+    }
+    
+    @Override
+    public int getModifiers() {
+        return modifiers;
     }
     
     protected abstract static class AbstractBodyElementSummaryBuilder<T extends AbstractBodyElementSummaryBuilder<T>> extends AbstractSummaryBuilder<T> {
@@ -58,6 +64,11 @@ public abstract class AbstractBodyElementSummary extends AbstractSummary {
             return getThis();
         }
 
+        protected T withModifiers(int modifiers) {
+            summary().modifiers = modifiers;
+            return getThis();
+        }
+        
         @Override
         protected abstract AbstractBodyElementSummary summary();
     }

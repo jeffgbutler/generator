@@ -41,6 +41,7 @@ public class EnumSummary extends AbstractTypeOrEnumSummary {
 
         return new Builder()
             .withName(summarizer.getName())
+            .withModifiers(summarizer.getModifiers())
             .withSuperInterfaces(summarizer.getSuperInterfaces())
             .withEnumConstants(summarizer.getEnumConstants())
             .withFields(summarizer.getFieldSummaries())

@@ -34,6 +34,7 @@ public class ClassSummary extends AbstractTypeOrEnumSummary {
         
         return new Builder()
             .withName(summarizer.getName())
+            .withModifiers(summarizer.getModifiers())
             .withSuperClass(summarizer.getSuperClass())
             .withSuperInterfaces(summarizer.getSuperInterfaces())
             .withFields(summarizer.getFieldSummaries())

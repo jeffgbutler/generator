@@ -18,9 +18,10 @@ package org.mybatis.generator.eclipse.tests.harness.summary;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.mybatis.generator.eclipse.tests.harness.summary.support.FieldSummarizer;
 
-public class FieldSummary {
+public class FieldSummary implements Modifiable {
     private String name;
     private String type;
+    private int modifiers;
 
     private FieldSummary() {
         super();
@@ -34,11 +35,17 @@ public class FieldSummary {
         return type;
     }
     
+    @Override
+    public int getModifiers() {
+        return modifiers;
+    }
+    
     public static FieldSummary from(VariableDeclarationFragment node) {
         FieldSummarizer summarizer = FieldSummarizer.from(node);
         
         return new Builder()
             .withName(summarizer.getName())
+            .withModifiers(summarizer.getModifiers())
             .withType(summarizer.getFieldType())
             .summary();
     }
@@ -53,6 +60,11 @@ public class FieldSummary {
         
         public Builder withType(String type) {
             fieldSummary.type = type;
+            return this;
+        }
+        
+        public Builder withModifiers(int modifiers) {
+            fieldSummary.modifiers = modifiers;
             return this;
         }
         

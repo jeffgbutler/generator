@@ -42,6 +42,7 @@ public class AnnotationSummary extends AbstractBodyElementSummary {
         
         return new Builder()
             .withName(summarizer.getName())
+            .withModifiers(summarizer.getModifiers())
             .withAnnotationMembers(summarizer.getAnnotationMembers())
             .withFields(summarizer.getFieldSummaries())
             .withAnnotationSummaries(summarizer.getAnnotationSummaries())

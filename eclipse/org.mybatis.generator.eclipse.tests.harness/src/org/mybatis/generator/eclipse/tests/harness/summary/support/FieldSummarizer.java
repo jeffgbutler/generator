@@ -47,10 +47,23 @@ public class FieldSummarizer {
         return fieldType.toString();
     }
 
+    public int getModifiers() {
+        int modifiers = 0;
+        if (node.getParent().getNodeType() == ASTNode.FIELD_DECLARATION) {
+            modifiers = getModifiers((FieldDeclaration) node.getParent());
+        }
+        
+        return modifiers;
+    }
+    
     private String getFieldType(FieldDeclaration node) {
         return getTypeString(node.getType());
     }
 
+    private int getModifiers(FieldDeclaration node) {
+        return node.getModifiers();
+    }
+    
     private String getDimensions() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < node.getExtraDimensions(); i++) {

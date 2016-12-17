@@ -13,24 +13,11 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.mybatis.generator.eclipse.tests.harness.summary.support;
+package org.mybatis.generator.eclipse.tests.harness.summary;
 
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
-
-public abstract class AbstractBodyElementSummarizer extends AbstractSummarizer {
-
-    private AbstractTypeDeclaration node;
-    
-    public AbstractBodyElementSummarizer(AbstractTypeDeclaration node) {
-        super(node);
-        this.node = node;
-    }
-    
-    public final String getName() {
-        return node.getName().getFullyQualifiedName();
-    }
-    
-    public int getModifiers() {
-        return node.getModifiers();
-    }
+public interface Modifiable {
+    /**
+     * @return a set of modifier flags.  The flags are from {@link org.eclipse.jdt.core.dom.Modifier}
+     */
+    int getModifiers();
 }
