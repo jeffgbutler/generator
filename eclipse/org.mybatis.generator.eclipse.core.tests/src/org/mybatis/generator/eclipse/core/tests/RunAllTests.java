@@ -21,12 +21,16 @@ import org.mybatis.generator.eclipse.core.tests.callback.EclipseShellCallbackTes
 import org.mybatis.generator.eclipse.core.tests.merge.ExistingJavaFileVisitorTest;
 import org.mybatis.generator.eclipse.core.tests.merge.JavaFileMergerTest;
 import org.mybatis.generator.eclipse.core.tests.merge.NewJavaFileVisitorTest;
+import org.mybatis.generator.eclipse.core.tests.merge.visitors.GeneratedCodeDeletingVisitorTest;
+import org.mybatis.generator.eclipse.core.tests.merge.visitors.JavaFileMerger2Test;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
     EclipseShellCallbackTest.class,
     ExistingJavaFileVisitorTest.class,
+    GeneratedCodeDeletingVisitorTest.class,
     JavaFileMergerTest.class,
+    JavaFileMerger2Test.class,
     NewJavaFileVisitorTest.class
 })
 /**

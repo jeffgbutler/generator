@@ -15,6 +15,12 @@
  */
 package org.mybatis.generator.eclipse.core.merge.visitors;
 
+import static org.mybatis.generator.eclipse.core.merge.visitors.VisitorUtils.isPublic;
+import static org.mybatis.generator.eclipse.core.merge.visitors.VisitorUtils.isTopLevel;
+import static org.mybatis.generator.eclipse.core.merge.visitors.VisitorUtils.nodeShouldBeDeleted;
+import static org.mybatis.generator.eclipse.core.merge.visitors.VisitorUtils.retrieveAnnotations;
+import static org.mybatis.generator.eclipse.core.merge.visitors.VisitorUtils.stringify;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,23 +29,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.Annotation;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
-import org.eclipse.jdt.core.dom.BodyDeclaration;
+import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
-import org.eclipse.jdt.core.dom.IDocElement;
-import org.eclipse.jdt.core.dom.IExtendedModifier;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
-import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.Modifier;
-import org.eclipse.jdt.core.dom.TagElement;
-import org.eclipse.jdt.core.dom.TextElement;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
@@ -47,7 +46,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 /**
  * This visitor deletes generated code from an existing Java file.
  * 
- * The visitor will descend into the public top level class/interface/enum in the file.  Within
+ * The visitor will descend into the public top level annotation/class/interface/enum in the file.  Within
  * that element, the visitor will delete any first level generated element.
  * 
  *  The visitor will also delete any non-public top level generated element.
@@ -63,10 +62,17 @@ public class GeneratedCodeDeletingVisitor extends ASTVisitor {
     private AbstractTypeDeclaration typeDeclaration;
     private List<String> imports = new ArrayList<String>();
     private List<String> superInterfaces = new ArrayList<String>();
-    private String superClass;
+    private List<String> savedEnumConstants = new ArrayList<String>();
+    private CompilationUnit compilationUnit;
 
     public GeneratedCodeDeletingVisitor(String[] javadocTags) {
         this.javadocTags.addAll(Arrays.asList(javadocTags));
+    }
+    
+    @Override
+    public boolean visit(CompilationUnit node) {
+        compilationUnit = node;
+        return true;
     }
 
     /**
@@ -74,7 +80,7 @@ public class GeneratedCodeDeletingVisitor extends ASTVisitor {
      */
     @Override
     public boolean visit(FieldDeclaration node) {
-        if (nodeShouldBeDeleted(node)) {
+        if (nodeShouldBeDeleted(node, javadocTags)) {
             List<Annotation> annotations = retrieveAnnotations(node);
             if (!annotations.isEmpty()) {
                 VariableDeclarationFragment variable = (VariableDeclarationFragment) node
@@ -93,7 +99,7 @@ public class GeneratedCodeDeletingVisitor extends ASTVisitor {
      */
     @Override
     public boolean visit(MethodDeclaration node) {
-        if (nodeShouldBeDeleted(node)) {
+        if (nodeShouldBeDeleted(node, javadocTags)) {
             List<Annotation> annotations = retrieveAnnotations(node);
             if (!annotations.isEmpty()) {
                 TypeStringifier mss = new MethodSignatureStringifier();
@@ -109,8 +115,10 @@ public class GeneratedCodeDeletingVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(EnumConstantDeclaration node) {
-        if (nodeShouldBeDeleted(node)) {
+        if (nodeShouldBeDeleted(node, javadocTags)) {
             node.delete();
+        } else {
+            savedEnumConstants.add(node.getName().getIdentifier());
         }
         return false;
     }
@@ -129,7 +137,6 @@ public class GeneratedCodeDeletingVisitor extends ASTVisitor {
         if (deleteOrDescend(node)) {
             compilationUnitType = node.isInterface() ? CompilationUnitType.INTERFACE : CompilationUnitType.CLASS;
             collectSuperInterfaces(node.superInterfaceTypes());
-            collectSuperClass(node.getSuperclassType());
             return true;
         } else {
             return false;
@@ -170,21 +177,12 @@ public class GeneratedCodeDeletingVisitor extends ASTVisitor {
             return true;
         } else {
             // is this a generated inner or non-public top level type? If so, then delete
-            if (nodeShouldBeDeleted(node)) {
+            if (nodeShouldBeDeleted(node, javadocTags)) {
                 node.delete();
             }
 
             return false;
         }
-    }
-    
-    private boolean isPublic(BodyDeclaration node) {
-        return Modifier.isPublic(node.getModifiers());
-    }
-
-    private boolean isTopLevel(ASTNode node) {
-        ASTNode parent = node.getParent();
-        return parent != null && parent.getNodeType() == ASTNode.COMPILATION_UNIT;
     }
     
     private void collectSuperInterfaces(List<Type> superinterfaceTypes) {
@@ -193,80 +191,74 @@ public class GeneratedCodeDeletingVisitor extends ASTVisitor {
         }
     }
     
-    private void collectSuperClass(Type superclassType) {
-        if (superclassType != null) {
-            superClass = stringify(superclassType);
+    public AbstractTypeDeclaration getTypeDeclaration() {
+        return typeDeclaration;
+    }
+
+    public CompilationUnitType getCompilationUnitType() {
+        return compilationUnitType;
+    }
+    
+    public boolean hasImport(ImportDeclaration importDeclaration) {
+        ImportDeclarationStringifier stringifier = new ImportDeclarationStringifier();
+        importDeclaration.accept(stringifier);
+        return imports.contains(stringifier.toString());
+    }
+
+    public boolean hasSuperInterface(Type type) {
+        return superInterfaces.contains(stringify(type));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void addImport(ImportDeclaration importDeclaration) {
+        compilationUnit.imports().add(importDeclaration);
+    }
+    
+    /**
+     * Important: this type must have been created as attached the the AST for the compilation unit
+     * 
+     * @param type
+     */
+    @SuppressWarnings("unchecked")
+    public void addSuperInterface(Type type) {
+       if (compilationUnitType == CompilationUnitType.ENUM) {
+           ((EnumDeclaration) typeDeclaration).superInterfaceTypes().add(type);
+       } else if (compilationUnitType == CompilationUnitType.CLASS || compilationUnitType == CompilationUnitType.INTERFACE) {
+           ((TypeDeclaration) typeDeclaration).superInterfaceTypes().add(type);
+       }
+    }
+
+    /**
+     * Important: this type must have been created as attached the the AST for the compilation unit
+     * 
+     * @param type
+     */
+    public void setSuperClass(Type type) {
+        if (compilationUnitType == CompilationUnitType.CLASS) {
+            ((TypeDeclaration) typeDeclaration).setSuperclassType(type);
         }
     }
     
-    private String stringify(Type type) {
-        TypeStringifier ts = new TypeStringifier();
-        type.accept(ts);
-        return ts.toString();
-    }
-    
-    private boolean nodeShouldBeDeleted(BodyDeclaration node) {
-        Javadoc javadoc = node.getJavadoc();
-        if (javadoc != null && javadocContainsGeneratedTag(javadoc)) {
-            return true;
-        }
-
-        return false;
+    public void addFirstLevelNodes(List newNodes) {
+        typeDeclaration.bodyDeclarations().addAll(newNodes);
     }
 
-    private boolean javadocContainsGeneratedTag(Javadoc javadoc) {
-        @SuppressWarnings("unchecked")
-        List<TagElement> tagElements = javadoc.tags();
-        for (TagElement tagElement : tagElements) {
-            if (tagElementContainsGeneratedTag(tagElement)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private boolean tagElementContainsGeneratedTag(TagElement tagElement) {
-        String tagName = tagElement.getTagName();
-        if (tagName != null && javadocTags.contains(tagName)) {
-            if (!generatedNodeShouldBeKept(tagElement)) {
-                return true;
-            }
-        }
-        
-        return false;
-    }
-    
-    private boolean generatedNodeShouldBeKept(TagElement tagElement) {
-        @SuppressWarnings("unchecked")
-        List<IDocElement> fragments = tagElement.fragments();
-        for (IDocElement fragment : fragments) {
-            if (fragmentIsDoNotDelete(fragment)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    private boolean fragmentIsDoNotDelete(IDocElement fragment) {
-        if (fragment instanceof TextElement) {
-            TextElement textElement = (TextElement) fragment;
-            if ("do_not_delete_during_merge".equals(textElement.getText())) {
-                return true;
-            }
-        }
-        return false;
+    public void addTopLevelNodes(List newTopLevelNodes) {
+        compilationUnit.types().addAll(newTopLevelNodes);
     }
 
     @SuppressWarnings("unchecked")
-    private List<Annotation> retrieveAnnotations(BodyDeclaration node) {
-        List<IExtendedModifier> modifiers = node.modifiers();
-        List<Annotation> annotations = new ArrayList<Annotation>();
-        for (IExtendedModifier modifier : modifiers) {
-            if (modifier.isAnnotation()) {
-                annotations.add((Annotation) modifier);
+    public void addNewEnumConstants(List<EnumConstantDeclaration> newEnumConnstants) {
+        if (compilationUnitType != CompilationUnitType.ENUM) {
+            return;
+        }
+        
+        EnumDeclaration enumDeclaration = (EnumDeclaration) typeDeclaration;
+        
+        for (EnumConstantDeclaration enumConstant : newEnumConnstants) {
+            if (!savedEnumConstants.contains(enumConstant.getName().getIdentifier())) {
+                enumDeclaration.enumConstants().add(enumConstant);
             }
         }
-        return annotations;
     }
 }

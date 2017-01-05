@@ -15,38 +15,49 @@
  */
 package org.mybatis.generator.eclipse.core.merge.visitors;
 
+import static org.mybatis.generator.eclipse.core.merge.visitors.VisitorUtils.isPublic;
+import static org.mybatis.generator.eclipse.core.merge.visitors.VisitorUtils.isTopLevel;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
-import org.eclipse.jdt.core.dom.BodyDeclaration;
 import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 /**
  * This visitor gathers new nodes that will be written into an existing Java file.
  * 
- * FOr the public item, the visitor will descend and capture methods, fields, enum declarations,
+ * For the public item, the visitor will descend and capture methods, fields, enum declarations,
  * inner classes/enums/interfaces.
  * 
  * @author Jeff Butler
  *
  */
 public class NewJavaFileVisitor extends ASTVisitor {
-    private CompilationUnitType compilationUnitType;
-    private List<BodyDeclaration> newNodes = new ArrayList<BodyDeclaration>();
-    private List<BodyDeclaration> newTopLevelNodes = new ArrayList<BodyDeclaration>();
     private List<ImportDeclaration> imports = new ArrayList<ImportDeclaration>();
+    
+    // following are items contained in the public top level type
+    private CompilationUnitType compilationUnitType;
     private Type superclass;
     private List<Type> superInterfaceTypes = new ArrayList<Type>();
+    private List<EnumConstantDeclaration> enumConstants = new ArrayList<EnumConstantDeclaration>();
+    private List<FieldDeclaration> fields = new ArrayList<FieldDeclaration>();
+    private List<MethodDeclaration> methods = new ArrayList<MethodDeclaration>();
+    private List<AnnotationTypeDeclaration> annotations = new ArrayList<AnnotationTypeDeclaration>();
+    private List<EnumDeclaration> enums = new ArrayList<EnumDeclaration>();
+    private List<TypeDeclaration> types = new ArrayList<TypeDeclaration>();
+
+    // following are other top level types
+    private List<AnnotationTypeDeclaration> topLevelAnnotations = new ArrayList<AnnotationTypeDeclaration>();
+    private List<EnumDeclaration> topLevelEnums = new ArrayList<EnumDeclaration>();
+    private List<TypeDeclaration> topLevelTypes = new ArrayList<TypeDeclaration>();
 
     /**
      * 
@@ -63,15 +74,13 @@ public class NewJavaFileVisitor extends ASTVisitor {
 
     @Override
     public boolean visit(FieldDeclaration node) {
-        newNodes.add(node);
-
+        fields.add(node);
         return false;
     }
 
     @Override
     public boolean visit(MethodDeclaration node) {
-        newNodes.add(node);
-
+        methods.add(node);
         return false;
     }
 
@@ -84,11 +93,11 @@ public class NewJavaFileVisitor extends ASTVisitor {
                 compilationUnitType = CompilationUnitType.ENUM;
                 return true;
             } else {
-                newTopLevelNodes.add(node);
+                topLevelEnums.add(node);
                 return false;
             }
         } else {
-            newNodes.add(node);
+            enums.add(node);
             return false;
         }
     }
@@ -103,11 +112,11 @@ public class NewJavaFileVisitor extends ASTVisitor {
                 compilationUnitType = node.isInterface() ? CompilationUnitType.INTERFACE : CompilationUnitType.CLASS;
                 return true;
             } else {
-                newTopLevelNodes.add(node);
+                topLevelTypes.add(node);
                 return false;
             }
         } else {
-            newNodes.add(node);
+            types.add(node);
             return false;
         }
     }
@@ -119,25 +128,21 @@ public class NewJavaFileVisitor extends ASTVisitor {
                 compilationUnitType = CompilationUnitType.ANNOTATION;
                 return true;
             } else {
-                newTopLevelNodes.add(node);
+                topLevelAnnotations.add(node);
                 return false;
             }
         } else {
-            newNodes.add(node);
+            annotations.add(node);
             return false;
         }
     }
     
     @Override
     public boolean visit(EnumConstantDeclaration node) {
-        newNodes.add(node);
+        enumConstants.add(node);
         return false;
     }
     
-    public List<BodyDeclaration> getNewNodes() {
-        return newNodes;
-    }
-
     public List<ImportDeclaration> getImports() {
         return imports;
     }
@@ -153,13 +158,12 @@ public class NewJavaFileVisitor extends ASTVisitor {
     public CompilationUnitType getCompilationUnitType() {
         return compilationUnitType;
     }
-    
-    private boolean isPublic(BodyDeclaration node) {
-        return Modifier.isPublic(node.getModifiers());
+
+    public List<EnumConstantDeclaration> enumConstants() {
+        return enumConstants;
     }
 
-    private boolean isTopLevel(ASTNode node) {
-        ASTNode parent = node.getParent();
-        return parent != null && parent.getNodeType() == ASTNode.COMPILATION_UNIT;
+    public boolean hasEnumConstants() {
+        return !enumConstants.isEmpty();
     }
 }
