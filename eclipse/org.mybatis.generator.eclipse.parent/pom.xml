@@ -85,6 +85,11 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-versions-plugin</artifactId>
+        <version>${tycho-version}</version>
+      </plugin>
+      <plugin>
         <groupId>org.eclipse.tycho.extras</groupId>
         <artifactId>tycho-source-feature-plugin</artifactId>
         <version>${tycho-extras-version}</version>
