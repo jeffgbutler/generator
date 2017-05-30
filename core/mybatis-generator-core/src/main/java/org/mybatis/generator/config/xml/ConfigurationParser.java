@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2016 the original author or authors.
+ *    Copyright 2006-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -181,14 +181,14 @@ public class ConfigurationParser {
     private Configuration parseIbatorConfiguration(Element rootNode)
             throws XMLParserException {
         IbatorConfigurationParser parser = new IbatorConfigurationParser(
-        		extraProperties);
+                extraProperties);
         return parser.parseIbatorConfiguration(rootNode);
     }
 
     private Configuration parseMyBatisGeneratorConfiguration(Element rootNode)
             throws XMLParserException {
         MyBatisGeneratorConfigurationParser parser = new MyBatisGeneratorConfigurationParser(
-        		extraProperties);
+                extraProperties);
         return parser.parseConfiguration(rootNode);
     }
 }

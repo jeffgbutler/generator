@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2016 the original author or authors.
+ *    Copyright 2006-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -131,7 +131,7 @@ public class AnnotatedSelectByPrimaryKeyMethodGenerator extends
     private void addResultMapAnnotation(Method method) {
         
         String annotation = String.format("@ResultMap(\"%s.%s\")", //$NON-NLS-1$
-        		introspectedTable.getMyBatis3SqlMapNamespace(),
+                introspectedTable.getMyBatis3SqlMapNamespace(),
                 introspectedTable.getRules().generateResultMapWithBLOBs() ?
                         introspectedTable.getResultMapWithBLOBsId() : introspectedTable.getBaseResultMapId());
         method.addAnnotation(annotation);
