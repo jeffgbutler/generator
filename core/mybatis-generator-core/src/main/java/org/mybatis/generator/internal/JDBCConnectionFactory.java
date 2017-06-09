@@ -46,7 +46,7 @@ public class JDBCConnectionFactory implements ConnectionFactory {
      * This constructor is called when there is a JDBCConnectionConfiguration
      * specified in the configuration.
      * 
-     * @param config
+     * @param config the configuration
      */
     public JDBCConnectionFactory(JDBCConnectionConfiguration config) {
         super();
@@ -56,7 +56,7 @@ public class JDBCConnectionFactory implements ConnectionFactory {
         driverClass = config.getDriverClass();
         otherProperties = config.getProperties();
     }
-    
+
     /**
      * This constructor is called when this connection factory is specified 
      * as the type in a ConnectionFactory configuration element. 
@@ -66,9 +66,7 @@ public class JDBCConnectionFactory implements ConnectionFactory {
     }
 
     @Override
-    public Connection getConnection()
-            throws SQLException {
-        Driver driver = getDriver();
+    public Connection getConnection() throws SQLException {
 
         Properties props = new Properties();
 
@@ -82,6 +80,7 @@ public class JDBCConnectionFactory implements ConnectionFactory {
 
         props.putAll(otherProperties);
 
+        Driver driver = getDriver();
         Connection conn = driver.connect(connectionURL, props);
 
         if (conn == null) {
@@ -112,10 +111,10 @@ public class JDBCConnectionFactory implements ConnectionFactory {
         password = properties.getProperty("password"); //$NON-NLS-1$
         connectionURL = properties.getProperty("connectionURL"); //$NON-NLS-1$
         driverClass = properties.getProperty("driverClass"); //$NON-NLS-1$
-        
+
         otherProperties = new Properties();
         otherProperties.putAll(properties);
-        
+
         // remove all the properties that we have specific attributes for
         otherProperties.remove("userId"); //$NON-NLS-1$
         otherProperties.remove("password"); //$NON-NLS-1$

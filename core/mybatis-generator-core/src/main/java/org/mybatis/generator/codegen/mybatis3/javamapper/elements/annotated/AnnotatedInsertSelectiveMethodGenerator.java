@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2016 the original author or authors.
+ *    Copyright 2006-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -25,8 +25,7 @@ import org.mybatis.generator.config.GeneratedKey;
  * 
  * @author Jeff Butler
  */
-public class AnnotatedInsertSelectiveMethodGenerator extends
-    InsertSelectiveMethodGenerator {
+public class AnnotatedInsertSelectiveMethodGenerator extends InsertSelectiveMethodGenerator {
 
     public AnnotatedInsertSelectiveMethodGenerator() {
         super();
@@ -41,7 +40,7 @@ public class AnnotatedInsertSelectiveMethodGenerator extends
         sb.append(".class, method=\""); //$NON-NLS-1$
         sb.append(introspectedTable.getInsertSelectiveStatementId());
         sb.append("\")"); //$NON-NLS-1$
-        
+
         method.addAnnotation(sb.toString());
 
         GeneratedKey gk = introspectedTable.getGeneratedKey();
@@ -56,6 +55,7 @@ public class AnnotatedInsertSelectiveMethodGenerator extends
         if (gk != null) {
             addGeneratedKeyImports(interfaze, gk);
         }
-        interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.InsertProvider")); //$NON-NLS-1$
+        interfaze.addImportedType(
+                new FullyQualifiedJavaType("org.apache.ibatis.annotations.InsertProvider")); //$NON-NLS-1$
     }
 }

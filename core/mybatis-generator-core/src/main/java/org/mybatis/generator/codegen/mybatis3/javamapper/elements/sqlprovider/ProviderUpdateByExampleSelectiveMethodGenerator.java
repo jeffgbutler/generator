@@ -15,10 +15,10 @@
  */
 package org.mybatis.generator.codegen.mybatis3.javamapper.elements.sqlprovider;
 
-import static org.mybatis.generator.internal.util.JavaBeansUtil.getGetterMethodName;
-import static org.mybatis.generator.internal.util.StringUtility.escapeStringForJava;
 import static org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities.getAliasedEscapedColumnName;
 import static org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities.getParameterClause;
+import static org.mybatis.generator.internal.util.JavaBeansUtil.getGetterMethodName;
+import static org.mybatis.generator.internal.util.StringUtility.escapeStringForJava;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -36,8 +36,7 @@ import org.mybatis.generator.codegen.mybatis3.ListUtilities;
  * @author Jeff Butler
  * 
  */
-public class ProviderUpdateByExampleSelectiveMethodGenerator extends
-        AbstractJavaProviderMethodGenerator {
+public class ProviderUpdateByExampleSelectiveMethodGenerator extends AbstractJavaProviderMethodGenerator {
 
     public ProviderUpdateByExampleSelectiveMethodGenerator(boolean useLegacyBuilder) {
         super(useLegacyBuilder);
@@ -58,7 +57,7 @@ public class ProviderUpdateByExampleSelectiveMethodGenerator extends
         }
 
         importedTypes.add(new FullyQualifiedJavaType("java.util.Map")); //$NON-NLS-1$
-        
+
         Method method = new Method(introspectedTable.getUpdateByExampleSelectiveStatementId());
         method.setReturnType(FullyQualifiedJavaType.getStringInstance());
         method.setVisibility(JavaVisibility.PUBLIC);
@@ -66,13 +65,13 @@ public class ProviderUpdateByExampleSelectiveMethodGenerator extends
                 "parameter")); //$NON-NLS-1$
         
         FullyQualifiedJavaType record =
-            introspectedTable.getRules().calculateAllFieldsClass();
+                introspectedTable.getRules().calculateAllFieldsClass();
         importedTypes.add(record);
         method.addBodyLine(String.format("%s record = (%s) parameter.get(\"record\");", //$NON-NLS-1$
                 record.getShortName(), record.getShortName()));
 
         FullyQualifiedJavaType example =
-            new FullyQualifiedJavaType(introspectedTable.getExampleType());
+                new FullyQualifiedJavaType(introspectedTable.getExampleType());
         importedTypes.add(example);
         method.addBodyLine(String.format("%s example = (%s) parameter.get(\"example\");", //$NON-NLS-1$
                 example.getShortName(), example.getShortName()));
@@ -81,13 +80,13 @@ public class ProviderUpdateByExampleSelectiveMethodGenerator extends
                 introspectedTable);
 
         method.addBodyLine(""); //$NON-NLS-1$
-        
+
         if (useLegacyBuilder) {
             method.addBodyLine("BEGIN();"); //$NON-NLS-1$
         } else {
             method.addBodyLine("SQL sql = new SQL();"); //$NON-NLS-1$
         }
-        
+
         method.addBodyLine(String.format("%sUPDATE(\"%s\");", //$NON-NLS-1$
                 builderPrefix,
                 escapeStringForJava(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime())));
@@ -96,26 +95,26 @@ public class ProviderUpdateByExampleSelectiveMethodGenerator extends
         for (IntrospectedColumn introspectedColumn : ListUtilities.removeGeneratedAlwaysColumns(introspectedTable.getAllColumns())) {
             if (!introspectedColumn.getFullyQualifiedJavaType().isPrimitive()) {
                 method.addBodyLine(String.format("if (record.%s() != null) {", //$NON-NLS-1$
-                    getGetterMethodName(introspectedColumn.getJavaProperty(),
-                            introspectedColumn.getFullyQualifiedJavaType())));
+                        getGetterMethodName(introspectedColumn.getJavaProperty(),
+                                introspectedColumn.getFullyQualifiedJavaType())));
             }
 
             StringBuilder sb = new StringBuilder();
             sb.append(getParameterClause(introspectedColumn));
             sb.insert(2, "record."); //$NON-NLS-1$
-            
+
             method.addBodyLine(String.format("%sSET(\"%s = %s\");", //$NON-NLS-1$
                     builderPrefix,
                     escapeStringForJava(getAliasedEscapedColumnName(introspectedColumn)),
                     sb.toString()));
-                
+
             if (!introspectedColumn.getFullyQualifiedJavaType().isPrimitive()) {
                 method.addBodyLine("}"); //$NON-NLS-1$
             }
 
             method.addBodyLine(""); //$NON-NLS-1$
         }
-        
+
         if (useLegacyBuilder) {
             method.addBodyLine("applyWhere(example, true);"); //$NON-NLS-1$
             method.addBodyLine("return SQL();"); //$NON-NLS-1$
@@ -123,7 +122,7 @@ public class ProviderUpdateByExampleSelectiveMethodGenerator extends
             method.addBodyLine("applyWhere(sql, example, true);"); //$NON-NLS-1$
             method.addBodyLine("return sql.toString();"); //$NON-NLS-1$
         }
-        
+
         if (context.getPlugins().providerUpdateByExampleSelectiveMethodGenerated(method, topLevelClass,
                 introspectedTable)) {
             topLevelClass.addStaticImports(staticImports);

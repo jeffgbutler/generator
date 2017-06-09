@@ -36,8 +36,7 @@ import org.mybatis.generator.codegen.mybatis3.ListUtilities;
  * @author Jeff Butler
  * 
  */
-public class ProviderInsertSelectiveMethodGenerator extends
-        AbstractJavaProviderMethodGenerator {
+public class ProviderInsertSelectiveMethodGenerator extends AbstractJavaProviderMethodGenerator {
 
     public ProviderInsertSelectiveMethodGenerator(boolean useLegacyBuilder) {
         super(useLegacyBuilder);
@@ -47,7 +46,7 @@ public class ProviderInsertSelectiveMethodGenerator extends
     public void addClassElements(TopLevelClass topLevelClass) {
         Set<String> staticImports = new TreeSet<String>();
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
-        
+
         if (useLegacyBuilder) {
             staticImports.add("org.apache.ibatis.jdbc.SqlBuilder.BEGIN"); //$NON-NLS-1$
             staticImports.add("org.apache.ibatis.jdbc.SqlBuilder.INSERT_INTO"); //$NON-NLS-1$
@@ -58,7 +57,7 @@ public class ProviderInsertSelectiveMethodGenerator extends
         }
 
         FullyQualifiedJavaType fqjt = introspectedTable.getRules()
-            .calculateAllFieldsClass();
+                .calculateAllFieldsClass();
         importedTypes.add(fqjt);
 
         Method method = new Method(
@@ -86,8 +85,8 @@ public class ProviderInsertSelectiveMethodGenerator extends
             if (!introspectedColumn.getFullyQualifiedJavaType().isPrimitive()
                     && !introspectedColumn.isSequenceColumn()) {
                 method.addBodyLine(String.format("if (record.%s() != null) {", //$NON-NLS-1$
-                    getGetterMethodName(introspectedColumn.getJavaProperty(),
-                            introspectedColumn.getFullyQualifiedJavaType())));
+                        getGetterMethodName(introspectedColumn.getJavaProperty(),
+                                introspectedColumn.getFullyQualifiedJavaType())));
             }
             method.addBodyLine(String.format("%sVALUES(\"%s\", \"%s\");", //$NON-NLS-1$
                     builderPrefix,
@@ -99,7 +98,7 @@ public class ProviderInsertSelectiveMethodGenerator extends
                 method.addBodyLine("}"); //$NON-NLS-1$
             }
         }
-        
+
         method.addBodyLine(""); //$NON-NLS-1$
         if (useLegacyBuilder) {
             method.addBodyLine("return SQL();"); //$NON-NLS-1$

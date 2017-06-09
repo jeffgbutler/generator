@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2016 the original author or authors.
+ *    Copyright 2006-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -54,16 +54,16 @@ public abstract class AbstractJavaMapperMethodGenerator extends
             sb.append(introspectedColumn.getJavaProperty());
             sb.append('\"');
         }
-        
+
         if (stringHasValue(introspectedColumn.getTypeHandler())) {
             FullyQualifiedJavaType fqjt =
-                new FullyQualifiedJavaType(introspectedColumn.getTypeHandler());
+                    new FullyQualifiedJavaType(introspectedColumn.getTypeHandler());
             interfaze.addImportedType(fqjt);
             sb.append(", typeHandler="); //$NON-NLS-1$
             sb.append(fqjt.getShortName());
             sb.append(".class"); //$NON-NLS-1$
         }
-        
+
         sb.append(", jdbcType=JdbcType."); //$NON-NLS-1$
         sb.append(introspectedColumn.getJdbcTypeName());
         if (idColumn) {
@@ -98,14 +98,16 @@ public abstract class AbstractJavaMapperMethodGenerator extends
             }
         }
     }
-    
+
     protected void addGeneratedKeyImports(Interface interfaze, GeneratedKey gk) {
         IntrospectedColumn introspectedColumn = introspectedTable.getColumn(gk.getColumn());
         if (introspectedColumn != null) {
             if (gk.isJdbcStandard()) {
-                interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Options")); //$NON-NLS-1$
+                interfaze.addImportedType(
+                        new FullyQualifiedJavaType("org.apache.ibatis.annotations.Options")); //$NON-NLS-1$
             } else {
-                interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.SelectKey")); //$NON-NLS-1$
+                interfaze.addImportedType(
+                        new FullyQualifiedJavaType("org.apache.ibatis.annotations.SelectKey")); //$NON-NLS-1$
                 FullyQualifiedJavaType fqjt = introspectedColumn.getFullyQualifiedJavaType();
                 interfaze.addImportedType(fqjt);
             }

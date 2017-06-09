@@ -29,13 +29,15 @@ import org.mybatis.generator.internal.util.StringUtility;
  * is for MyBatis3 targeted runtimes only.  The plugin accepts the
  * following properties (all are optional):
  * 
- * cache_eviction
- * cache_flushInterval
- * cache_size
- * cache_readOnly
- * cache_type
+ * <ul>
+ *   <li>cache_eviction</li>
+ *   <li>cache_flushInterval</li>
+ *   <li>cache_size</li>
+ *   <li>cache_readOnly</li>
+ *   <li>cache_type</li>
+ * </ul>
  * 
- * All properties correspond to properties of the MyBatis cache element and
+ * <p>All properties correspond to properties of the MyBatis cache element and
  * are passed "as is" to the corresponding properties of the generated cache
  * element.  All properties can be specified at the table level, or on the
  * plugin element.  The property on the table element will override any
@@ -51,10 +53,10 @@ public class CachePlugin extends PluginAdapter {
         READ_ONLY("cache_readOnly", "readOnly"), //$NON-NLS-1$ //$NON-NLS-2$
         SIZE("cache_size", "size"), //$NON-NLS-1$ //$NON-NLS-2$
         TYPE("cache_type", "type"); //$NON-NLS-1$ //$NON-NLS-2$
-        
+
         private String propertyName;
         private String attributeName;
-        
+
         CacheProperty(String propertyName, String attributeName) {
             this.propertyName = propertyName;
             this.attributeName = attributeName;
@@ -68,7 +70,7 @@ public class CachePlugin extends PluginAdapter {
             return attributeName;
         }
     }
-    
+
     public CachePlugin() {
         super();
     }
@@ -87,19 +89,19 @@ public class CachePlugin extends PluginAdapter {
         for (CacheProperty cacheProperty : CacheProperty.values()) {
             addAttributeIfExists(element, introspectedTable, cacheProperty);
         }
-        
+
         document.getRootElement().addElement(element);
 
         return true;
     }
-    
+
     private void addAttributeIfExists(XmlElement element, IntrospectedTable introspectedTable,
             CacheProperty cacheProperty) {
         String property = introspectedTable.getTableConfigurationProperty(cacheProperty.getPropertyName());
         if (property == null) {
             property = properties.getProperty(cacheProperty.getPropertyName());
         }
-        
+
         if (StringUtility.stringHasValue(property)) {
             element.addAttribute(new Attribute(cacheProperty.getAttributeName(), property));
         }

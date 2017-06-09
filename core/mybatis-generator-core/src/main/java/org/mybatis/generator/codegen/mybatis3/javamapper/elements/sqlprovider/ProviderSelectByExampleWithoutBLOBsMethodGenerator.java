@@ -34,8 +34,7 @@ import org.mybatis.generator.api.dom.java.TopLevelClass;
  * @author Jeff Butler
  * 
  */
-public class ProviderSelectByExampleWithoutBLOBsMethodGenerator extends
-        AbstractJavaProviderMethodGenerator {
+public class ProviderSelectByExampleWithoutBLOBsMethodGenerator extends AbstractJavaProviderMethodGenerator {
 
     public ProviderSelectByExampleWithoutBLOBsMethodGenerator(boolean useLegacyBuilder) {
         super(useLegacyBuilder);
@@ -45,7 +44,7 @@ public class ProviderSelectByExampleWithoutBLOBsMethodGenerator extends
     public void addClassElements(TopLevelClass topLevelClass) {
         Set<String> staticImports = new TreeSet<String>();
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
-        
+
         if (useLegacyBuilder) {
             staticImports.add("org.apache.ibatis.jdbc.SqlBuilder.BEGIN"); //$NON-NLS-1$
             staticImports.add("org.apache.ibatis.jdbc.SqlBuilder.SELECT"); //$NON-NLS-1$
@@ -56,7 +55,7 @@ public class ProviderSelectByExampleWithoutBLOBsMethodGenerator extends
         } else {
             importedTypes.add(NEW_BUILDER_IMPORT);
         }
-        
+
         FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(introspectedTable.getExampleType());
         importedTypes.add(fqjt);
 
@@ -79,19 +78,19 @@ public class ProviderSelectByExampleWithoutBLOBsMethodGenerator extends
             if (distinctCheck) {
                 method.addBodyLine("if (example != null && example.isDistinct()) {"); //$NON-NLS-1$
                 method.addBodyLine(String.format("%sSELECT_DISTINCT(\"%s\");", //$NON-NLS-1$
-                    builderPrefix,
-                    escapeStringForJava(getSelectListPhrase(introspectedColumn))));
+                        builderPrefix,
+                        escapeStringForJava(getSelectListPhrase(introspectedColumn))));
                 method.addBodyLine("} else {"); //$NON-NLS-1$
                 method.addBodyLine(String.format("%sSELECT(\"%s\");", //$NON-NLS-1$
-                    builderPrefix,
-                    escapeStringForJava(getSelectListPhrase(introspectedColumn))));
+                        builderPrefix,
+                        escapeStringForJava(getSelectListPhrase(introspectedColumn))));
                 method.addBodyLine("}"); //$NON-NLS-1$
             } else {
                 method.addBodyLine(String.format("%sSELECT(\"%s\");", //$NON-NLS-1$
-                    builderPrefix,
-                    escapeStringForJava(getSelectListPhrase(introspectedColumn))));
+                        builderPrefix,
+                        escapeStringForJava(getSelectListPhrase(introspectedColumn))));
             }
-            
+
             distinctCheck = false;
         }
 
@@ -103,34 +102,34 @@ public class ProviderSelectByExampleWithoutBLOBsMethodGenerator extends
         } else {
             method.addBodyLine("applyWhere(sql, example, false);"); //$NON-NLS-1$
         }
-        
+
         method.addBodyLine(""); //$NON-NLS-1$
         method.addBodyLine("if (example != null && example.getOrderByClause() != null) {"); //$NON-NLS-1$
         method.addBodyLine(String.format("%sORDER_BY(example.getOrderByClause());", builderPrefix)); //$NON-NLS-1$
         method.addBodyLine("}"); //$NON-NLS-1$
-        
+
         method.addBodyLine(""); //$NON-NLS-1$
         if (useLegacyBuilder) {
             method.addBodyLine("return SQL();"); //$NON-NLS-1$
         } else {
             method.addBodyLine("return sql.toString();"); //$NON-NLS-1$
         }
-        
+
         if (callPlugins(method, topLevelClass)) {
             topLevelClass.addStaticImports(staticImports);
             topLevelClass.addImportedTypes(importedTypes);
             topLevelClass.addMethod(method);
         }
     }
-    
+
     public List<IntrospectedColumn> getColumns() {
         return introspectedTable.getNonBLOBColumns();
     }
-    
+
     public String getMethodName() {
-        return introspectedTable.getSelectByExampleStatementId();        
+        return introspectedTable.getSelectByExampleStatementId();
     }
-    
+
     public boolean callPlugins(Method method, TopLevelClass topLevelClass) {
         return context.getPlugins().providerSelectByExampleWithoutBLOBsMethodGenerated(method, topLevelClass,
                 introspectedTable);

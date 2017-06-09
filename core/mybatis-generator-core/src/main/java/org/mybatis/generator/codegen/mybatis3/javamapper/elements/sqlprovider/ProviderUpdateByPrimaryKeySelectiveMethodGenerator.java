@@ -36,8 +36,7 @@ import org.mybatis.generator.codegen.mybatis3.ListUtilities;
  * @author Jeff Butler
  * 
  */
-public class ProviderUpdateByPrimaryKeySelectiveMethodGenerator extends
-        AbstractJavaProviderMethodGenerator {
+public class ProviderUpdateByPrimaryKeySelectiveMethodGenerator extends AbstractJavaProviderMethodGenerator {
 
     public ProviderUpdateByPrimaryKeySelectiveMethodGenerator(boolean useLegacyBuilder) {
         super(useLegacyBuilder);
@@ -60,7 +59,7 @@ public class ProviderUpdateByPrimaryKeySelectiveMethodGenerator extends
 
         FullyQualifiedJavaType fqjt = introspectedTable.getRules().calculateAllFieldsClass();
         importedTypes.add(fqjt);
-        
+
         Method method = new Method(introspectedTable.getUpdateByPrimaryKeySelectiveStatementId());
         method.setReturnType(FullyQualifiedJavaType.getStringInstance());
         method.setVisibility(JavaVisibility.PUBLIC);
@@ -74,7 +73,7 @@ public class ProviderUpdateByPrimaryKeySelectiveMethodGenerator extends
         } else {
             method.addBodyLine("SQL sql = new SQL();"); //$NON-NLS-1$
         }
-        
+
         method.addBodyLine(String.format("%sUPDATE(\"%s\");", //$NON-NLS-1$
                 builderPrefix,
                 escapeStringForJava(introspectedTable.getFullyQualifiedTableNameAtRuntime())));
@@ -83,15 +82,15 @@ public class ProviderUpdateByPrimaryKeySelectiveMethodGenerator extends
         for (IntrospectedColumn introspectedColumn : ListUtilities.removeGeneratedAlwaysColumns(introspectedTable.getNonPrimaryKeyColumns())) {
             if (!introspectedColumn.getFullyQualifiedJavaType().isPrimitive()) {
                 method.addBodyLine(String.format("if (record.%s() != null) {", //$NON-NLS-1$
-                    getGetterMethodName(introspectedColumn.getJavaProperty(),
-                            introspectedColumn.getFullyQualifiedJavaType())));
+                        getGetterMethodName(introspectedColumn.getJavaProperty(),
+                                introspectedColumn.getFullyQualifiedJavaType())));
             }
 
             method.addBodyLine(String.format("%sSET(\"%s = %s\");", //$NON-NLS-1$
                     builderPrefix,
                     escapeStringForJava(getEscapedColumnName(introspectedColumn)),
                     getParameterClause(introspectedColumn)));
-                
+
             if (!introspectedColumn.getFullyQualifiedJavaType().isPrimitive()) {
                 method.addBodyLine("}"); //$NON-NLS-1$
             }
@@ -105,9 +104,9 @@ public class ProviderUpdateByPrimaryKeySelectiveMethodGenerator extends
                     escapeStringForJava(getEscapedColumnName(introspectedColumn)),
                     getParameterClause(introspectedColumn)));
         }
-        
+
         method.addBodyLine(""); //$NON-NLS-1$
-        
+
         if (useLegacyBuilder) {
             method.addBodyLine("return SQL();"); //$NON-NLS-1$
         } else {

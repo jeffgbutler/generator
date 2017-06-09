@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2016 the original author or authors.
+ *    Copyright 2006-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,8 +29,7 @@ import org.mybatis.generator.codegen.mybatis3.javamapper.elements.SelectByExampl
  * 
  * @author Jeff Butler
  */
-public class AnnotatedSelectByExampleWithBLOBsMethodGenerator extends
-    SelectByExampleWithBLOBsMethodGenerator {
+public class AnnotatedSelectByExampleWithBLOBsMethodGenerator extends SelectByExampleWithBLOBsMethodGenerator {
 
     public AnnotatedSelectByExampleWithBLOBsMethodGenerator() {
         super();
@@ -39,22 +38,22 @@ public class AnnotatedSelectByExampleWithBLOBsMethodGenerator extends
     @Override
     public void addMapperAnnotations(Interface interfaze, Method method) {
         FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(introspectedTable.getMyBatis3SqlProviderType());
-        
+
         StringBuilder sb = new StringBuilder();
         sb.append("@SelectProvider(type="); //$NON-NLS-1$
         sb.append(fqjt.getShortName());
         sb.append(".class, method=\""); //$NON-NLS-1$
         sb.append(introspectedTable.getSelectByExampleWithBLOBsStatementId());
         sb.append("\")"); //$NON-NLS-1$
-        
+
         method.addAnnotation(sb.toString());
-        
+
         if (introspectedTable.isConstructorBased()) {
             method.addAnnotation("@ConstructorArgs({"); //$NON-NLS-1$
         } else {
             method.addAnnotation("@Results({"); //$NON-NLS-1$
         }
-        
+
         Iterator<IntrospectedColumn> iterPk = introspectedTable.getPrimaryKeyColumns().iterator();
         Iterator<IntrospectedColumn> iterNonPk = introspectedTable.getNonPrimaryKeyColumns().iterator();
         while (iterPk.hasNext()) {
@@ -67,7 +66,7 @@ public class AnnotatedSelectByExampleWithBLOBsMethodGenerator extends
             if (iterPk.hasNext() || iterNonPk.hasNext()) {
                 sb.append(',');
             }
-            
+
             method.addAnnotation(sb.toString());
         }
 
@@ -81,13 +80,13 @@ public class AnnotatedSelectByExampleWithBLOBsMethodGenerator extends
             if (iterNonPk.hasNext()) {
                 sb.append(',');
             }
-            
+
             method.addAnnotation(sb.toString());
         }
-        
+
         method.addAnnotation("})"); //$NON-NLS-1$
     }
-    
+
     @Override
     public void addExtraImports(Interface interfaze) {
         interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.SelectProvider")); //$NON-NLS-1$

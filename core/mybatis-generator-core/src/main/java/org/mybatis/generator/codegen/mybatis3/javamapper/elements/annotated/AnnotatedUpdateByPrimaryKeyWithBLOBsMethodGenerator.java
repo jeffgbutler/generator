@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2016 the original author or authors.
+ *    Copyright 2006-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,8 +33,7 @@ import org.mybatis.generator.codegen.mybatis3.javamapper.elements.UpdateByPrimar
  * 
  * @author Jeff Butler
  */
-public class AnnotatedUpdateByPrimaryKeyWithBLOBsMethodGenerator extends
-    UpdateByPrimaryKeyWithBLOBsMethodGenerator {
+public class AnnotatedUpdateByPrimaryKeyWithBLOBsMethodGenerator extends UpdateByPrimaryKeyWithBLOBsMethodGenerator {
 
     public AnnotatedUpdateByPrimaryKeyWithBLOBsMethodGenerator() {
         super();
@@ -42,7 +41,7 @@ public class AnnotatedUpdateByPrimaryKeyWithBLOBsMethodGenerator extends
 
     @Override
     public void addMapperAnnotations(Method method) {
-        
+
         method.addAnnotation("@Update({"); //$NON-NLS-1$
 
         StringBuilder sb = new StringBuilder();
@@ -85,7 +84,6 @@ public class AnnotatedUpdateByPrimaryKeyWithBLOBsMethodGenerator extends
         boolean and = false;
         iter = introspectedTable.getPrimaryKeyColumns().iterator();
         while (iter.hasNext()) {
-            IntrospectedColumn introspectedColumn = iter.next();
             sb.setLength(0);
             javaIndent(sb, 1);
             if (and) {
@@ -95,6 +93,7 @@ public class AnnotatedUpdateByPrimaryKeyWithBLOBsMethodGenerator extends
                 and = true;
             }
 
+            IntrospectedColumn introspectedColumn = iter.next();
             sb.append(escapeStringForJava(getEscapedColumnName(introspectedColumn)));
             sb.append(" = "); //$NON-NLS-1$
             sb.append(getParameterClause(introspectedColumn));
@@ -104,7 +103,7 @@ public class AnnotatedUpdateByPrimaryKeyWithBLOBsMethodGenerator extends
             }
             method.addAnnotation(sb.toString());
         }
-        
+
         method.addAnnotation("})"); //$NON-NLS-1$
     }
 
