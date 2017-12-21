@@ -21,9 +21,8 @@ Releasing Core:
 
 1. Clone the main repo (with ssh), checkout the master branch
 2. cd core
-3. mvn -Dgpg.passphrase=[your passphrase] release:prepare
-4. mvn -Dgpg.passphrase=[your passphrase] release:perform (this also updates
-   the site)
+3. mvn release:prepare
+4. mvn release:perform (this also updates the site)
 5. Logon to https://oss.sonatype.org/
 6. Find the mybatis staging repo
 7. Verify everything looks OK (I usually delete the bundle files as they're not
