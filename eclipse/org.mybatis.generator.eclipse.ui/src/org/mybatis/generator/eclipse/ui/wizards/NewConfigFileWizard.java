@@ -41,6 +41,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.mybatis.generator.api.dom.DefaultXmlFormatter;
 import org.mybatis.generator.api.dom.xml.Attribute;
 import org.mybatis.generator.api.dom.xml.Document;
 import org.mybatis.generator.api.dom.xml.XmlElement;
@@ -172,11 +173,6 @@ public class NewConfigFileWizard extends Wizard implements INewWizard {
         javaModelGenerator.addAttribute(new Attribute("targetProject", "???")); //$NON-NLS-1$ //$NON-NLS-2$
         context.addElement(javaModelGenerator);
 
-        XmlElement sqlMapGenerator = new XmlElement("sqlMapGenerator"); //$NON-NLS-1$
-        sqlMapGenerator.addAttribute(new Attribute("targetPackage", "???")); //$NON-NLS-1$ //$NON-NLS-2$
-        sqlMapGenerator.addAttribute(new Attribute("targetProject", "???")); //$NON-NLS-1$ //$NON-NLS-2$
-        context.addElement(sqlMapGenerator);
-
         XmlElement javaClientGenerator = new XmlElement("javaClientGenerator"); //$NON-NLS-1$
         javaClientGenerator.addAttribute(new Attribute("targetPackage", "???")); //$NON-NLS-1$ //$NON-NLS-2$
         javaClientGenerator.addAttribute(new Attribute("targetProject", "???")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -192,8 +188,7 @@ public class NewConfigFileWizard extends Wizard implements INewWizard {
         table.addElement(columnOverride);
         context.addElement(table);
 
-        return new ByteArrayInputStream(document.getFormattedContent()
-                .getBytes());
+        return new ByteArrayInputStream(new DefaultXmlFormatter().getFormattedContent(document).getBytes());
     }
 
     private void throwCoreException(String message) throws CoreException {

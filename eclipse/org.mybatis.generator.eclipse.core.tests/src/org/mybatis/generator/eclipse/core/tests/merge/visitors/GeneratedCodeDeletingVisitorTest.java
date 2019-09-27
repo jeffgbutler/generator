@@ -46,7 +46,7 @@ public class GeneratedCodeDeletingVisitorTest {
         CompilationUnit cu = getCompilationUnitFromSource(source);
                 
         cu.recordModifications();
-        GeneratedCodeDeletingVisitor visitor = new GeneratedCodeDeletingVisitor(MergeConstants.OLD_ELEMENT_TAGS);
+        GeneratedCodeDeletingVisitor visitor = new GeneratedCodeDeletingVisitor(MergeConstants.getOldElementTags());
         
         // delete all the old generated stuff
         cu.accept(visitor);
@@ -74,7 +74,7 @@ public class GeneratedCodeDeletingVisitorTest {
         IDocument document = new Document(source);
         CompilationUnit cu = getCompilationUnitFromSource(source);
         cu.recordModifications();
-        GeneratedCodeDeletingVisitor visitor = new GeneratedCodeDeletingVisitor(MergeConstants.OLD_ELEMENT_TAGS);
+        GeneratedCodeDeletingVisitor visitor = new GeneratedCodeDeletingVisitor(MergeConstants.getOldElementTags());
         
         // delete all the old generated stuff
         cu.accept(visitor);
@@ -103,7 +103,7 @@ public class GeneratedCodeDeletingVisitorTest {
         IDocument document = new Document(source);
         CompilationUnit cu = getCompilationUnitFromSource(source);
         cu.recordModifications();
-        GeneratedCodeDeletingVisitor visitor = new GeneratedCodeDeletingVisitor(MergeConstants.OLD_ELEMENT_TAGS);
+        GeneratedCodeDeletingVisitor visitor = new GeneratedCodeDeletingVisitor(MergeConstants.getOldElementTags());
         
         // delete all the old generated stuff
         cu.accept(visitor);

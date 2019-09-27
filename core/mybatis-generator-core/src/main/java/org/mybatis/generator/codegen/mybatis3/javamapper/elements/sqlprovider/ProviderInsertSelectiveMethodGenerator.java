@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ *    Copyright 2006-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,11 +31,6 @@ import org.mybatis.generator.api.dom.java.Parameter;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
 import org.mybatis.generator.codegen.mybatis3.ListUtilities;
 
-/**
- * 
- * @author Jeff Butler
- * 
- */
 public class ProviderInsertSelectiveMethodGenerator extends AbstractJavaProviderMethodGenerator {
 
     public ProviderInsertSelectiveMethodGenerator(boolean useLegacyBuilder) {
@@ -44,8 +39,8 @@ public class ProviderInsertSelectiveMethodGenerator extends AbstractJavaProvider
 
     @Override
     public void addClassElements(TopLevelClass topLevelClass) {
-        Set<String> staticImports = new TreeSet<String>();
-        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
+        Set<String> staticImports = new TreeSet<>();
+        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<>();
 
         if (useLegacyBuilder) {
             staticImports.add("org.apache.ibatis.jdbc.SqlBuilder.BEGIN"); //$NON-NLS-1$
@@ -79,7 +74,8 @@ public class ProviderInsertSelectiveMethodGenerator extends AbstractJavaProvider
                 builderPrefix,
                 escapeStringForJava(introspectedTable.getFullyQualifiedTableNameAtRuntime())));
 
-        for (IntrospectedColumn introspectedColumn : ListUtilities.removeIdentityAndGeneratedAlwaysColumns(introspectedTable.getAllColumns())) {
+        for (IntrospectedColumn introspectedColumn :
+                ListUtilities.removeIdentityAndGeneratedAlwaysColumns(introspectedTable.getAllColumns())) {
             
             method.addBodyLine(""); //$NON-NLS-1$
             if (!introspectedColumn.getFullyQualifiedJavaType().isPrimitive()

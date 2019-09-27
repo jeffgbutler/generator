@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ *    Copyright 2006-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,16 +15,14 @@
  */
 package org.mybatis.generator.api.dom.java;
 
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.hamcrest.core.Is.*;
+import org.junit.jupiter.api.Test;
+import org.mybatis.generator.api.dom.java.render.TopLevelInterfaceRenderer;
 
 public class InterfaceTest {
 
@@ -43,7 +41,7 @@ public class InterfaceTest {
         interfaze.addImportedType(arrayList);
 
         assertNotNull(interfaze.getImportedTypes());
-        assertEquals(interfaze.getImportedTypes().size(), 1);
+        assertEquals(1, interfaze.getImportedTypes().size());
         assertTrue(interfaze.getImportedTypes().contains(arrayList));
     }
 
@@ -51,7 +49,7 @@ public class InterfaceTest {
     public void testAddImportedTypes() {
 
         Interface interfaze = new Interface("com.foo.UserInterface");
-        Set<FullyQualifiedJavaType> importedTypes = new HashSet<FullyQualifiedJavaType>();
+        Set<FullyQualifiedJavaType> importedTypes = new HashSet<>();
 
         FullyQualifiedJavaType arrayList = FullyQualifiedJavaType.getNewArrayListInstance();
         FullyQualifiedJavaType hashMap = FullyQualifiedJavaType.getNewHashMapInstance();
@@ -61,7 +59,7 @@ public class InterfaceTest {
         interfaze.addImportedTypes(importedTypes);
 
         assertNotNull(interfaze.getImportedTypes());
-        assertEquals(interfaze.getImportedTypes().size(), 2);
+        assertEquals(2, interfaze.getImportedTypes().size());
         assertTrue(interfaze.getImportedTypes().contains(arrayList));
         assertTrue(interfaze.getImportedTypes().contains(hashMap));
     }
@@ -73,8 +71,8 @@ public class InterfaceTest {
         interfaze.addFileCommentLine("test");
 
         assertNotNull(interfaze.getFileCommentLines());
-        assertEquals(interfaze.getFileCommentLines().size(), 1);
-        assertEquals(interfaze.getFileCommentLines().get(0), "test");
+        assertEquals(1, interfaze.getFileCommentLines().size());
+        assertEquals("test", interfaze.getFileCommentLines().get(0));
     }
 
     @Test
@@ -84,7 +82,7 @@ public class InterfaceTest {
         interfaze.addStaticImport("com.foo.StaticUtil");
 
         assertNotNull(interfaze.getStaticImports());
-        assertEquals(interfaze.getStaticImports().size(), 1);
+        assertEquals(1, interfaze.getStaticImports().size());
         assertTrue(interfaze.getStaticImports().contains("com.foo.StaticUtil"));
     }
 
@@ -92,13 +90,13 @@ public class InterfaceTest {
     public void testAddStaticImports() {
 
         Interface interfaze = new Interface("com.foo.UserInterface");
-        Set<String> staticImports = new HashSet<String>();
+        Set<String> staticImports = new HashSet<>();
         staticImports.add("com.foo.StaticUtil1");
         staticImports.add("com.foo.StaticUtil2");
         interfaze.addStaticImports(staticImports);
 
         assertNotNull(interfaze.getStaticImports());
-        assertEquals(interfaze.getStaticImports().size(), 2);
+        assertEquals(2, interfaze.getStaticImports().size());
         assertTrue(interfaze.getStaticImports().contains("com.foo.StaticUtil1"));
         assertTrue(interfaze.getStaticImports().contains("com.foo.StaticUtil2"));
     }
@@ -119,10 +117,11 @@ public class InterfaceTest {
         String expected = "package foo;" + System.getProperty("line.separator")
             + System.getProperty("line.separator")
             + "public interface Bar {" + System.getProperty("line.separator")
-            + "    String EMPTY_STRING = \"\";" + System.getProperty("line.separator")
+            + "    String EMPTY_STRING = \"\";" + System.getProperty("line.separator") + System.getProperty("line.separator")
             + "    String ONE = \"one\";" + System.getProperty("line.separator")
             + "}";
 
-        assertThat(interfaze.getFormattedContent(), is(expected));
+        TopLevelInterfaceRenderer renderer = new TopLevelInterfaceRenderer();
+        assertThat(renderer.render(interfaze)).isEqualTo(expected);
     }
 }

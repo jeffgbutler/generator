@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ *    Copyright 2006-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,14 +15,9 @@
  */
 package org.mybatis.generator.api.dom.java;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static junit.framework.TestCase.assertFalse;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
 
 public class InnerInterfaceTest {
 
@@ -47,11 +42,11 @@ public class InnerInterfaceTest {
     public void testAddMethod() {
 
         InnerInterface interfaze = new InnerInterface("com.foo.UserInterface");
-        Method method = new Method();
+        Method method = new Method("foo");
         interfaze.addMethod(method);
 
         assertNotNull(interfaze.getMethods());
-        assertEquals(interfaze.getMethods().size(), 1);
+        assertEquals(1, interfaze.getMethods().size());
         assertSame(interfaze.getMethods().get(0), method);
     }
 
@@ -60,14 +55,7 @@ public class InnerInterfaceTest {
 
         InnerInterface innerInterface = new InnerInterface("com.foo.InnerUserInterface");
         assertNotNull(innerInterface.getType());
-        assertEquals(innerInterface.getType().getFullyQualifiedName(), "com.foo.InnerUserInterface");
-    }
-
-    @Test
-    public void testGetSuperClass() {
-
-        InnerInterface interfaze = new InnerInterface("com.foo.UserInterface");
-        assertNull(interfaze.getSuperClass());
+        assertEquals("com.foo.InnerUserInterface", innerInterface.getType().getFullyQualifiedName());
     }
 
     @Test
@@ -76,23 +64,9 @@ public class InnerInterfaceTest {
         InnerInterface interfaze = new InnerInterface("com.foo.UserInterface");
         InnerInterface innerInterfaze = new InnerInterface("com.foo.InnerUserInterface");
 
-        interfaze.addInnerInterfaces(innerInterfaze);
+        interfaze.addInnerInterface(innerInterfaze);
         assertNotNull(interfaze.getInnerInterfaces());
-        assertEquals(interfaze.getInnerInterfaces().size(), 1);
+        assertEquals(1, interfaze.getInnerInterfaces().size());
         assertSame(interfaze.getInnerInterfaces().get(0), innerInterfaze);
-    }
-
-    @Test
-    public void testIsJavaInterface() {
-
-        InnerInterface interfaze = new InnerInterface("com.foo.UserInterface");
-        assertTrue(interfaze.isJavaInterface());
-    }
-
-    @Test
-    public void testIsJavaEnumeration() {
-
-        InnerInterface interfaze = new InnerInterface("com.foo.UserInterface");
-        assertFalse(interfaze.isJavaEnumeration());
     }
 }

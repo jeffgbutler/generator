@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ *    Copyright 2006-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,11 +26,6 @@ import org.mybatis.generator.api.dom.java.JavaVisibility;
 import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.Parameter;
 
-/**
- * 
- * @author Jeff Butler
- * 
- */
 public class SelectByPrimaryKeyMethodGenerator extends
         AbstractJavaMapperMethodGenerator {
 
@@ -43,16 +38,16 @@ public class SelectByPrimaryKeyMethodGenerator extends
 
     @Override
     public void addInterfaceElements(Interface interfaze) {
-        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
-        Method method = new Method();
+        Method method = new Method(introspectedTable.getSelectByPrimaryKeyStatementId());
         method.setVisibility(JavaVisibility.PUBLIC);
+        method.setAbstract(true);
 
         FullyQualifiedJavaType returnType = introspectedTable.getRules()
                 .calculateAllFieldsClass();
         method.setReturnType(returnType);
-        importedTypes.add(returnType);
 
-        method.setName(introspectedTable.getSelectByPrimaryKeyStatementId());
+        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<>();
+        importedTypes.add(returnType);
 
         if (!isSimple && introspectedTable.getRules().generatePrimaryKeyClass()) {
             FullyQualifiedJavaType type = new FullyQualifiedJavaType(
@@ -103,8 +98,10 @@ public class SelectByPrimaryKeyMethodGenerator extends
     }
 
     public void addMapperAnnotations(Interface interfaze, Method method) {
+        // extension point for subclasses
     }
 
     public void addExtraImports(Interface interfaze) {
+        // extension point for subclasses
     }
 }

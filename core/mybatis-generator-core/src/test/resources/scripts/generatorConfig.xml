@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2006-2017 the original author or authors.
+       Copyright 2006-2019 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
 <generatorConfiguration>
   <properties resource="scripts/database.properties"/>
 
-  <context id="FlatJava5" defaultModelType="flat">
+  <context id="FlatJava5" defaultModelType="flat" targetRuntime="MyBatis3">
     <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" />
     <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin" />
     <plugin type="org.mybatis.generator.plugins.ToStringPlugin" />
@@ -207,7 +207,6 @@
 
     <javaClientGenerator type="XMLMAPPER" targetPackage="mbg.test.mb3.generated.miscellaneous.mapper"  targetProject="MAVEN">
       <property name="rootInterface" value="mbg.test.common.BaseInterface" />
-      <property name="methodNameCalculator" value="EXTENDED"/>
     </javaClientGenerator>
 
     <table tableName="BlobsOnly" /> <!-- should generate a warning -->
@@ -260,6 +259,7 @@
     <javaModelGenerator targetPackage="mbg.test.mb3.generated.miscellaneous.model" targetProject="MAVEN">
       <property name="trimStrings" value="true" />
       <property name="enableSubPackages" value="true"/>
+      <property name="exampleTargetPackage" value="mbg.test.mb3.generated.miscellaneous.model.example"/>
     </javaModelGenerator>
 
     <sqlMapGenerator targetPackage="mbg.test.mb3.generated.miscellaneous.xml"
@@ -269,7 +269,7 @@
     <table tableName="NameView" />
   </context>
 
-  <context id="miscellaneousTests_ModelOnly1">
+  <context id="miscellaneousTests_ModelOnly1" targetRuntime="MyBatis3">
     <property name="autoDelimitKeywords" value="true" />
     
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver"
@@ -283,7 +283,7 @@
     <table tableName="NameView" />
   </context>
 
-  <context id="miscellaneousTests_ModelOnly2">
+  <context id="miscellaneousTests_ModelOnly2" targetRuntime="MyBatis3">
     <property name="autoDelimitKeywords" value="true" />
     
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver"
@@ -371,7 +371,7 @@
     </table>
   </context>
 
-  <context id="FlatJava5_Annotated" defaultModelType="flat">
+  <context id="FlatJava5_Annotated" defaultModelType="flat" targetRuntime="MyBatis3">
     <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" />
     <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>
 
@@ -523,7 +523,6 @@
 
     <javaClientGenerator type="ANNOTATEDMAPPER" targetPackage="mbg.test.mb3.generated.annotated.miscellaneous.mapper"  targetProject="MAVEN">
       <property name="rootInterface" value="mbg.test.common.BaseInterface" />
-      <property name="methodNameCalculator" value="EXTENDED"/>
     </javaClientGenerator>
 
     <table tableName="BlobsOnly" />
@@ -582,7 +581,7 @@
     <table tableName="PKFieldsBlobs" alias="A" />
   </context>
 
-  <context id="FlatJava5_Mixed" defaultModelType="flat">
+  <context id="FlatJava5_Mixed" defaultModelType="flat" targetRuntime="MyBatis3">
     <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" />
     <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>
 
@@ -729,9 +728,10 @@
       <property name="searchString" value="Example$"/>
       <property name="replaceString" value="Criteria"/>
     </plugin>
+    <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin" />
 
     <commentGenerator>
-      <property name="suppressDate" value="true"/>
+      <property name="suppressAllComments" value="true"/>
     </commentGenerator>
     
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver"
@@ -749,7 +749,6 @@
     
     <javaClientGenerator type="MIXEDMAPPER" targetPackage="mbg.test.mb3.generated.mixed.miscellaneous.mapper"  targetProject="MAVEN">
       <property name="rootInterface" value="mbg.test.common.BaseInterface" />
-      <property name="methodNameCalculator" value="EXTENDED"/>
     </javaClientGenerator>
 
     <table tableName="BlobsOnly" />

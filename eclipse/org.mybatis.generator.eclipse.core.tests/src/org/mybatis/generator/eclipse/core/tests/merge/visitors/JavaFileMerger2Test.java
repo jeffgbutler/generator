@@ -51,7 +51,7 @@ public class JavaFileMerger2Test {
     public void testMergeOnRegularClasses() throws Exception {
         String newJavaSource = simpleClassWithAllGeneratedItems();
         String existingJavaSource = simpleClassWithGeneratedAndCustomItems();
-        JavaFileMerger2 merger = new JavaFileMerger2(newJavaSource, existingJavaSource, MergeConstants.OLD_ELEMENT_TAGS);
+        JavaFileMerger2 merger = new JavaFileMerger2(newJavaSource, existingJavaSource, MergeConstants.getOldElementTags());
         String mergedSource = merger.getMergedSource();
         
         CompilationUnitSummary summary = getCompilationUnitSummaryFromSource(mergedSource);
@@ -79,7 +79,7 @@ public class JavaFileMerger2Test {
     public void testMergeOnRegularInterfaces() throws Exception {
         String newJavaSource = simpleInterfaceWithAllGeneratedItems();
         String existingJavaSource = simpleInterfaceWithGeneratedAndCustomItems();
-        JavaFileMerger2 merger = new JavaFileMerger2(newJavaSource, existingJavaSource, MergeConstants.OLD_ELEMENT_TAGS);
+        JavaFileMerger2 merger = new JavaFileMerger2(newJavaSource, existingJavaSource, MergeConstants.getOldElementTags());
         String mergedSource = merger.getMergedSource();
         
         CompilationUnitSummary summary = getCompilationUnitSummaryFromSource(mergedSource);
@@ -99,7 +99,7 @@ public class JavaFileMerger2Test {
     public void testMergeOnRegularEnums() throws Exception {
         String newJavaSource = simpleEnumWithAllGeneratedItems();
         String existingJavaSource = simpleEnumWithGeneratedAndCustomItems();
-        JavaFileMerger2 merger = new JavaFileMerger2(newJavaSource, existingJavaSource, MergeConstants.OLD_ELEMENT_TAGS);
+        JavaFileMerger2 merger = new JavaFileMerger2(newJavaSource, existingJavaSource, MergeConstants.getOldElementTags());
         String mergedSource = merger.getMergedSource();
         
         CompilationUnitSummary summary = getCompilationUnitSummaryFromSource(mergedSource);

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ *    Copyright 2006-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,11 +24,6 @@ import org.mybatis.generator.api.dom.java.JavaVisibility;
 import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.Parameter;
 
-/**
- * 
- * @author Jeff Butler
- * 
- */
 public class UpdateByExampleWithoutBLOBsMethodGenerator extends
         AbstractJavaMapperMethodGenerator {
 
@@ -38,10 +33,10 @@ public class UpdateByExampleWithoutBLOBsMethodGenerator extends
 
     @Override
     public void addInterfaceElements(Interface interfaze) {
-        Method method = new Method();
+        Method method = new Method(introspectedTable.getUpdateByExampleStatementId());
         method.setVisibility(JavaVisibility.PUBLIC);
+        method.setAbstract(true);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
-        method.setName(introspectedTable.getUpdateByExampleStatementId());
 
         FullyQualifiedJavaType parameterType;
         if (introspectedTable.getRules().generateBaseRecordClass()) {
@@ -54,7 +49,7 @@ public class UpdateByExampleWithoutBLOBsMethodGenerator extends
         method.addParameter(new Parameter(parameterType,
                 "record", "@Param(\"record\")")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
+        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<>();
         importedTypes.add(parameterType);
 
         FullyQualifiedJavaType exampleType = new FullyQualifiedJavaType(
@@ -81,8 +76,10 @@ public class UpdateByExampleWithoutBLOBsMethodGenerator extends
     }
 
     public void addMapperAnnotations(Method method) {
+        // extension point for subclasses
     }
 
     public void addExtraImports(Interface interfaze) {
+        // extension point for subclasses
     }
 }

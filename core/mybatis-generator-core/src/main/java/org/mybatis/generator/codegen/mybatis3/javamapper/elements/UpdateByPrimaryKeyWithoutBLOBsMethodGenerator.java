@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2016 the original author or authors.
+ *    Copyright 2006-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,11 +24,6 @@ import org.mybatis.generator.api.dom.java.JavaVisibility;
 import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.Parameter;
 
-/**
- * 
- * @author Jeff Butler
- * 
- */
 public class UpdateByPrimaryKeyWithoutBLOBsMethodGenerator extends
         AbstractJavaMapperMethodGenerator {
 
@@ -38,15 +33,15 @@ public class UpdateByPrimaryKeyWithoutBLOBsMethodGenerator extends
 
     @Override
     public void addInterfaceElements(Interface interfaze) {
-        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
+        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<>();
         FullyQualifiedJavaType parameterType = new FullyQualifiedJavaType(
                 introspectedTable.getBaseRecordType());
         importedTypes.add(parameterType);
 
-        Method method = new Method();
+        Method method = new Method(introspectedTable.getUpdateByPrimaryKeyStatementId());
         method.setVisibility(JavaVisibility.PUBLIC);
+        method.setAbstract(true);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
-        method.setName(introspectedTable.getUpdateByPrimaryKeyStatementId());
         method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
 
         context.getCommentGenerator().addGeneralMethodComment(method,
@@ -64,8 +59,10 @@ public class UpdateByPrimaryKeyWithoutBLOBsMethodGenerator extends
     }
 
     public void addMapperAnnotations(Method method) {
+        // extension point for subclasses
     }
 
     public void addExtraImports(Interface interfaze) {
+        // extension point for subclasses
     }
 }

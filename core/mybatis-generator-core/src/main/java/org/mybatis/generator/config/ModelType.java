@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2016 the original author or authors.
+ *    Copyright 2006-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package org.mybatis.generator.config;
 import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
 /**
- * Typesafe enum of different model types
+ * Typesafe enum of different model types.
  * 
  * @author Jeff Butler
  */
@@ -27,25 +27,18 @@ public enum ModelType {
     FLAT("flat"), //$NON-NLS-1$
     CONDITIONAL("conditional"); //$NON-NLS-1$
 
-    private final String modelType;
+    private final String type;
 
-    /**
-     * 
-     */
-    private ModelType(String modelType) {
-        this.modelType = modelType;
-    }
-
-    public String getModelType() {
-        return modelType;
+    ModelType(String type) {
+        this.type = type;
     }
 
     public static ModelType getModelType(String type) {
-        if (HIERARCHICAL.getModelType().equalsIgnoreCase(type)) {
+        if (HIERARCHICAL.type.equalsIgnoreCase(type)) {
             return HIERARCHICAL;
-        } else if (FLAT.getModelType().equalsIgnoreCase(type)) {
+        } else if (FLAT.type.equalsIgnoreCase(type)) {
             return FLAT;
-        } else if (CONDITIONAL.getModelType().equalsIgnoreCase(type)) {
+        } else if (CONDITIONAL.type.equalsIgnoreCase(type)) {
             return CONDITIONAL;
         } else {
             throw new RuntimeException(getString(

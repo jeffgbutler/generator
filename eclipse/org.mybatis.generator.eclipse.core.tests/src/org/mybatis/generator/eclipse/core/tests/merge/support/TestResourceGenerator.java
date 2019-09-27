@@ -16,6 +16,7 @@
 package org.mybatis.generator.eclipse.core.tests.merge.support;
 
 import org.mybatis.generator.api.MyBatisGenerator;
+import org.mybatis.generator.api.dom.DefaultJavaFormatter;
 import org.mybatis.generator.api.dom.java.Field;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.api.dom.java.Interface;
@@ -52,7 +53,7 @@ public class TestResourceGenerator {
         commentGenerator.addMethodComment(method);
         tlc.addMethod(method);
 
-        return tlc.getFormattedContent();
+        return new DefaultJavaFormatter().getFormattedContent(tlc);
     }
 
     public static String simpleClassWithGeneratedAndCustomItems() {
@@ -97,7 +98,7 @@ public class TestResourceGenerator {
         method.setVisibility(JavaVisibility.PUBLIC);
         tlc.addMethod(method);
 
-        return tlc.getFormattedContent();
+        return new DefaultJavaFormatter().getFormattedContent(tlc);
     }
 
     public static String simpleInterfaceWithAllGeneratedItems() {
@@ -116,7 +117,7 @@ public class TestResourceGenerator {
         commentGenerator.addMethodComment(method);
         itf.addMethod(method);
 
-        return itf.getFormattedContent();
+        return new DefaultJavaFormatter().getFormattedContent(itf);
     }
 
     public static String simpleInterfaceWithGeneratedAndCustomItems() {
@@ -162,7 +163,7 @@ public class TestResourceGenerator {
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         itf.addMethod(method);
 
-        return itf.getFormattedContent();
+        return new DefaultJavaFormatter().getFormattedContent(itf);
     }
     
     public static String simpleEnumWithAllGeneratedItems() {
@@ -185,7 +186,7 @@ public class TestResourceGenerator {
         commentGenerator.addMethodComment(method);
         enumm.addMethod(method);
         
-        return enumm.getFormattedContent();
+        return new DefaultJavaFormatter().getFormattedContent(enumm);
     }
 
     public static String simpleEnumWithGeneratedAndCustomItems() {
@@ -217,6 +218,6 @@ public class TestResourceGenerator {
         method.addBodyLine("return counter++;");
         enumm.addMethod(method);
         
-        return enumm.getFormattedContent();
+        return new DefaultJavaFormatter().getFormattedContent(enumm);
     }
 }

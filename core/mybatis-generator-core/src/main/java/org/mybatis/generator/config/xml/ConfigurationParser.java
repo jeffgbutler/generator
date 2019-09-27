@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ *    Copyright 2006-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -12,19 +12,6 @@
  *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
- */
-/*
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
  */
 package org.mybatis.generator.config.xml;
 
@@ -39,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -89,12 +77,12 @@ public class ConfigurationParser {
         this.extraProperties = extraProperties;
 
         if (warnings == null) {
-            this.warnings = new ArrayList<String>();
+            this.warnings = new ArrayList<>();
         } else {
             this.warnings = warnings;
         }
 
-        parseErrors = new ArrayList<String>();
+        parseErrors = new ArrayList<>();
     }
 
     public Configuration parseConfiguration(File inputFile) throws IOException,
@@ -128,6 +116,7 @@ public class ConfigurationParser {
         factory.setValidating(true);
 
         try {
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setEntityResolver(new ParserEntityResolver());
 
@@ -148,7 +137,7 @@ public class ConfigurationParser {
                 }
             }
 
-            if (parseErrors.size() > 0) {
+            if (document == null || !parseErrors.isEmpty()) {
                 throw new XMLParserException(parseErrors);
             }
 
@@ -157,17 +146,13 @@ public class ConfigurationParser {
             DocumentType docType = document.getDoctype();
             if (rootNode.getNodeType() == Node.ELEMENT_NODE
                     && docType.getPublicId().equals(
-                            XmlConstants.IBATOR_CONFIG_PUBLIC_ID)) {
-                config = parseIbatorConfiguration(rootNode);
-            } else if (rootNode.getNodeType() == Node.ELEMENT_NODE
-                    && docType.getPublicId().equals(
                             XmlConstants.MYBATIS_GENERATOR_CONFIG_PUBLIC_ID)) {
                 config = parseMyBatisGeneratorConfiguration(rootNode);
             } else {
                 throw new XMLParserException(getString("RuntimeError.5")); //$NON-NLS-1$
             }
 
-            if (parseErrors.size() > 0) {
+            if (!parseErrors.isEmpty()) {
                 throw new XMLParserException(parseErrors);
             }
 
@@ -176,13 +161,6 @@ public class ConfigurationParser {
             parseErrors.add(e.getMessage());
             throw new XMLParserException(parseErrors);
         }
-    }
-
-    private Configuration parseIbatorConfiguration(Element rootNode)
-            throws XMLParserException {
-        IbatorConfigurationParser parser = new IbatorConfigurationParser(
-                extraProperties);
-        return parser.parseIbatorConfiguration(rootNode);
     }
 
     private Configuration parseMyBatisGeneratorConfiguration(Element rootNode)

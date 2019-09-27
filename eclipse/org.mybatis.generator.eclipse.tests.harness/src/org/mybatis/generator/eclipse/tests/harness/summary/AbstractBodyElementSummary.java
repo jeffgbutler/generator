@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public abstract class AbstractBodyElementSummary extends AbstractSummary implements Modifiable {
 
-    private Map<String, FieldSummary> fields = new HashMap<String, FieldSummary>();
+    private Map<String, FieldSummary> fields = new HashMap<>();
     private String name;
     private int modifiers;
 

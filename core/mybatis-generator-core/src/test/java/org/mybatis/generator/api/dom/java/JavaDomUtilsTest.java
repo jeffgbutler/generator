@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ *    Copyright 2006-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,8 +15,9 @@
  */
 package org.mybatis.generator.api.dom.java;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 public class JavaDomUtilsTest {
 
@@ -115,6 +116,17 @@ public class JavaDomUtilsTest {
 
         FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType("java.util.Map<java.math.BigDecimal, java.util.List<?>>");
         assertEquals("Map<BigDecimal, List<?>>",
+                JavaDomUtils.calculateTypeName(interfaze, fqjt));
+    }
+
+    @Test
+    public void testArray() {
+        Interface interfaze = new Interface(new FullyQualifiedJavaType("com.foo.UserMapper"));
+
+        interfaze.addImportedType(new FullyQualifiedJavaType("java.math.BigDecimal[]"));
+
+        FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType("java.math.BigDecimal[]");
+        assertEquals("BigDecimal[]",
                 JavaDomUtils.calculateTypeName(interfaze, fqjt));
     }
 }

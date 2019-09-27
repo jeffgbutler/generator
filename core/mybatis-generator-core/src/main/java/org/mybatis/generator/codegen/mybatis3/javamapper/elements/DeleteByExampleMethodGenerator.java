@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ *    Copyright 2006-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,11 +24,6 @@ import org.mybatis.generator.api.dom.java.JavaVisibility;
 import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.Parameter;
 
-/**
- * 
- * @author Jeff Butler
- * 
- */
 public class DeleteByExampleMethodGenerator extends
         AbstractJavaMapperMethodGenerator {
 
@@ -38,15 +33,15 @@ public class DeleteByExampleMethodGenerator extends
 
     @Override
     public void addInterfaceElements(Interface interfaze) {
-        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
+        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<>();
         FullyQualifiedJavaType type = new FullyQualifiedJavaType(
                 introspectedTable.getExampleType());
         importedTypes.add(type);
 
-        Method method = new Method();
+        Method method = new Method(introspectedTable.getDeleteByExampleStatementId());
         method.setVisibility(JavaVisibility.PUBLIC);
+        method.setAbstract(true);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
-        method.setName(introspectedTable.getDeleteByExampleStatementId());
         method.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
 
         context.getCommentGenerator().addGeneralMethodComment(method,
@@ -63,9 +58,10 @@ public class DeleteByExampleMethodGenerator extends
     }
 
     public void addMapperAnnotations(Method method) {
+        // extension point for subclasses
     }
 
     public void addExtraImports(Interface interfaze) {
-
+        // extension point for subclasses
     }
 }

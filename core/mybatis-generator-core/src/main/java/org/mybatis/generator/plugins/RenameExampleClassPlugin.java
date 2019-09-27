@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ *    Copyright 2006-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,9 +33,9 @@ import org.mybatis.generator.api.PluginAdapter;
  * <p>This plugin accepts two properties:
  * 
  * <ul>
- * <li><tt>searchString</tt> (required) the regular expression of the name
+ * <li><code>searchString</code> (required) the regular expression of the name
  * search.</li>
- * <li><tt>replaceString</tt> (required) the replacement String.</li>
+ * <li><code>replaceString</code> (required) the replacement String.</li>
  * </ul>
  * 
  * <p>For example, to change the name of the generated Example classes from
@@ -53,17 +53,13 @@ import org.mybatis.generator.api.PluginAdapter;
  * 
  */
 public class RenameExampleClassPlugin extends PluginAdapter {
-    private String searchString;
     private String replaceString;
     private Pattern pattern;
-
-    public RenameExampleClassPlugin() {
-    }
 
     @Override
     public boolean validate(List<String> warnings) {
 
-        searchString = properties.getProperty("searchString"); //$NON-NLS-1$
+        String searchString = properties.getProperty("searchString"); //$NON-NLS-1$
         replaceString = properties.getProperty("replaceString"); //$NON-NLS-1$
 
         boolean valid = stringHasValue(searchString)

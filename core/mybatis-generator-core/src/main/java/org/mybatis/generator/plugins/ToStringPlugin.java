@@ -1,5 +1,5 @@
 /**
- *    Copyright 2006-2018 the original author or authors.
+ *    Copyright 2006-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -67,13 +67,10 @@ public class ToStringPlugin extends PluginAdapter {
 
     private void generateToString(IntrospectedTable introspectedTable,
             TopLevelClass topLevelClass) {
-        Method method = new Method();
+        Method method = new Method("toString"); //$NON-NLS-1$
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getStringInstance());
-        method.setName("toString"); //$NON-NLS-1$
-        if (introspectedTable.isJava5Targeted()) {
-            method.addAnnotation("@Override"); //$NON-NLS-1$
-        }
+        method.addAnnotation("@Override"); //$NON-NLS-1$
 
         if (introspectedTable.getTargetRuntime() == TargetRuntime.MYBATIS3_DSQL) {
             context.getCommentGenerator().addGeneralMethodAnnotation(method,
@@ -98,7 +95,7 @@ public class ToStringPlugin extends PluginAdapter {
         }
 
         method.addBodyLine("sb.append(\"]\");"); //$NON-NLS-1$
-        if (useToStringFromRoot && topLevelClass.getSuperClass() != null) {
+        if (useToStringFromRoot && topLevelClass.getSuperClass().isPresent()) {
             method.addBodyLine("sb.append(\", from super class \");"); //$NON-NLS-1$
             method.addBodyLine("sb.append(super.toString());"); //$NON-NLS-1$
         }
