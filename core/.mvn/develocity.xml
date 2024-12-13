@@ -15,20 +15,16 @@
        limitations under the License.
 
 -->
-<extensions>
-  <extension>
-    <groupId>fr.jcgay.maven</groupId>
-    <artifactId>maven-profiler</artifactId>
-    <version>3.2</version>
-  </extension>
-  <extension>
-    <groupId>com.gradle</groupId>
-    <artifactId>develocity-maven-extension</artifactId>
-    <version>1.22</version>
-  </extension>
-  <extension>
-    <groupId>com.gradle</groupId>
-    <artifactId>common-custom-user-data-maven-extension</artifactId>
-    <version>2.0.1</version>
-  </extension>
-</extensions>
+<develocity>
+  <server>
+    <url>https://develocity.jgb-lab.dev</url>
+  </server>
+  <buildCache>
+    <local>
+      <enabled>false</enabled>
+    </local>
+  </buildCache>
+  <buildScan>
+    <backgroundBuildScanUpload>#{env['CI'] == null}</backgroundBuildScanUpload>
+  </buildScan>
+</develocity>
