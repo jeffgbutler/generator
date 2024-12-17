@@ -21,7 +21,7 @@
   </server>
   <buildCache>
     <local>
-      <enabled>false</enabled>
+      <enabled>true</enabled>
     </local>
   </buildCache>
   <buildScan>
