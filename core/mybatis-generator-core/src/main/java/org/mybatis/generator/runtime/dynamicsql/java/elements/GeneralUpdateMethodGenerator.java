@@ -41,7 +41,7 @@ public class GeneralUpdateMethodGenerator extends AbstractJavaInterfaceMethodGen
         Set<FullyQualifiedJavaType> imports = new HashSet<>();
 
         FullyQualifiedJavaType parameterType = new FullyQualifiedJavaType(
-                "org.mybatis.dynamic.sql.update.UpdateDSLCompleter"); //$NON-NLS-1$
+                "org.mybatis.dynamic.sql.dsl.UpdateDSLCompleter"); //$NON-NLS-1$
 
         imports.add(parameterType);
         imports.add(new FullyQualifiedJavaType("org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils")); //$NON-NLS-1$

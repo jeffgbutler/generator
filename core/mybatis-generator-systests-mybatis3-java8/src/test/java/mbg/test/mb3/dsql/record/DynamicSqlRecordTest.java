@@ -70,8 +70,8 @@ import mbg.test.mb3.generated.dsql.record.model.mbgtest.Id;
 import mbg.test.mb3.generated.dsql.record.model.mbgtest.sub.Translation;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
-import org.mybatis.dynamic.sql.select.CountDSLCompleter;
-import org.mybatis.dynamic.sql.select.SelectDSLCompleter;
+import org.mybatis.dynamic.sql.dsl.CountDSLCompleter;
+import org.mybatis.dynamic.sql.dsl.SelectDSLCompleter;
 
 /**
  * @author Jeff Butler

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2006-2025 the original author or authors.
+ *    Copyright 2006-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
-import org.mybatis.dynamic.sql.select.SelectDSLCompleter;
 
 import mbg.test.common.util.TestUtilities;
 import mbg.test.mb3.generated.dsql.miscellaneous.mapper.GeneratedalwaystestMapper;
 import mbg.test.mb3.generated.dsql.miscellaneous.model.Generatedalwaystest;
+import org.mybatis.dynamic.sql.dsl.SelectDSLCompleter;
 
 public class GeneratedAlwaysTest extends AbstractAnnotatedMiscellaneousTest {
 

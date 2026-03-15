@@ -44,9 +44,7 @@ public class UpdateSelectiveColumnsMethodGenerator extends AbstractJavaInterface
         Set<FullyQualifiedJavaType> imports = new HashSet<>();
 
         FullyQualifiedJavaType parameterAndReturnType = new FullyQualifiedJavaType(
-                "org.mybatis.dynamic.sql.update.UpdateDSL"); //$NON-NLS-1$
-        parameterAndReturnType.addTypeArgument(new FullyQualifiedJavaType(
-                "org.mybatis.dynamic.sql.update.UpdateModel")); //$NON-NLS-1$
+                "org.mybatis.dynamic.sql.dsl.UpdateDSL"); //$NON-NLS-1$
         imports.add(parameterAndReturnType);
 
         imports.add(recordType);
