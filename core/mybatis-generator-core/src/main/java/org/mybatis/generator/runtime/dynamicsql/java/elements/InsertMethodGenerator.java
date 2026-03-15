@@ -67,14 +67,14 @@ public class InsertMethodGenerator extends AbstractJavaInterfaceMethodGenerator 
             String fieldName = fragmentGenerator.calculateFieldName(tableFieldName, column);
 
             if (first) {
-                method.addBodyLine(OutputUtilities.javaIndent(1) + "c.map(" + fieldName //$NON-NLS-1$
-                        + ").toProperty(\"" + column.getJavaProperty() //$NON-NLS-1$
-                        + "\")"); //$NON-NLS-1$
+                method.addBodyLine(OutputUtilities.javaIndent(1) + "c.withMappedColumn(" //$NON-NLS-1$
+                        + fieldName
+                        + ")"); //$NON-NLS-1$
                 first = false;
             } else {
-                method.addBodyLine(OutputUtilities.javaIndent(1) + ".map(" + fieldName //$NON-NLS-1$
-                        + ").toProperty(\"" + column.getJavaProperty() //$NON-NLS-1$
-                        + "\")"); //$NON-NLS-1$
+                method.addBodyLine(OutputUtilities.javaIndent(1) + ".withMappedColumn(" //$NON-NLS-1$
+                        + fieldName
+                        + ")"); //$NON-NLS-1$
             }
         }
 

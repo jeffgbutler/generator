@@ -178,6 +178,10 @@ public class DynamicSqlSupportClassGenerator extends AbstractGenerator {
             initializationString.append(".class)"); //$NON-NLS-1$
         }
 
+        initializationString.append(".withJavaProperty(\""); //$NON-NLS-1$
+        initializationString.append(column.getJavaProperty());
+        initializationString.append("\")"); //$NON-NLS-1$
+
         return initializationString.toString();
     }
 

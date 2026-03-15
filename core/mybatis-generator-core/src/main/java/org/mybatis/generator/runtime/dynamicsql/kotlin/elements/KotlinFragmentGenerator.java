@@ -278,9 +278,9 @@ public class KotlinFragmentGenerator {
                     calculateFieldNameAndImport(tableFieldName, supportObjectImport, column);
             builder.withImport(fieldNameAndImport.importString());
 
-            builder.withCodeLine("    map(" + fieldNameAndImport.fieldName() //$NON-NLS-1$
-                    + ") toProperty \"" + column.getJavaProperty() //$NON-NLS-1$
-                    + "\""); //$NON-NLS-1$
+            builder.withCodeLine(OutputUtilities.kotlinIndent(1) + "withMappedColumn("  //$NON-NLS-1$
+                    + fieldNameAndImport.fieldName()
+                    + ")"); //$NON-NLS-1$
         }
 
         builder.withCodeLine("}"); //$NON-NLS-1$

@@ -68,27 +68,27 @@ public class InsertSelectiveMethodGenerator extends AbstractJavaInterfaceMethodG
             String fieldName = fragmentGenerator.calculateFieldName(tableFieldName, column);
             if (column.isSequenceColumn()) {
                 if (first) {
-                    method.addBodyLine(OutputUtilities.javaIndent(1) + "c.map(" + fieldName //$NON-NLS-1$
-                            + ").toProperty(\"" + column.getJavaProperty() //$NON-NLS-1$
-                            + "\")"); //$NON-NLS-1$
+                    method.addBodyLine(OutputUtilities.javaIndent(1) + "c.withMappedColumn(" //$NON-NLS-1$
+                            + fieldName
+                            + ")"); //$NON-NLS-1$
                     first = false;
                 } else {
-                    method.addBodyLine(OutputUtilities.javaIndent(1) + ".map(" + fieldName //$NON-NLS-1$
-                            + ").toProperty(\"" + column.getJavaProperty() //$NON-NLS-1$
-                            + "\")"); //$NON-NLS-1$
+                    method.addBodyLine(OutputUtilities.javaIndent(1) + ".withMappedColumn(" //$NON-NLS-1$
+                            + fieldName
+                            + ")"); //$NON-NLS-1$
                 }
             } else {
                 String methodName = JavaBeansUtil.getCallingGetterMethodName(column);
                 if (first) {
-                    method.addBodyLine(OutputUtilities.javaIndent(1) + "c.map(" + fieldName //$NON-NLS-1$
-                            + ").toPropertyWhenPresent(\"" + column.getJavaProperty() //$NON-NLS-1$
-                            + "\", row::" + methodName //$NON-NLS-1$
+                    method.addBodyLine(OutputUtilities.javaIndent(1) + "c.withMappedColumnWhenPresent(" //$NON-NLS-1$
+                            + fieldName
+                            + ", row::" + methodName //$NON-NLS-1$
                             + ")"); //$NON-NLS-1$
                     first = false;
                 } else {
-                    method.addBodyLine(OutputUtilities.javaIndent(1) + ".map(" + fieldName //$NON-NLS-1$
-                            + ").toPropertyWhenPresent(\"" + column.getJavaProperty() //$NON-NLS-1$
-                            + "\", row::" + methodName //$NON-NLS-1$
+                    method.addBodyLine(OutputUtilities.javaIndent(1) + ".withMappedColumnWhenPresent(" //$NON-NLS-1$
+                            + fieldName
+                            + ", row::" + methodName //$NON-NLS-1$
                             + ")"); //$NON-NLS-1$
                 }
             }

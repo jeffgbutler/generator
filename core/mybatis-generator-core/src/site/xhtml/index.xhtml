@@ -147,17 +147,28 @@ DatabaseMetaData interface, especially the <code>getColumns</code> and
     </tr>
     <tr>
         <td>MyBatis3DynamicSQL</td>
-        <td>1.4.1+</td>
-        <td>3.5.5+</td>
+        <td>1.4.1 - 1.4.2</td>
+        <td>3.4.2+</td>
         <td>1.3.1+</td>
     </tr>
     <tr>
         <td>MyBatis3Kotlin</td>
-        <td>1.4.1+</td>
-        <td>3.5.5+</td>
+        <td>1.4.1 - 1.4.2</td>
+        <td>3.4.2+</td>
         <td>1.4.0+</td>
     </tr>
+  <tr>
+    <td>MyBatis3DynamicSql, MyBatis3Kotlin</td>
+    <td>2.0.0+</td>
+    <td>3.5.5+</td>
+    <td>2.0.0+</td>
+  </tr>
 </table>
+
+<p>Unless specifically disabled, most runtimes will also add a <code>jakarta.annotation.Generated</code> annotation to
+  generated Java fields, methods, inner classes, etc. This annotation is used by the Java merge function.
+  This adds a compile time dependency of "jakarta.annotation:jakarta.annotation-api".
+</p>
 
 <h2>Support</h2>
 <p>Support for MyBatis Generator is provided through the MyBatis user mailing list.
