@@ -26,10 +26,8 @@
 <body>
 <h1>What's New in MyBatis Generator</h1>
 <h2>Version 2.0.0</h2>
-<p>In this release we have adopted JSpecify to fully document the null handling capabilities of the library.
-Proper use of JSpecify pushes a codebase towards immutability - which is a good thing in general. This has caused
-some potentially breaking changes to the API (detailed below). It has also given us an opportunity to do a general
-cleanup and modernization of the code base. For many users, these changes should be transparent.
+<p>THis is a major release for the generator including many enhancements. There are also some breaking changes that
+may impact users. Please read these release notes for details.
 </p>
 
 <p>See the GitHub page for milestone 2.0.0 for details other changes in this release:
@@ -38,8 +36,12 @@ cleanup and modernization of the code base. For many users, these changes should
 
 <h3>Adoption of JSpecify</h3>
 <p>Following the lead of many other projects (including The Spring Framework), we have adopted JSpecify to fully
-document the null handling properties of this library. JSpecify is now a runtime dependency - as is
-recommended practice with JSpecify.</p>
+  document the null handling properties of this library. JSpecify is now a runtime dependency - as is
+  recommended practice with JSpecify. Proper use of JSpecify pushes a codebase towards immutability - which is a good
+  thing in general. This has caused some potentially breaking changes to the API (detailed below). It has also given
+  us an opportunity to do a general cleanup and modernization of the code base. For many users, these changes should
+  be transparent.
+</p>
 
 <h3>Java File Merging</h3>
 <p>The core library now supports Java file merging - this no longer requires Eclipse to run.
@@ -132,6 +134,10 @@ recommended practice with JSpecify.</p>
     database tables and columns will use snake case names (e.g., ORDER_MASTER) rather than camel case names
     (e.g., orderMaster). This helps avoid awkward parameter naming for some methods where we appended an underscore
     to generated parameters in some cases.
+  </li>
+  <li>
+    The runtimes that build code for MyBatis Dynamic SQL (MyBatis3DynamicSql and MyBatis3Kotlin) have been updated to
+    use version 2.0.0 of that library, and the generated code will require that version or later.
   </li>
 </ul>
 

@@ -107,10 +107,19 @@ a full user manual for the generator to the Eclipse help system.</p>
   <a href="https://marketplace.eclipse.org/content/mybatis-generator">https://marketplace.eclipse.org/content/mybatis-generator</a>.
 </p>
 <h2>Dependencies</h2>
-<p>MBG has no dependencies beyond the JRE.  Java 8 or
-above is required.  Also, a JDBC driver that implements the
-DatabaseMetaData interface, especially the <code>getColumns</code> and
-<code>getPrimaryKeys</code> methods is required.</p>
+<p>MBG has the following dependencies:</p>
+  <ul>
+    <li>Java 17 or above</li>
+    <li>A JDBC driver that implements the
+      DatabaseMetaData interface, especially the <code>getColumns</code> and
+      <code>getPrimaryKeys</code> methods
+    </li>
+    <li>JSpecify (org.jspecify:jspecify)</li>
+    <li>Jakarta Commons Logging (commons-logging:commons-logging)</li>
+    <li>If you enable the Java merge function, then JavaParser (com.github.javaparser:javaparser-core)
+      is a dependency
+    </li>
+  </ul>
 
 <h2>Generated Code Dependencies</h2>
 <p>MBG will generate code in different styles. This is controlled by the "targetRuntime" attribute of a
