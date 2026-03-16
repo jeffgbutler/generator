@@ -42,8 +42,6 @@ import java.util.Optional;
 
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
-import org.mybatis.dynamic.sql.select.CountDSLCompleter;
-import org.mybatis.dynamic.sql.select.SelectDSLCompleter;
 
 import mbg.test.mb3.generated.dsql.mapper.AwfulTableMapper;
 import mbg.test.mb3.generated.dsql.mapper.FieldsblobsMapper;
@@ -63,6 +61,8 @@ import mbg.test.mb3.generated.dsql.model.Pkfieldsblobs;
 import mbg.test.mb3.generated.dsql.model.Pkonly;
 import mbg.test.mb3.generated.dsql.model.mbgtest.Id;
 import mbg.test.mb3.generated.dsql.model.mbgtest.sub.Translation;
+import org.mybatis.dynamic.sql.dsl.CountDSLCompleter;
+import org.mybatis.dynamic.sql.dsl.SelectDSLCompleter;
 
 /**
  * @author Jeff Butler

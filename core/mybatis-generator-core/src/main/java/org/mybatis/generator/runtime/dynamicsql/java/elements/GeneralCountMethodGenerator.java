@@ -41,7 +41,7 @@ public class GeneralCountMethodGenerator extends AbstractJavaInterfaceMethodGene
         Set<FullyQualifiedJavaType> imports = new HashSet<>();
 
         FullyQualifiedJavaType parameterType = new FullyQualifiedJavaType(
-                "org.mybatis.dynamic.sql.select.CountDSLCompleter"); //$NON-NLS-1$
+                "org.mybatis.dynamic.sql.dsl.CountDSLCompleter"); //$NON-NLS-1$
         imports.add(parameterType);
         imports.add(new FullyQualifiedJavaType("org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils")); //$NON-NLS-1$
 

@@ -107,10 +107,19 @@ a full user manual for the generator to the Eclipse help system.</p>
   <a href="https://marketplace.eclipse.org/content/mybatis-generator">https://marketplace.eclipse.org/content/mybatis-generator</a>.
 </p>
 <h2>Dependencies</h2>
-<p>MBG has no dependencies beyond the JRE.  Java 8 or
-above is required.  Also, a JDBC driver that implements the
-DatabaseMetaData interface, especially the <code>getColumns</code> and
-<code>getPrimaryKeys</code> methods is required.</p>
+<p>MBG has the following dependencies:</p>
+  <ul>
+    <li>Java 17 or above</li>
+    <li>A JDBC driver that implements the
+      DatabaseMetaData interface, especially the <code>getColumns</code> and
+      <code>getPrimaryKeys</code> methods
+    </li>
+    <li>JSpecify (org.jspecify:jspecify)</li>
+    <li>Jakarta Commons Logging (commons-logging:commons-logging)</li>
+    <li>If you enable the Java merge function, then JavaParser (com.github.javaparser:javaparser-core)
+      is a dependency
+    </li>
+  </ul>
 
 <h2>Generated Code Dependencies</h2>
 <p>MBG will generate code in different styles. This is controlled by the "targetRuntime" attribute of a
@@ -147,17 +156,28 @@ DatabaseMetaData interface, especially the <code>getColumns</code> and
     </tr>
     <tr>
         <td>MyBatis3DynamicSQL</td>
-        <td>1.4.1+</td>
-        <td>3.5.5+</td>
+        <td>1.4.1 - 1.4.2</td>
+        <td>3.4.2+</td>
         <td>1.3.1+</td>
     </tr>
     <tr>
         <td>MyBatis3Kotlin</td>
-        <td>1.4.1+</td>
-        <td>3.5.5+</td>
+        <td>1.4.1 - 1.4.2</td>
+        <td>3.4.2+</td>
         <td>1.4.0+</td>
     </tr>
+  <tr>
+    <td>MyBatis3DynamicSql, MyBatis3Kotlin</td>
+    <td>2.0.0+</td>
+    <td>3.5.5+</td>
+    <td>2.0.0+</td>
+  </tr>
 </table>
+
+<p>Unless specifically disabled, most runtimes will also add a <code>jakarta.annotation.Generated</code> annotation to
+  generated Java fields, methods, inner classes, etc. This annotation is used by the Java merge function.
+  This adds a compile time dependency of "jakarta.annotation:jakarta.annotation-api".
+</p>
 
 <h2>Support</h2>
 <p>Support for MyBatis Generator is provided through the MyBatis user mailing list.

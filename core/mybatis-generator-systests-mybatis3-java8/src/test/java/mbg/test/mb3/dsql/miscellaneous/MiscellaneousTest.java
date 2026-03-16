@@ -30,8 +30,8 @@ import java.util.Optional;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
+import org.mybatis.dynamic.sql.dsl.SelectDSLCompleter;
 import org.mybatis.dynamic.sql.insert.render.MultiRowInsertStatementProvider;
-import org.mybatis.dynamic.sql.select.SelectDSLCompleter;
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider;
 
 import mbg.test.common.FirstName;

@@ -301,7 +301,7 @@ public class FragmentGenerator {
         Set<FullyQualifiedJavaType> imports = new HashSet<>();
 
         FullyQualifiedJavaType parameterType = new FullyQualifiedJavaType(
-                "org.mybatis.dynamic.sql.select.SelectDSLCompleter"); //$NON-NLS-1$
+                "org.mybatis.dynamic.sql.dsl.SelectDSLCompleter"); //$NON-NLS-1$
 
         imports.add(parameterType);
         imports.add(new FullyQualifiedJavaType("org.mybatis.dynamic.sql.util.mybatis3.MyBatis3Utils")); //$NON-NLS-1$

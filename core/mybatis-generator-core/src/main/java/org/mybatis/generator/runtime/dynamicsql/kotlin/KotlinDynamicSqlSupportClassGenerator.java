@@ -187,6 +187,9 @@ public class KotlinDynamicSqlSupportClassGenerator extends AbstractGenerator {
                     String.format(", javaType = %s::class", kt.getShortNameWithoutTypeArguments())); //$NON-NLS-1$
         }
 
+        initializationString.append(
+                String.format(", javaProperty = \"%s\"", column.getJavaProperty())); //$NON-NLS-1$
+
         initializationString.append(')'); //$NON-NLS-1$
 
         return initializationString.toString();
