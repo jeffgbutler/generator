@@ -383,7 +383,8 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
     <td><i>This property is ignored is the target runtime is "MyBatis3Kotlin"</i><br/>
       This property is used to select whether MBG will generate immutable
       model classes - this means that the classes will not have "setter" methods and
-      the constructor will accept values for each field in the class.
+      the constructor will accept values for each field in the class. For Kotlin, the data class
+      will be generated with "val" properties instead of "var" properties.
       <p>If true, this forces the model classes to be built with paramterized constructors
          regardless of the value of the "constructorBased" property.</p>
       <p><i>The default value is false.</i></p></td>

@@ -51,7 +51,7 @@
       <columnOverride column="stringBoolean" javaType="boolean" typeHandler="mbg.test.mb3.common.StringBooleanTypeHandler"/>
     </table>
     <table tableName="PKBlobs">
-      <property name="constructorBased" value="true"/>
+      <property name="immutable" value="true"/>
     </table>
     <table tableName="PKFieldsBlobs" />
     <table tableName="FieldsBlobs" />
@@ -202,7 +202,7 @@
       <columnOverride column="stringBoolean" javaType="boolean" typeHandler="mbg.test.mb3.common.StringBooleanTypeHandler"/>
     </table>
     <table tableName="PKBlobs">
-      <property name="constructorBased" value="true"/>
+      <property name="immutable" value="true"/>
     </table>
     <table tableName="PKFieldsBlobs" />
     <table tableName="FieldsBlobs" />

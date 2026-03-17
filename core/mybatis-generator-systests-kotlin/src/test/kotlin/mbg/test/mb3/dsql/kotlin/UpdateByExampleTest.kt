@@ -1,5 +1,5 @@
 /*
- *    Copyright 2006-2025 the original author or authors.
+ *    Copyright 2006-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -281,16 +281,10 @@ class UpdateByExampleTest : AbstractTest() {
     fun testPKBlobsUpdateByExampleSelective() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(PkblobsMapper::class.java)
-            var record = Pkblobs()
-            record.id = 3
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            var record = Pkblobs(3, generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
-            record = Pkblobs()
-            record.id = 6
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            record = Pkblobs(6, generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
             val newRecord = Pkblobs(blob1 = generateRandomBlob())
@@ -316,16 +310,10 @@ class UpdateByExampleTest : AbstractTest() {
     fun testPKBlobsUpdateByExample() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(PkblobsMapper::class.java)
-            var record = Pkblobs()
-            record.id = 3
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            var record = Pkblobs(3, generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
-            record = Pkblobs()
-            record.id = 6
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            record = Pkblobs(6, generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
             val newRecord = Pkblobs(id = 8)

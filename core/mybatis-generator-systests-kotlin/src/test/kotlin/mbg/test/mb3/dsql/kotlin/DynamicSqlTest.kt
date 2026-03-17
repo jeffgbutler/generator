@@ -712,10 +712,7 @@ class DynamicSqlTest : AbstractTest() {
     fun testPKBlobsInsert() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(PkblobsMapper::class.java)
-            val record = Pkblobs()
-            record.id = 3
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            val record = Pkblobs(3, generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
             val answer = mapper.select { allRows() }
@@ -806,16 +803,10 @@ class DynamicSqlTest : AbstractTest() {
     fun testPKBlobsSelectByPrimaryKey() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(PkblobsMapper::class.java)
-            val record = Pkblobs()
-            record.id = 3
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            val record = Pkblobs(3, generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
-            val record1 = Pkblobs()
-            record1.id = 6
-            record1.blob1 = generateRandomBlob()
-            record1.blob2 = generateRandomBlob()
+            val record1 = Pkblobs(6, generateRandomBlob(), generateRandomBlob())
             mapper.insert(record1)
 
             val newRecord = mapper.selectByPrimaryKey(6)
@@ -833,16 +824,10 @@ class DynamicSqlTest : AbstractTest() {
     fun testPKBlobsSelectByExampleWithBlobs() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(PkblobsMapper::class.java)
-            var record = Pkblobs()
-            record.id = 3
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            var record = Pkblobs(3, generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
-            record = Pkblobs()
-            record.id = 6
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            record = Pkblobs(6, generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
             val answer = mapper.select { where { pkblobs.id isGreaterThan 4 } }
@@ -863,16 +848,10 @@ class DynamicSqlTest : AbstractTest() {
             val mapper = sqlSession.getMapper(PkblobsMapper::class.java)
             val records = mutableListOf<Pkblobs>()
 
-            var record = Pkblobs()
-            record.id = 3
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            var record = Pkblobs(3, generateRandomBlob(), generateRandomBlob())
             records.add(record)
 
-            record = Pkblobs()
-            record.id = 6
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            record = Pkblobs(6, generateRandomBlob(), generateRandomBlob())
             records.add(record)
 
             val recordsInserted = mapper.insertMultiple(records)
@@ -894,16 +873,10 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(PkblobsMapper::class.java)
-            var record = Pkblobs()
-            record.id = 3
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            var record = Pkblobs(3, generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
-            record = Pkblobs()
-            record.id = 6
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            record = Pkblobs(6, generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
             var rows = mapper.count { where { pkblobs.id isLessThan 4 } }
