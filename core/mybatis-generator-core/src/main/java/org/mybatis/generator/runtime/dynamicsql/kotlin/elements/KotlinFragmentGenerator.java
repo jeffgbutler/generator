@@ -15,7 +15,6 @@
  */
 package org.mybatis.generator.runtime.dynamicsql.kotlin.elements;
 
-import static org.mybatis.generator.api.dom.OutputUtilities.kotlinIndent;
 import static org.mybatis.generator.internal.util.StringUtility.escapeStringForKotlin;
 
 import java.util.HashSet;
@@ -118,60 +117,37 @@ public class KotlinFragmentGenerator {
         return columName + " isEqualTo " + property; //$NON-NLS-1$
     }
 
-    public KotlinFunctionParts getAnnotatedResults() {
+    public KotlinFunctionParts getAnnotatedArgs() {
         KotlinFunctionParts.Builder builder = new KotlinFunctionParts.Builder();
 
         builder.withImport("org.apache.ibatis.type.JdbcType"); //$NON-NLS-1$
-        builder.withImport("org.apache.ibatis.annotations.Result"); //$NON-NLS-1$
+        builder.withImport("org.apache.ibatis.annotations.Arg"); //$NON-NLS-1$
         builder.withImport("org.apache.ibatis.annotations.Results"); //$NON-NLS-1$
 
-        builder.withAnnotation("@Results(id=\"" + resultMapId + "\", value = ["); //$NON-NLS-1$ //$NON-NLS-2$
-
-        StringBuilder sb = new StringBuilder();
+        builder.withAnnotation("@Results(id=\"" + resultMapId + "\")"); //$NON-NLS-1$ //$NON-NLS-2$
 
         Set<String> imports = new HashSet<>();
         Iterator<IntrospectedColumn> iterPk = introspectedTable.getPrimaryKeyColumns().iterator();
         Iterator<IntrospectedColumn> iterNonPk = introspectedTable.getNonPrimaryKeyColumns().iterator();
         while (iterPk.hasNext()) {
             IntrospectedColumn introspectedColumn = iterPk.next();
-            sb.setLength(0);
-            kotlinIndent(sb, 1);
-            sb.append(getResultAnnotation(imports, introspectedColumn, true));
-
-            if (iterPk.hasNext() || iterNonPk.hasNext()) {
-                sb.append(',');
-            }
-
-            builder.withAnnotation(sb.toString());
+            builder.withAnnotation(getArgAnnotation(imports, introspectedColumn, true));
         }
 
         while (iterNonPk.hasNext()) {
             IntrospectedColumn introspectedColumn = iterNonPk.next();
-            sb.setLength(0);
-            kotlinIndent(sb, 1);
-            sb.append(getResultAnnotation(imports, introspectedColumn, false));
-
-            if (iterNonPk.hasNext()) {
-                sb.append(',');
-            }
-
-            builder.withAnnotation(sb.toString());
+            builder.withAnnotation(getArgAnnotation(imports, introspectedColumn, false));
         }
 
-        builder.withAnnotation("])") //$NON-NLS-1$
-                .withImports(imports);
-
-        return builder.build();
+        return builder.withImports(imports).build();
     }
 
-    private String getResultAnnotation(Set<String> imports, IntrospectedColumn introspectedColumn,
-            boolean idColumn) {
+    private String getArgAnnotation(Set<String> imports, IntrospectedColumn introspectedColumn,
+                                    boolean idColumn) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Result(column=\""); //$NON-NLS-1$
+        sb.append("@Arg(column=\""); //$NON-NLS-1$
         sb.append(escapeStringForKotlin(introspectedColumn.getActualColumnName()));
-        sb.append("\", property=\""); //$NON-NLS-1$
-        sb.append(introspectedColumn.getJavaProperty());
-        sb.append('\"');
+        sb.append("\""); //$NON-NLS-1$
 
         introspectedColumn.getTypeHandler().ifPresent(th -> {
             imports.add(th);
@@ -182,12 +158,43 @@ public class KotlinFragmentGenerator {
 
         sb.append(", jdbcType=JdbcType."); //$NON-NLS-1$
         sb.append(introspectedColumn.getJdbcTypeName());
+
+        FullyQualifiedKotlinType kt = JavaToKotlinTypeConverter.convert(introspectedColumn.getFullyQualifiedJavaType());
+        imports.addAll(kt.getImportList());
+        sb.append(", javaType="); //$NON-NLS-1$
+        sb.append(calculateNullableTypeForArgAnnotation(kt));
+        sb.append("::class"); //$NON-NLS-1$
+
         if (idColumn) {
             sb.append(", id=true"); //$NON-NLS-1$
         }
         sb.append(')');
 
         return sb.toString();
+    }
+
+    /**
+     * Calculates the javaType for a constructor arg annotation. Kotlin nullable primitive types
+     * map to the Java wrapper types, but all except <code>Int</code> have the same name as their
+     * Java counterparts. MyBatis will get confused if we use the Kotlin type because, for example
+     * <code>kotlin.Long</code> will map to Java's primitive <code>long</code>. In a constructor
+     * mapping, the types must match exactly. So, for example, a <code>kotlin.Long?</code> needs
+     * to map to a <code>java.lang.Long</code>.
+     *
+     * @param kt the Kotlin type
+     * @return the type string for a constructor arg annotation
+     */
+    private String calculateNullableTypeForArgAnnotation(FullyQualifiedKotlinType kt) {
+        return switch (kt.getShortNameWithoutTypeArguments()) {
+            case "Int" -> "Integer"; //$NON-NLS-1$ //$NON-NLS-2$
+            case "Long" -> "java.lang.Long"; //$NON-NLS-1$ //$NON-NLS-2$
+            case "Short" -> "java.lang.Short"; //$NON-NLS-1$ //$NON-NLS-2$
+            case "Byte" -> "java.lang.Byte"; //$NON-NLS-1$ //$NON-NLS-2$
+            case "Float" -> "java.lang.Float"; //$NON-NLS-1$ //$NON-NLS-2$
+            case "Double" -> "java.lang.Double"; //$NON-NLS-1$ //$NON-NLS-2$
+            case "Boolean" -> "java.lang.Boolean"; //$NON-NLS-1$ //$NON-NLS-2$
+            default -> kt.getShortNameWithoutTypeArguments();
+        };
     }
 
     public KotlinFunctionParts getSetEqualLines(List<IntrospectedColumn> columnList, boolean terminate) {

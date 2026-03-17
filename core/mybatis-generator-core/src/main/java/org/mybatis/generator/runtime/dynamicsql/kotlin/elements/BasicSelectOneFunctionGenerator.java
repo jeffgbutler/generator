@@ -71,7 +71,7 @@ public class BasicSelectOneFunctionGenerator extends AbstractKotlinMapperFunctio
                     + resultMapId
                     + "\")"); //$NON-NLS-1$
         } else {
-            builder.withExtraFunctionParts(fragmentGenerator.getAnnotatedResults());
+            builder.withExtraFunctionParts(fragmentGenerator.getAnnotatedArgs());
         }
 
         return builder.buildOptional();

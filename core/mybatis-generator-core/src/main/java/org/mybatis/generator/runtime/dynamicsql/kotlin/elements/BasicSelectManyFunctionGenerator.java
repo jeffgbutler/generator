@@ -59,7 +59,7 @@ public class BasicSelectManyFunctionGenerator extends AbstractKotlinMapperFuncti
         KotlinFunctionAndImports functionAndImports = KotlinFunctionAndImports.withFunction(function)
                 .withImports(imports)
                 .withImports(recordType.getImportList())
-                .withExtraFunctionParts(fragmentGenerator.getAnnotatedResults())
+                .withExtraFunctionParts(fragmentGenerator.getAnnotatedArgs())
                 .build();
 
         return Optional.of(functionAndImports);
