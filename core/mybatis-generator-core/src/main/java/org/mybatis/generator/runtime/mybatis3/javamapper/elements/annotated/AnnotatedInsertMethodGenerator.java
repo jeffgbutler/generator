@@ -67,7 +67,7 @@ public class AnnotatedInsertMethodGenerator extends InsertMethodGenerator {
 
         List<String> valuesClauses = new ArrayList<>();
         Iterator<IntrospectedColumn> iter =
-                ListUtilities.removeIdentityAndGeneratedAlwaysColumns(introspectedTable.getAllColumns())
+                ListUtilities.filterColumnsForInsert(introspectedTable.getAllColumns())
                 .iterator();
         boolean hasFields = false;
         while (iter.hasNext()) {

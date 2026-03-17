@@ -140,7 +140,7 @@ class UpdateByExampleTest : AbstractTest() {
             key = Pkonly(7, 8)
             mapper.insert(key)
 
-            val updateKey = Pkonly(seqNum = 3)
+            val updateKey = Pkonly(id = -1, seqNum = 3)
 
             val rows = mapper.update {
                 updateSelectiveColumns(updateKey)
@@ -287,7 +287,7 @@ class UpdateByExampleTest : AbstractTest() {
             record = Pkblobs(6, generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
-            val newRecord = Pkblobs(blob1 = generateRandomBlob())
+            val newRecord = Pkblobs(id = -1, blob1 = generateRandomBlob())
 
             val rows = mapper.update {
                 updateSelectiveColumns(newRecord)

@@ -64,7 +64,7 @@ public class ProviderInsertSelectiveMethodGenerator extends AbstractJavaClassMet
                 escapeStringForJava(introspectedTable.getFullyQualifiedTableNameAtRuntime())));
 
         for (IntrospectedColumn introspectedColumn :
-                ListUtilities.removeIdentityAndGeneratedAlwaysColumns(introspectedTable.getAllColumns())) {
+                ListUtilities.filterColumnsForInsert(introspectedTable.getAllColumns())) {
 
             method.addBodyLine(""); //$NON-NLS-1$
             if (!introspectedColumn.getFullyQualifiedJavaType().isPrimitive()

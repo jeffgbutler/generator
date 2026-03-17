@@ -60,7 +60,7 @@ public class UpdateByPrimaryKeySelectiveExtensionFunctionGenerator extends Abstr
         return KotlinFunctionAndImports.withFunction(function)
                 .withImports(imports)
                 .withImports(recordType.getImportList())
-                .withExtraFunctionParts(fragmentGenerator.getSetEqualWhenPresentLines(
+                .withExtraFunctionParts(fragmentGenerator.getSetEqualWhenPresentLinesForUpdateStatement(
                         introspectedTable.getNonPrimaryKeyColumns(), false))
                 .withExtraFunctionParts(fragmentGenerator.getPrimaryKeyWhereClauseAndParameters(true))
                 .buildOptional();

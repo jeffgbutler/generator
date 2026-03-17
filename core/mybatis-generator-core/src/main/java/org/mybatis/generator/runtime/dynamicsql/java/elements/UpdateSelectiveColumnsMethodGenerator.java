@@ -57,7 +57,7 @@ public class UpdateSelectiveColumnsMethodGenerator extends AbstractJavaInterface
         method.addParameter(new Parameter(recordType, "row")); //$NON-NLS-1$
         method.addParameter(new Parameter(parameterAndReturnType, "dsl")); //$NON-NLS-1$
 
-        method.addBodyLines(fragmentGenerator.getSetEqualWhenPresentLines(introspectedTable.getAllColumns(),
+        method.addBodyLines(fragmentGenerator.getSetEqualWhenPresentLinesForUpdateStatement(introspectedTable.getAllColumns(),
                 "return dsl", OutputUtilities.javaIndent(2), true)); //$NON-NLS-1$
 
         JavaMethodAndImports answer = JavaMethodAndImports.withMethod(method)

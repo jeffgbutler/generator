@@ -208,17 +208,19 @@ public class KotlinFragmentGenerator {
         };
     }
 
-    public KotlinFunctionParts getSetEqualLines(List<IntrospectedColumn> columnList, boolean terminate) {
+    public KotlinFunctionParts getSetEqualLinesForUpdateStatement(List<IntrospectedColumn> columnList,
+                                                                  boolean terminate) {
 
         KotlinFunctionParts.Builder builder = new KotlinFunctionParts.Builder();
 
-        List<IntrospectedColumn> columns = ListUtilities.removeIdentityAndGeneratedAlwaysColumns(columnList);
+        List<IntrospectedColumn> columns = ListUtilities.filterColumnsForUpdate(columnList);
         for (IntrospectedColumn column : columns) {
             FieldNameAndImport fieldNameAndImport = calculateFieldNameAndImport(tableFieldName, supportObjectImport,
                     column);
             builder.withImport(fieldNameAndImport.importString());
 
-            builder.withCodeLine(OutputUtilities.kotlinIndent(1) + "set(" + fieldNameAndImport.fieldName() //$NON-NLS-1$
+            builder.withCodeLine(OutputUtilities.kotlinIndent(1) + "set(" //$NON-NLS-1$
+                    + fieldNameAndImport.fieldName()
                     + ") equalToOrNull row::" + column.getJavaProperty()); //$NON-NLS-1$
         }
 
@@ -229,11 +231,12 @@ public class KotlinFragmentGenerator {
         return builder.build();
     }
 
-    public KotlinFunctionParts getSetEqualWhenPresentLines(List<IntrospectedColumn> columnList, boolean terminate) {
+    public KotlinFunctionParts getSetEqualWhenPresentLinesForUpdateStatement(List<IntrospectedColumn> columnList,
+                                                                             boolean terminate) {
 
         KotlinFunctionParts.Builder builder = new KotlinFunctionParts.Builder();
 
-        List<IntrospectedColumn> columns = ListUtilities.removeIdentityAndGeneratedAlwaysColumns(columnList);
+        List<IntrospectedColumn> columns = ListUtilities.filterColumnsForUpdate(columnList);
         for (IntrospectedColumn column : columns) {
             FieldNameAndImport fieldNameAndImport = calculateFieldNameAndImport(tableFieldName, supportObjectImport,
                     column);
@@ -290,7 +293,7 @@ public class KotlinFragmentGenerator {
 
     private KotlinFunctionParts completeInsertBody(KotlinFunctionParts.Builder builder) {
         List<IntrospectedColumn> columns =
-                ListUtilities.removeIdentityAndGeneratedAlwaysColumns(introspectedTable.getAllColumns());
+                ListUtilities.filterColumnsForInsert(introspectedTable.getAllColumns());
         for (IntrospectedColumn column : columns) {
             FieldNameAndImport fieldNameAndImport =
                     calculateFieldNameAndImport(tableFieldName, supportObjectImport, column);

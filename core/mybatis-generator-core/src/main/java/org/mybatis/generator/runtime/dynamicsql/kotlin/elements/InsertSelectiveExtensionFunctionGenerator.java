@@ -76,7 +76,7 @@ public class InsertSelectiveExtensionFunctionGenerator extends AbstractKotlinMap
                 + ") {"); //$NON-NLS-1$
 
         List<IntrospectedColumn> columns =
-                ListUtilities.removeIdentityAndGeneratedAlwaysColumns(introspectedTable.getAllColumns());
+                ListUtilities.filterColumnsForInsert(introspectedTable.getAllColumns());
         for (IntrospectedColumn column : columns) {
             KotlinFragmentGenerator.FieldNameAndImport fieldNameAndImport =
                     fragmentGenerator.calculateFieldNameAndImport(tableFieldName, supportObjectImport, column);

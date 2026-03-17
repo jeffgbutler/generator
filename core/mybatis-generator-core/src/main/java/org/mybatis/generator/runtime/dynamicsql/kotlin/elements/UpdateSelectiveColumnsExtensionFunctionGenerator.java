@@ -55,7 +55,7 @@ public class UpdateSelectiveColumnsExtensionFunctionGenerator extends AbstractKo
         return KotlinFunctionAndImports.withFunction(function)
                 .withImports(imports)
                 .withImports(recordType.getImportList())
-                .withExtraFunctionParts(fragmentGenerator.getSetEqualWhenPresentLines(introspectedTable.getAllColumns(),
+                .withExtraFunctionParts(fragmentGenerator.getSetEqualWhenPresentLinesForUpdateStatement(introspectedTable.getAllColumns(),
                         true))
                 .buildOptional();
     }

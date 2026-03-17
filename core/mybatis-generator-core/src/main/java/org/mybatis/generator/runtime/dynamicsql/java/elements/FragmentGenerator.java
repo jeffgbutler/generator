@@ -238,21 +238,23 @@ public class FragmentGenerator {
         return sb.toString();
     }
 
-    public List<String> getSetEqualLines(List<IntrospectedColumn> columnList, String firstLinePrefix,
-            String subsequentLinePrefix, boolean terminate) {
-        return getSetLines(columnList, firstLinePrefix, subsequentLinePrefix, terminate, "equalTo"); //$NON-NLS-1$
+    public List<String> getSetEqualLinesForUpdateStatement(List<IntrospectedColumn> columnList, String firstLinePrefix,
+                                                           String subsequentLinePrefix, boolean terminate) {
+        return getSetLinesForUpdateStatement(columnList, firstLinePrefix, subsequentLinePrefix, terminate, "equalTo"); //$NON-NLS-1$
     }
 
-    public List<String> getSetEqualWhenPresentLines(List<IntrospectedColumn> columnList, String firstLinePrefix,
-            String subsequentLinePrefix, boolean terminate) {
-        return getSetLines(columnList, firstLinePrefix, subsequentLinePrefix, terminate,
+    public List<String> getSetEqualWhenPresentLinesForUpdateStatement(List<IntrospectedColumn> columnList,
+                                                                      String firstLinePrefix,
+                                                                      String subsequentLinePrefix, boolean terminate) {
+        return getSetLinesForUpdateStatement(columnList, firstLinePrefix, subsequentLinePrefix, terminate,
                 "equalToWhenPresent"); //$NON-NLS-1$
     }
 
-    private List<String> getSetLines(List<IntrospectedColumn> columnList, String firstLinePrefix,
-                                     String subsequentLinePrefix, boolean terminate, String fragment) {
+    private List<String> getSetLinesForUpdateStatement(List<IntrospectedColumn> columnList, String firstLinePrefix,
+                                                       String subsequentLinePrefix, boolean terminate,
+                                                       String fragment) {
         List<String> lines = new ArrayList<>();
-        List<IntrospectedColumn> columns = ListUtilities.removeIdentityAndGeneratedAlwaysColumns(columnList);
+        List<IntrospectedColumn> columns = ListUtilities.filterColumnsForUpdate(columnList);
         Iterator<IntrospectedColumn> iter = columns.iterator();
         boolean first = true;
         while (iter.hasNext()) {
