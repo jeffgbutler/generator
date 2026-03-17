@@ -139,6 +139,13 @@ may impact users. Please read these release notes for details.
     The runtimes that build code for MyBatis Dynamic SQL (MyBatis3DynamicSql and MyBatis3Kotlin) have been updated to
     use version 2.0.0 of that library, and the generated code will require that version or later.
   </li>
+  <li>The Kotlin runtime has the following enhancements:
+    <ul>
+      <li>Generated result maps now use constructor argument mappings rather than results mapping. This is more
+        consistent with how data classes are actually built and lessens the reliance on reflection tricks.
+      </li>
+    </ul>
+  </li>
 </ul>
 
 <h3>Potentially Breaking Changes</h3>
