@@ -128,45 +128,6 @@ class UpdateByExampleTest : AbstractTest() {
     }
 
     @Test
-    fun testPKOnlyUpdateByExampleSelective() {
-        openSession().use { sqlSession ->
-            val mapper = sqlSession.getMapper(PkonlyMapper::class.java)
-            var key = Pkonly(1, 3)
-            mapper.insert(key)
-
-            key = Pkonly(5, 6)
-            mapper.insert(key)
-
-            key = Pkonly(7, 8)
-            mapper.insert(key)
-
-            val updateKey = Pkonly(id = -1, seqNum = 3)
-
-            val rows = mapper.update {
-                updateSelectiveColumns(updateKey)
-                where { pkonly.id isGreaterThan 4 }
-            }
-            assertEquals(2, rows)
-
-            var returnedRows = mapper.count {
-                where {
-                    pkonly.id isEqualTo 5
-                    and { pkonly.seqNum isEqualTo 3 }
-                }
-            }
-            assertEquals(1, returnedRows)
-
-            returnedRows = mapper.count {
-                where {
-                    pkonly.id isEqualTo 7
-                    and { pkonly.seqNum isEqualTo 3 }
-                }
-            }
-            assertEquals(1, returnedRows)
-        }
-    }
-
-    @Test
     fun testPKOnlyUpdateByExample() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(PkonlyMapper::class.java)

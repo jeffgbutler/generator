@@ -79,6 +79,26 @@
     </table>
   </context>
 
+  <context id="kotlin-immutable" targetRuntime="MyBatis3Kotlin">
+    <jdbcConnection driverClass="org.hsqldb.jdbcDriver" connectionURL="jdbc:hsqldb:mem:aname" userId="sa" />
+
+    <javaTypeResolver>
+      <property name="useJSR310Types" value="true"/>
+    </javaTypeResolver>
+
+    <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.model" targetProject="MAVEN">
+      <property name="immutable" value="true"/>
+      <property name="respectNullabilityForKotlin" value="true"/>
+    </javaModelGenerator>
+
+    <javaClientGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.mapper"  targetProject="MAVEN">
+      <property name="enableSubPackages" value="true" />
+    </javaClientGenerator>
+
+    <table tableName="Address" />
+    <table tableName="Person" />
+  </context>
+
   <context id="kotlin-readonly" targetRuntime="MyBatis3Kotlin">
     <plugin type="org.mybatis.generator.plugins.dsql.ReadOnlyPlugin" />
 

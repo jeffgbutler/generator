@@ -16,16 +16,19 @@
 package org.mybatis.generator.runtime.dynamicsql.kotlin.elements;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
 import org.jspecify.annotations.Nullable;
+import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.dom.kotlin.FullyQualifiedKotlinType;
 import org.mybatis.generator.api.dom.kotlin.KotlinArg;
 import org.mybatis.generator.api.dom.kotlin.KotlinFile;
 import org.mybatis.generator.api.dom.kotlin.KotlinFunction;
 import org.mybatis.generator.runtime.KotlinFunctionAndImports;
+import org.mybatis.generator.runtime.mybatis3.ListUtilities;
 
 public class UpdateByPrimaryKeySelectiveExtensionFunctionGenerator extends AbstractKotlinMapperFunctionGenerator {
     private final FullyQualifiedKotlinType recordType;
@@ -45,6 +48,12 @@ public class UpdateByPrimaryKeySelectiveExtensionFunctionGenerator extends Abstr
             return Optional.empty();
         }
 
+        List<IntrospectedColumn> columns = introspectedTable.getNonPrimaryKeyColumns();
+        if (introspectedTable.respectNullabilityForKotlin()
+                && columns.stream().noneMatch(IntrospectedColumn::isNullable)) {
+            return Optional.empty();
+        }
+
         Set<String> imports = new HashSet<>();
 
         KotlinFunction function = KotlinFunction
@@ -60,8 +69,8 @@ public class UpdateByPrimaryKeySelectiveExtensionFunctionGenerator extends Abstr
         return KotlinFunctionAndImports.withFunction(function)
                 .withImports(imports)
                 .withImports(recordType.getImportList())
-                .withExtraFunctionParts(fragmentGenerator.getSetEqualWhenPresentLinesForUpdateStatement(
-                        introspectedTable.getNonPrimaryKeyColumns(), false))
+                .withExtraFunctionParts(fragmentGenerator.getSetEqualWhenPresentLinesForUpdateStatement(columns,
+                        false))
                 .withExtraFunctionParts(fragmentGenerator.getPrimaryKeyWhereClauseAndParameters(true))
                 .buildOptional();
     }

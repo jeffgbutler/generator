@@ -16,16 +16,19 @@
 package org.mybatis.generator.runtime.dynamicsql.kotlin.elements;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
 import org.jspecify.annotations.Nullable;
+import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.dom.kotlin.FullyQualifiedKotlinType;
 import org.mybatis.generator.api.dom.kotlin.KotlinArg;
 import org.mybatis.generator.api.dom.kotlin.KotlinFile;
 import org.mybatis.generator.api.dom.kotlin.KotlinFunction;
 import org.mybatis.generator.runtime.KotlinFunctionAndImports;
+import org.mybatis.generator.runtime.mybatis3.ListUtilities;
 
 public class UpdateSelectiveColumnsExtensionFunctionGenerator extends AbstractKotlinMapperFunctionGenerator {
     private final FullyQualifiedKotlinType recordType;
@@ -39,6 +42,14 @@ public class UpdateSelectiveColumnsExtensionFunctionGenerator extends AbstractKo
 
     @Override
     public Optional<KotlinFunctionAndImports> generateFunctionAndImports() {
+        List<IntrospectedColumn> updateColumns =
+                ListUtilities.filterColumnsForUpdate(introspectedTable.getAllColumns());
+
+        if (introspectedTable.respectNullabilityForKotlin()
+                && updateColumns.stream().noneMatch(IntrospectedColumn::isNullable)) {
+            return Optional.empty();
+        }
+
         Set<String> imports = new HashSet<>();
         imports.add("org.mybatis.dynamic.sql.util.kotlin.KotlinUpdateBuilder"); //$NON-NLS-1$
 
@@ -55,7 +66,7 @@ public class UpdateSelectiveColumnsExtensionFunctionGenerator extends AbstractKo
         return KotlinFunctionAndImports.withFunction(function)
                 .withImports(imports)
                 .withImports(recordType.getImportList())
-                .withExtraFunctionParts(fragmentGenerator.getSetEqualWhenPresentLinesForUpdateStatement(introspectedTable.getAllColumns(),
+                .withExtraFunctionParts(fragmentGenerator.getSetEqualWhenPresentLinesForUpdateStatement(updateColumns,
                         true))
                 .buildOptional();
     }

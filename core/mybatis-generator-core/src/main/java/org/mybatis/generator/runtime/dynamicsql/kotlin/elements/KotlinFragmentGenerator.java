@@ -219,9 +219,16 @@ public class KotlinFragmentGenerator {
                     column);
             builder.withImport(fieldNameAndImport.importString());
 
-            builder.withCodeLine(OutputUtilities.kotlinIndent(1) + "set(" //$NON-NLS-1$
-                    + fieldNameAndImport.fieldName()
-                    + ") equalToOrNull row::" + column.getJavaProperty()); //$NON-NLS-1$
+            if (introspectedTable.respectNullabilityForKotlin() && !column.isNullable()) {
+                builder.withCodeLine(OutputUtilities.kotlinIndent(1) + "set(" //$NON-NLS-1$
+                        + fieldNameAndImport.fieldName()
+                        + ") equalTo row::" + column.getJavaProperty()); //$NON-NLS-1$
+
+            } else {
+                builder.withCodeLine(OutputUtilities.kotlinIndent(1) + "set(" //$NON-NLS-1$
+                        + fieldNameAndImport.fieldName()
+                        + ") equalToOrNull row::" + column.getJavaProperty()); //$NON-NLS-1$
+            }
         }
 
         if (terminate) {
@@ -233,18 +240,19 @@ public class KotlinFragmentGenerator {
 
     public KotlinFunctionParts getSetEqualWhenPresentLinesForUpdateStatement(List<IntrospectedColumn> columnList,
                                                                              boolean terminate) {
-
         KotlinFunctionParts.Builder builder = new KotlinFunctionParts.Builder();
 
-        List<IntrospectedColumn> columns = ListUtilities.filterColumnsForUpdate(columnList);
-        for (IntrospectedColumn column : columns) {
+        ListUtilities.filterColumnsForUpdate(columnList).stream()
+                .filter(ic -> !introspectedTable.respectNullabilityForKotlin() || ic.isNullable())
+                .forEach(column -> {
             FieldNameAndImport fieldNameAndImport = calculateFieldNameAndImport(tableFieldName, supportObjectImport,
                     column);
             builder.withImport(fieldNameAndImport.importString());
 
-            builder.withCodeLine(OutputUtilities.kotlinIndent(1) + "set(" + fieldNameAndImport.fieldName() //$NON-NLS-1$
+            builder.withCodeLine(OutputUtilities.kotlinIndent(1) + "set(" //$NON-NLS-1$
+                    + fieldNameAndImport.fieldName()
                     + ") equalToWhenPresent row::" + column.getJavaProperty()); //$NON-NLS-1$
-        }
+        });
 
         if (terminate) {
             builder.withCodeLine("}"); //$NON-NLS-1$
