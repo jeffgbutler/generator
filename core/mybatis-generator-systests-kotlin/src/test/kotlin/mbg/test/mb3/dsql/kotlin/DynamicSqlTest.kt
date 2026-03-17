@@ -719,7 +719,7 @@ class DynamicSqlTest : AbstractTest() {
             assertThat(answer).hasSize(1)
 
             with(answer[0]) {
-                assertThat(id).isEqualTo(record.id!!)
+                assertThat(id).isEqualTo(record.id)
                 assertThat(blobsAreEqual(blob1, record.blob1)).isTrue
                 assertThat(blobsAreEqual(blob2, record.blob2)).isTrue
             }
@@ -813,7 +813,7 @@ class DynamicSqlTest : AbstractTest() {
 
             assertThat(newRecord).isNotNull
             if (newRecord != null) {
-                assertThat(newRecord.id).isEqualTo(record1.id!!)
+                assertThat(newRecord.id).isEqualTo(record1.id)
                 assertThat(blobsAreEqual(newRecord.blob1, record1.blob1)).isTrue
                 assertThat(blobsAreEqual(newRecord.blob2, record1.blob2)).isTrue
             }
@@ -835,7 +835,7 @@ class DynamicSqlTest : AbstractTest() {
             assertEquals(1, answer.size)
 
             val newRecord = answer[0]
-            assertEquals(record.id!!, newRecord.id)
+            assertEquals(record.id, newRecord.id)
             assertTrue(blobsAreEqual(record.blob1, newRecord.blob1))
             assertTrue(blobsAreEqual(record.blob2, newRecord.blob2))
         }
@@ -862,7 +862,7 @@ class DynamicSqlTest : AbstractTest() {
             assertEquals(1, answer.size)
 
             val newRecord = answer[0]
-            assertEquals(record.id!!, newRecord.id)
+            assertEquals(record.id, newRecord.id)
             assertTrue(blobsAreEqual(record.blob1, newRecord.blob1))
             assertTrue(blobsAreEqual(record.blob2, newRecord.blob2))
         }

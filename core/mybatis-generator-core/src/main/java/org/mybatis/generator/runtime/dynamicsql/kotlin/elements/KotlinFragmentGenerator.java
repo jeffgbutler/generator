@@ -61,7 +61,11 @@ public class KotlinFragmentGenerator {
         for (IntrospectedColumn column : introspectedTable.getPrimaryKeyColumns()) {
             String argName;
             if (forUpdate) {
-                argName = "row." + column.getJavaProperty() + "!!"; //$NON-NLS-1$ //$NON-NLS-2$
+                if (introspectedTable.respectNullabilityForKotlin() && !column.isNullable()) {
+                    argName = "row." + column.getJavaProperty(); //$NON-NLS-1$
+                } else {
+                    argName = "row." + column.getJavaProperty() + "!!"; //$NON-NLS-1$ //$NON-NLS-2$
+                }
             } else {
                 String propertyName = column.getJavaProperty();
                 if (!useSnakeCase) {
@@ -161,9 +165,16 @@ public class KotlinFragmentGenerator {
 
         FullyQualifiedKotlinType kt = JavaToKotlinTypeConverter.convert(introspectedColumn.getFullyQualifiedJavaType());
         imports.addAll(kt.getImportList());
-        sb.append(", javaType="); //$NON-NLS-1$
-        sb.append(calculateNullableTypeForArgAnnotation(kt));
-        sb.append("::class"); //$NON-NLS-1$
+
+        if (introspectedTable.respectNullabilityForKotlin() && !introspectedColumn.isNullable()) {
+            sb.append(", javaType="); //$NON-NLS-1$
+            sb.append(kt.getShortNameWithoutTypeArguments());
+            sb.append("::class"); //$NON-NLS-1$
+        } else {
+            sb.append(", javaType="); //$NON-NLS-1$
+            sb.append(calculateNullableTypeForArgAnnotation(kt));
+            sb.append("::class"); //$NON-NLS-1$
+        }
 
         if (idColumn) {
             sb.append(", id=true"); //$NON-NLS-1$

@@ -43,6 +43,7 @@
     <table tableName="FieldsOnly" />
     <table tableName="PKOnly">
       <property name="immutable" value="true"/>
+      <property name="respectNullabilityForKotlin" value="true"/>
     </table>
     <table tableName="PKFields" alias="B" >
       <property name="selectAllOrderByClause" value="ID1, ID2"/>
@@ -52,6 +53,7 @@
     </table>
     <table tableName="PKBlobs">
       <property name="immutable" value="true"/>
+      <property name="respectNullabilityForKotlin" value="true"/>
     </table>
     <table tableName="PKFieldsBlobs" />
     <table tableName="FieldsBlobs" />
@@ -195,6 +197,7 @@
     <table tableName="FieldsOnly" />
     <table tableName="PKOnly">
       <property name="immutable" value="true"/>
+      <property name="respectNullabilityForKotlin" value="true"/>
     </table>
     <table tableName="PKFields" alias="B" >
       <property name="selectAllOrderByClause" value="ID1, ID2"/>
@@ -203,6 +206,7 @@
     </table>
     <table tableName="PKBlobs">
       <property name="immutable" value="true"/>
+      <property name="respectNullabilityForKotlin" value="true"/>
     </table>
     <table tableName="PKFieldsBlobs" />
     <table tableName="FieldsBlobs" />
