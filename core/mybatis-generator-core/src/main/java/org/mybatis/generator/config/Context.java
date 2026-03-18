@@ -158,7 +158,7 @@ public class Context extends PropertyHolder {
             for (int i = 0; i < tableConfigurations.size(); i++) {
                 TableConfiguration tc = tableConfigurations.get(i);
 
-                tc.validate(errors, i, this);
+                tc.validate(errors, i, this, knownRuntime);
             }
         }
 

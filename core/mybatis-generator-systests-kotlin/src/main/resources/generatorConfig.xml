@@ -77,24 +77,61 @@
     <table schema="mbgtest" tableName="Ids" domainObjectName="Id">
       <property name="useSnakeCaseIdentifiers" value="true"/>
     </table>
+    <table tableName="Address" />
+    <table tableName="Person" />
   </context>
 
-  <context id="kotlin-immutable" targetRuntime="MyBatis3Kotlin">
+  <context id="idiomatic-kotlin" targetRuntime="MyBatis3Kotlin">
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver" connectionURL="jdbc:hsqldb:mem:aname" userId="sa" />
 
     <javaTypeResolver>
       <property name="useJSR310Types" value="true"/>
     </javaTypeResolver>
 
-    <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.model" targetProject="MAVEN">
+    <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.idiomatic.model" targetProject="MAVEN">
       <property name="immutable" value="true"/>
       <property name="respectNullabilityForKotlin" value="true"/>
     </javaModelGenerator>
 
-    <javaClientGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.mapper"  targetProject="MAVEN">
+    <javaClientGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper"  targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />
     </javaClientGenerator>
 
+    <table tableName="FieldsOnly" />
+    <table tableName="PKOnly" />
+    <table tableName="PKFields" alias="B" >
+      <property name="selectAllOrderByClause" value="ID1, ID2"/>
+      <property name="dynamicSqlTableObjectName" value="Pkfieldstable"/>
+      <columnOverride column="wierd$Field" delimitedColumnName="true"/>
+      <columnOverride column="stringBoolean" javaType="boolean" typeHandler="mbg.test.mb3.common.StringBooleanTypeHandler"/>
+    </table>
+    <table tableName="PKBlobs" />
+    <table tableName="PKFieldsBlobs" />
+    <table tableName="FieldsBlobs" />
+    <table tableName="awful table" alias="A">
+      <generatedKey column="CuStOmEr iD" sqlStatement="JDBC" />
+      <columnOverride column="first name" property="firstFirstName" />
+      <columnOverride column="first_name" property="secondFirstName" />
+      <columnOverride column="firstName" property="thirdFirstName" />
+      <columnOverride column="from" delimitedColumnName="true" >
+        <property name="fredswife" value="wilma"/>
+      </columnOverride>
+      <columnOverride column="active" javaType="boolean" />
+      <columnOverride column="_id1" delimitedColumnName="true" />
+      <columnOverride column="$id2" delimitedColumnName="true" />
+      <columnOverride column="id5_" delimitedColumnName="true" />
+      <columnOverride column="id6$" delimitedColumnName="true" />
+      <columnOverride column="id7$$" delimitedColumnName="true" />
+      <columnOverride column="class" property="dbClass" />
+    </table>
+    <table schema="mbgtest" tableName="Translations" domainObjectName="Translation"/>
+    <table schema="mbgtest" tableName="Ids" domainObjectName="Id">
+      <property name="useSnakeCaseIdentifiers" value="true"/>
+    </table>
+    <table tableName="GeneratedAlwaysTest" >
+      <columnOverride column="ID_PLUS1" isGeneratedAlways="true" />
+      <columnOverride column="ID_PLUS2" isGeneratedAlways="true" />
+    </table>
     <table tableName="Address" />
     <table tableName="Person" />
   </context>

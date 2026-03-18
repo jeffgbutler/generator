@@ -61,10 +61,10 @@ public class KotlinFragmentGenerator {
         for (IntrospectedColumn column : introspectedTable.getPrimaryKeyColumns()) {
             String argName;
             if (forUpdate) {
-                if (introspectedTable.respectNullabilityForKotlin() && !column.isNullable()) {
-                    argName = "row." + column.getJavaProperty(); //$NON-NLS-1$
-                } else {
+                if (!introspectedTable.respectNullabilityForKotlin() || column.isNullable() || column.isIdentity()) {
                     argName = "row." + column.getJavaProperty() + "!!"; //$NON-NLS-1$ //$NON-NLS-2$
+                } else {
+                    argName = "row." + column.getJavaProperty(); //$NON-NLS-1$
                 }
             } else {
                 String propertyName = column.getJavaProperty();
@@ -219,7 +219,13 @@ public class KotlinFragmentGenerator {
                     column);
             builder.withImport(fieldNameAndImport.importString());
 
-            if (introspectedTable.respectNullabilityForKotlin() && !column.isNullable()) {
+            if (column.isIdentity()) {
+                // identity columns are always generated as nullable
+                builder.withCodeLine(OutputUtilities.kotlinIndent(1) + "set(" //$NON-NLS-1$
+                        + fieldNameAndImport.fieldName()
+                        + ") equalTo row." + column.getJavaProperty() + "!!"); //$NON-NLS-1$ //$NON-NLS-2$
+
+            } else if (introspectedTable.respectNullabilityForKotlin() && !column.isNullable()) {
                 builder.withCodeLine(OutputUtilities.kotlinIndent(1) + "set(" //$NON-NLS-1$
                         + fieldNameAndImport.fieldName()
                         + ") equalTo row::" + column.getJavaProperty()); //$NON-NLS-1$
