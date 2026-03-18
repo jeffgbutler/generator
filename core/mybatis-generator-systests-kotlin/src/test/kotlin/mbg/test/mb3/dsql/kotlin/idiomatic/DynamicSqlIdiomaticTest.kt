@@ -31,8 +31,6 @@ import mbg.test.mb3.generated.dsql.kotlin.idiomatic.model.Id
 import mbg.test.mb3.generated.dsql.kotlin.idiomatic.model.Translation
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.within
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -327,7 +325,7 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             mapper.insert(Pkonly(7, 8))
 
             val answer = mapper.select { allRows() }
-            assertEquals(3, answer.size)
+            assertThat(answer.size).isEqualTo(3)
         }
     }
 
@@ -384,10 +382,10 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
 
             assertThat(record2).isNotNull
             if (record2 != null) {
-                assertEquals(updateRecord.firstname, record2.firstname)
-                assertEquals(updateRecord.lastname, record2.lastname)
-                assertEquals(updateRecord.id1, record2.id1)
-                assertEquals(updateRecord.id2, record2.id2)
+                assertThat(record2.firstname).isEqualTo(updateRecord.firstname)
+                assertThat(record2.lastname).isEqualTo(updateRecord.lastname)
+                assertThat(record2.id1).isEqualTo(updateRecord.id1)
+                assertThat(record2.id2).isEqualTo(updateRecord.id2)
             }
         }
     }
@@ -413,17 +411,17 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
 
             assertThat(returnedRecord).isNotNull
             if(returnedRecord != null) {
-                assertEquals(record.datefield, returnedRecord.datefield)
-                assertEquals(record.decimal100field, returnedRecord.decimal100field)
-                assertEquals(record.decimal155field, returnedRecord.decimal155field)
-                assertEquals(record.decimal30field, returnedRecord.decimal30field)
-                assertEquals(4, returnedRecord.decimal60field)
-                assertEquals("Scott", returnedRecord.firstname)
-                assertEquals(record.id1, returnedRecord.id1)
-                assertEquals(record.id2, returnedRecord.id2)
-                assertEquals(record.lastname, returnedRecord.lastname)
-                assertEquals(record.timefield, returnedRecord.timefield)
-                assertEquals(record.timestampfield, returnedRecord.timestampfield)
+                assertThat(returnedRecord.datefield).isEqualTo(record.datefield)
+                assertThat(returnedRecord.decimal100field).isEqualTo(record.decimal100field)
+                assertThat(returnedRecord.decimal155field).isEqualTo(record.decimal155field)
+                assertThat(returnedRecord.decimal30field).isEqualTo(record.decimal30field)
+                assertThat(returnedRecord.decimal60field).isEqualTo(4)
+                assertThat(returnedRecord.firstname).isEqualTo("Scott")
+                assertThat(returnedRecord.id1).isEqualTo(record.id1)
+                assertThat(returnedRecord.id2).isEqualTo(record.id2)
+                assertThat(returnedRecord.lastname).isEqualTo(record.lastname)
+                assertThat(returnedRecord.timefield).isEqualTo(record.timefield)
+                assertThat(returnedRecord.timestampfield).isEqualTo(record.timestampfield)
             }
         }
     }
@@ -476,10 +474,10 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
 
             assertThat(newRecord).isNotNull
             if (newRecord != null) {
-                assertEquals(record1.firstname, newRecord.firstname)
-                assertEquals(record1.lastname, newRecord.lastname)
-                assertEquals(record1.id1, newRecord.id1)
-                assertEquals(record1.id2, newRecord.id2)
+                assertThat(newRecord.firstname).isEqualTo(record1.firstname)
+                assertThat(newRecord.lastname).isEqualTo(record1.lastname)
+                assertThat(newRecord.id1).isEqualTo(record1.id1)
+                assertThat(newRecord.id2).isEqualTo(record1.id2)
             }
         }
     }
@@ -808,8 +806,8 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             assertThat(newRecord).isNotNull
             if (newRecord != null) {
                 assertThat(newRecord.id).isEqualTo(record1.id)
-                assertThat(blobsAreEqual(newRecord.blob1, record1.blob1)).isTrue
-                assertThat(blobsAreEqual(newRecord.blob2, record1.blob2)).isTrue
+                assertThat(blobsAreEqual(newRecord.blob1, record1.blob1)).isTrue()
+                assertThat(blobsAreEqual(newRecord.blob2, record1.blob2)).isTrue()
             }
         }
     }
@@ -826,12 +824,12 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
 
             val answer = mapper.select { where { pkblobs.id isGreaterThan 4 } }
 
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
 
             val newRecord = answer[0]
-            assertEquals(record.id, newRecord.id)
-            assertTrue(blobsAreEqual(record.blob1, newRecord.blob1))
-            assertTrue(blobsAreEqual(record.blob2, newRecord.blob2))
+            assertThat(newRecord.id).isEqualTo(record.id)
+            assertThat(blobsAreEqual(record.blob1, newRecord.blob1)).isTrue()
+            assertThat(blobsAreEqual(record.blob2, newRecord.blob2)).isTrue()
         }
     }
 
@@ -849,16 +847,16 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             records.add(record)
 
             val recordsInserted = mapper.insertMultiple(records)
-            assertEquals(2, recordsInserted)
+            assertThat(recordsInserted).isEqualTo(2)
 
             val answer = mapper.select { where { pkblobs.id isGreaterThan 4 } }
 
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
 
             val newRecord = answer[0]
-            assertEquals(record.id, newRecord.id)
-            assertTrue(blobsAreEqual(record.blob1, newRecord.blob1))
-            assertTrue(blobsAreEqual(record.blob2, newRecord.blob2))
+            assertThat(newRecord.id).isEqualTo(record.id)
+            assertThat(blobsAreEqual(record.blob1, newRecord.blob1)).isTrue()
+            assertThat(blobsAreEqual(record.blob2, newRecord.blob2)).isTrue()
         }
     }
 
@@ -874,10 +872,10 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             mapper.insert(record)
 
             var rows = mapper.count { where { pkblobs.id isLessThan 4 } }
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             rows = mapper.count { allRows() }
-            assertEquals(2, rows)
+            assertThat(rows).isEqualTo(2)
         }
     }
 
@@ -890,14 +888,14 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             mapper.insert(record)
 
             val answer = mapper.select { allRows() }
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
 
             val returnedRecord = answer[0]
-            assertEquals(record.id1, returnedRecord.id1)
-            assertEquals(record.id2, returnedRecord.id2)
-            assertEquals(record.firstname, returnedRecord.firstname)
-            assertEquals(record.lastname, returnedRecord.lastname)
-            assertTrue(blobsAreEqual(record.blob1, returnedRecord.blob1))
+            assertThat(returnedRecord.id1).isEqualTo(record.id1)
+            assertThat(returnedRecord.id2).isEqualTo(record.id2)
+            assertThat(returnedRecord.firstname).isEqualTo(record.firstname)
+            assertThat(returnedRecord.lastname).isEqualTo(record.lastname)
+            assertThat(blobsAreEqual(record.blob1, returnedRecord.blob1)).isTrue()
         }
     }
 
@@ -912,17 +910,17 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             val updateRecord = Pkfieldsblobs(3, 4, "Scott", "Jones", generateRandomBlob())
 
             val rows = mapper.updateByPrimaryKey(updateRecord)
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             val newRecord = mapper.selectByPrimaryKey(3, 4)
 
             assertThat(newRecord).isNotNull
             if (newRecord != null) {
-                assertEquals(updateRecord.firstname, newRecord.firstname)
-                assertEquals(updateRecord.lastname, newRecord.lastname)
-                assertEquals(record.id1, newRecord.id1)
-                assertEquals(record.id2, newRecord.id2)
-                assertTrue(blobsAreEqual(updateRecord.blob1, newRecord.blob1))
+                assertThat(newRecord.firstname).isEqualTo(updateRecord.firstname)
+                assertThat(newRecord.lastname).isEqualTo(updateRecord.lastname)
+                assertThat(newRecord.id1).isEqualTo(record.id1)
+                assertThat(newRecord.id2).isEqualTo(record.id2)
+                assertThat(blobsAreEqual(updateRecord.blob1, newRecord.blob1)).isTrue()
             }
         }
     }
@@ -942,16 +940,16 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
                     and { pkfieldsblobs.id2 isEqualTo 4 }
                 }
             }
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             val returnedRecord = mapper.selectByPrimaryKey(3, 4)
 
             assertThat(returnedRecord).isNotNull
-            assertEquals(record.firstname, returnedRecord!!.firstname)
-            assertEquals("Jones", returnedRecord.lastname)
-            assertEquals(record.id1, returnedRecord.id1)
-            assertEquals(record.id2, returnedRecord.id2)
-            assertTrue(blobsAreEqual(record.blob1, returnedRecord.blob1))
+            assertThat(returnedRecord!!.firstname).isEqualTo(record.firstname)
+            assertThat(returnedRecord.lastname).isEqualTo("Jones")
+            assertThat(returnedRecord.id1).isEqualTo(record.id1)
+            assertThat(returnedRecord.id2).isEqualTo(record.id2)
+            assertThat(blobsAreEqual(record.blob1, returnedRecord.blob1)).isTrue()
         }
     }
 
@@ -967,13 +965,13 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             mapper.insert(record)
 
             var answer = mapper.select { allRows() }
-            assertEquals(2, answer.size)
+            assertThat(answer.size).isEqualTo(2)
 
             val rows = mapper.deleteByPrimaryKey(5, 6)
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             answer = mapper.select { allRows() }
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
         }
     }
 
@@ -989,13 +987,13 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             mapper.insert(record)
 
             var answer = mapper.select { allRows() }
-            assertEquals(2, answer.size)
+            assertThat(answer.size).isEqualTo(2)
 
             val rows = mapper.delete { where { pkfieldsblobs.id1 isNotEqualTo 3 } }
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             answer = mapper.select { allRows() }
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
         }
     }
 
@@ -1011,17 +1009,17 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             mapper.insert(record1)
 
             val answer = mapper.select { allRows() }
-            assertEquals(2, answer.size)
+            assertThat(answer.size).isEqualTo(2)
 
             val newRecord = mapper.selectByPrimaryKey(5, 6)
 
             assertThat(newRecord).isNotNull
             if (newRecord != null) {
-                assertEquals(record1.id1, newRecord.id1)
-                assertEquals(record1.id2, newRecord.id2)
-                assertEquals(record1.firstname, newRecord.firstname)
-                assertEquals(record1.lastname, newRecord.lastname)
-                assertTrue(blobsAreEqual(record1.blob1, newRecord.blob1))
+                assertThat(newRecord.id1).isEqualTo(record1.id1)
+                assertThat(newRecord.id2).isEqualTo(record1.id2)
+                assertThat(newRecord.firstname).isEqualTo(record1.firstname)
+                assertThat(newRecord.lastname).isEqualTo(record1.lastname)
+                assertThat(blobsAreEqual(record1.blob1, newRecord.blob1)).isTrue()
             }
         }
     }
@@ -1038,14 +1036,14 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             mapper.insert(record)
 
             val answer = mapper.select { where { pkfieldsblobs.id2 isEqualTo 6 } }
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
 
             val newRecord = answer[0]
-            assertEquals(record.id1, newRecord.id1)
-            assertEquals(record.id2, newRecord.id2)
-            assertEquals(record.firstname, newRecord.firstname)
-            assertEquals(record.lastname, newRecord.lastname)
-            assertTrue(blobsAreEqual(record.blob1, newRecord.blob1))
+            assertThat(newRecord.id1).isEqualTo(record.id1)
+            assertThat(newRecord.id2).isEqualTo(record.id2)
+            assertThat(newRecord.firstname).isEqualTo(record.firstname)
+            assertThat(newRecord.lastname).isEqualTo(record.lastname)
+            assertThat(blobsAreEqual(record.blob1, newRecord.blob1)).isTrue()
         }
     }
 
@@ -1063,17 +1061,17 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             records.add(record)
 
             val rowsInserted = mapper.insertMultiple(records)
-            assertEquals(2, rowsInserted)
+            assertThat(rowsInserted).isEqualTo(2)
 
             val answer = mapper.select { where { pkfieldsblobs.id2 isEqualTo 6 } }
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
 
             val newRecord = answer[0]
-            assertEquals(record.id1, newRecord.id1)
-            assertEquals(record.id2, newRecord.id2)
-            assertEquals(record.firstname, newRecord.firstname)
-            assertEquals(record.lastname, newRecord.lastname)
-            assertTrue(blobsAreEqual(record.blob1, newRecord.blob1))
+            assertThat(newRecord.id1).isEqualTo(record.id1)
+            assertThat(newRecord.id2).isEqualTo(record.id2)
+            assertThat(newRecord.firstname).isEqualTo(record.firstname)
+            assertThat(newRecord.lastname).isEqualTo(record.lastname)
+            assertThat(blobsAreEqual(record.blob1, newRecord.blob1)).isTrue()
         }
     }
 
@@ -1089,7 +1087,7 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             mapper.insert(record)
 
             val answer = mapper.select { allRows() }
-            assertEquals(2, answer.size)
+            assertThat(answer.size).isEqualTo(2)
         }
     }
 
@@ -1102,13 +1100,13 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             mapper.insert(record)
 
             val answer = mapper.select { allRows() }
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
 
             val returnedRecord = answer[0]
-            assertEquals(record.firstname, returnedRecord.firstname)
-            assertEquals(record.lastname, returnedRecord.lastname)
-            assertTrue(blobsAreEqual(record.blob1, returnedRecord.blob1))
-            assertTrue(blobsAreEqual(record.blob2, returnedRecord.blob2))
+            assertThat(returnedRecord.firstname).isEqualTo(record.firstname)
+            assertThat(returnedRecord.lastname).isEqualTo(record.lastname)
+            assertThat(blobsAreEqual(record.blob1, returnedRecord.blob1)).isTrue()
+            assertThat(blobsAreEqual(record.blob2, returnedRecord.blob2)).isTrue()
         }
     }
 
@@ -1124,13 +1122,13 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             mapper.insert(record)
 
             var answer = mapper.select { allRows() }
-            assertEquals(2, answer.size)
+            assertThat(answer.size).isEqualTo(2)
 
             val rows = mapper.delete { where { fieldsblobs.firstname isLike "S%" } }
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             answer = mapper.select { allRows() }
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
         }
     }
 
@@ -1146,13 +1144,13 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             mapper.insert(record)
 
             val answer = mapper.select { where { fieldsblobs.firstname isLike "S%" } }
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
 
             val newRecord = answer[0]
-            assertEquals(record.firstname, newRecord.firstname)
-            assertEquals(record.lastname, newRecord.lastname)
-            assertTrue(blobsAreEqual(record.blob1, newRecord.blob1))
-            assertTrue(blobsAreEqual(record.blob2, newRecord.blob2))
+            assertThat(newRecord.firstname).isEqualTo(record.firstname)
+            assertThat(newRecord.lastname).isEqualTo(record.lastname)
+            assertThat(blobsAreEqual(record.blob1, newRecord.blob1)).isTrue()
+            assertThat(blobsAreEqual(record.blob2, newRecord.blob2)).isTrue()
         }
     }
 
@@ -1170,16 +1168,16 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             records.add(record)
 
             val rowsInserted = mapper.insertMultiple(records)
-            assertEquals(2, rowsInserted)
+            assertThat(rowsInserted).isEqualTo(2)
 
             val answer = mapper.select { where { fieldsblobs.firstname isLike "S%" } }
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
 
             val newRecord = answer[0]
-            assertEquals(record.firstname, newRecord.firstname)
-            assertEquals(record.lastname, newRecord.lastname)
-            assertTrue(blobsAreEqual(record.blob1, newRecord.blob1))
-            assertTrue(blobsAreEqual(record.blob2, newRecord.blob2))
+            assertThat(newRecord.firstname).isEqualTo(record.firstname)
+            assertThat(newRecord.lastname).isEqualTo(record.lastname)
+            assertThat(blobsAreEqual(record.blob1, newRecord.blob1)).isTrue()
+            assertThat(blobsAreEqual(record.blob2, newRecord.blob2)).isTrue()
         }
     }
 
@@ -1195,7 +1193,7 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             mapper.insert(record)
 
             val answer = mapper.select { allRows() }
-            assertEquals(2, answer.size)
+            assertThat(answer.size).isEqualTo(2)
         }
     }
 
@@ -1211,10 +1209,10 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             mapper.insert(record)
 
             var rows = mapper.count { where { pkfieldsblobs.id1 isNotEqualTo 3 } }
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             rows = mapper.count { allRows() }
-            assertEquals(2, rows)
+            assertThat(rows).isEqualTo(2)
         }
     }
 
@@ -1230,30 +1228,27 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
 
             mapper.insert(record)
             val generatedCustomerId = record.customerId
-            assertEquals(57, generatedCustomerId!!)
+            assertThat(generatedCustomerId!!).isEqualTo(57)
 
             val returnedRecord = mapper.selectByPrimaryKey(generatedCustomerId)
 
             assertThat(returnedRecord).isNotNull
             if (returnedRecord != null) {
-                assertEquals(generatedCustomerId, returnedRecord.customerId)
-                assertEquals(record.eMail, returnedRecord.eMail)
-                assertEquals(record.emailaddress, returnedRecord.emailaddress)
-                assertEquals(record.firstFirstName, returnedRecord.firstFirstName)
-                assertEquals(record.from, returnedRecord.from)
-                assertEquals(record.id1!!, returnedRecord.id1)
-                assertEquals(record.id2!!, returnedRecord.id2)
-                assertEquals(record.id5!!, returnedRecord.id5)
-                assertEquals(record.id6!!, returnedRecord.id6)
-                assertEquals(record.id7!!, returnedRecord.id7)
-                assertEquals(record.secondFirstName, returnedRecord.secondFirstName)
-                assertEquals(record.thirdFirstName, returnedRecord.thirdFirstName)
+                assertThat(returnedRecord.customerId).isEqualTo(generatedCustomerId)
+                assertThat(returnedRecord.eMail).isEqualTo(record.eMail)
+                assertThat(returnedRecord.emailaddress).isEqualTo(record.emailaddress)
+                assertThat(returnedRecord.firstFirstName).isEqualTo(record.firstFirstName)
+                assertThat(returnedRecord.from).isEqualTo(record.from)
+                assertThat(returnedRecord.id1).isEqualTo(record.id1!!)
+                assertThat(returnedRecord.id2).isEqualTo(record.id2!!)
+                assertThat(returnedRecord.id5).isEqualTo(record.id5!!)
+                assertThat(returnedRecord.id6).isEqualTo(record.id6!!)
+                assertThat(returnedRecord.id7).isEqualTo(record.id7!!)
+                assertThat(returnedRecord.secondFirstName).isEqualTo(record.secondFirstName)
+                assertThat(returnedRecord.thirdFirstName).isEqualTo(record.thirdFirstName)
                 assertThat(returnedRecord.active).isTrue
                 assertThat(returnedRecord.active1).isFalse
-                assertEquals(3, returnedRecord.active2!!.size)
-                assertEquals(-128, returnedRecord.active2!![0])
-                assertEquals(127, returnedRecord.active2!![1])
-                assertEquals(0, returnedRecord.active2!![2])
+                assertThat(record.active2).isNotNull.containsExactly(-128, 127)
             }
         }
     }
@@ -1268,7 +1263,7 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
 
             mapper.insertSelective(record)
             val generatedCustomerId = record.customerId
-            assertEquals(57, generatedCustomerId!!)
+            assertThat(generatedCustomerId!!).isEqualTo(57)
 
             val returnedRecord = mapper.selectByPrimaryKey(generatedCustomerId)
 
@@ -1305,7 +1300,7 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             val record2 = record.copy(id1 = 11, id2 = 22)
 
             val rows = mapper.updateByPrimaryKey(record2)
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             val returnedRecord = mapper.selectByPrimaryKey(generatedCustomerId)
 
@@ -1332,23 +1327,23 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
                     awfulTable.customerId isEqualTo generatedCustomerId
                 }
             }
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             val returnedRecord = mapper.selectByPrimaryKey(generatedCustomerId)
 
             assertThat(returnedRecord).isNotNull
             if (returnedRecord != null) {
-                assertEquals(generatedCustomerId, returnedRecord.customerId)
-                assertEquals(record.eMail, returnedRecord.eMail)
-                assertEquals(record.emailaddress, returnedRecord.emailaddress)
-                assertEquals(record.firstFirstName, returnedRecord.firstFirstName)
-                assertEquals(11, returnedRecord.id1)
-                assertEquals(22, returnedRecord.id2)
-                assertEquals(record.id5!!, returnedRecord.id5)
-                assertEquals(record.id6!!, returnedRecord.id6)
-                assertEquals(record.id7!!, returnedRecord.id7)
-                assertEquals(record.secondFirstName, returnedRecord.secondFirstName)
-                assertEquals(record.thirdFirstName, returnedRecord.thirdFirstName)
+                assertThat(returnedRecord.customerId).isEqualTo(generatedCustomerId)
+                assertThat(returnedRecord.eMail).isEqualTo(record.eMail)
+                assertThat(returnedRecord.emailaddress).isEqualTo(record.emailaddress)
+                assertThat(returnedRecord.firstFirstName).isEqualTo(record.firstFirstName)
+                assertThat(returnedRecord.id1).isEqualTo(11)
+                assertThat(returnedRecord.id2).isEqualTo(22)
+                assertThat(returnedRecord.id5).isEqualTo(record.id5!!)
+                assertThat(returnedRecord.id6).isEqualTo(record.id6!!)
+                assertThat(returnedRecord.id7).isEqualTo(record.id7!!)
+                assertThat(returnedRecord.secondFirstName).isEqualTo(record.secondFirstName)
+                assertThat(returnedRecord.thirdFirstName).isEqualTo(record.thirdFirstName)
             }
         }
     }
@@ -1366,10 +1361,10 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             val generatedCustomerId = record.customerId
 
             val rows = mapper.deleteByPrimaryKey(generatedCustomerId!!)
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             val answer = mapper.select { allRows() }
-            assertEquals(0, answer.size)
+            assertThat(answer.size).isEqualTo(0)
         }
     }
 
@@ -1389,13 +1384,13 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             mapper.insert(record)
 
             var answer = mapper.select { allRows() }
-            assertEquals(2, answer.size)
+            assertThat(answer.size).isEqualTo(2)
 
             val rows = mapper.delete { where { awfulTable.eMail isLike "fred@%" } }
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             answer = mapper.select { allRows() }
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
         }
     }
 
@@ -1420,18 +1415,18 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
 
             assertThat(returnedRecord).isNotNull
             if (returnedRecord != null) {
-                assertEquals(record1.customerId!!, returnedRecord.customerId)
-                assertEquals(record1.eMail, returnedRecord.eMail)
-                assertEquals(record1.emailaddress, returnedRecord.emailaddress)
-                assertEquals(record1.firstFirstName, returnedRecord.firstFirstName)
-                assertEquals(record1.from, returnedRecord.from)
-                assertEquals(record1.id1!!, returnedRecord.id1)
-                assertEquals(record1.id2!!, returnedRecord.id2)
-                assertEquals(record1.id5!!, returnedRecord.id5)
-                assertEquals(record1.id6!!, returnedRecord.id6)
-                assertEquals(record1.id7!!, returnedRecord.id7)
-                assertEquals(record1.secondFirstName, returnedRecord.secondFirstName)
-                assertEquals(record1.thirdFirstName, returnedRecord.thirdFirstName)
+                assertThat(returnedRecord.customerId).isEqualTo(record1.customerId!!)
+                assertThat(returnedRecord.eMail).isEqualTo(record1.eMail)
+                assertThat(returnedRecord.emailaddress).isEqualTo(record1.emailaddress)
+                assertThat(returnedRecord.firstFirstName).isEqualTo(record1.firstFirstName)
+                assertThat(returnedRecord.from).isEqualTo(record1.from)
+                assertThat(returnedRecord.id1).isEqualTo(record1.id1!!)
+                assertThat(returnedRecord.id2).isEqualTo(record1.id2!!)
+                assertThat(returnedRecord.id5).isEqualTo(record1.id5!!)
+                assertThat(returnedRecord.id6).isEqualTo(record1.id6!!)
+                assertThat(returnedRecord.id7).isEqualTo(record1.id7!!)
+                assertThat(returnedRecord.secondFirstName).isEqualTo(record1.secondFirstName)
+                assertThat(returnedRecord.thirdFirstName).isEqualTo(record1.thirdFirstName)
             }
         }
     }
@@ -1475,21 +1470,21 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
                 where { awfulTable.firstFirstName isLike "B%" }
                 orderBy(awfulTable.customerId)
             }
-            assertEquals(3, answer.size)
+            assertThat(answer.size).isEqualTo(3)
             var returnedRecord = answer[0]
-            assertEquals(1111, returnedRecord.id1)
-            assertEquals(2222, returnedRecord.id2)
-            assertEquals(60, returnedRecord.customerId)
+            assertThat(returnedRecord.id1).isEqualTo(1111)
+            assertThat(returnedRecord.id2).isEqualTo(2222)
+            assertThat(returnedRecord.customerId).isEqualTo(60)
 
             returnedRecord = answer[1]
-            assertEquals(11111, returnedRecord.id1)
-            assertEquals(22222, returnedRecord.id2)
-            assertEquals(61, returnedRecord.customerId)
+            assertThat(returnedRecord.id1).isEqualTo(11111)
+            assertThat(returnedRecord.id2).isEqualTo(22222)
+            assertThat(returnedRecord.customerId).isEqualTo(61)
 
             returnedRecord = answer[2]
-            assertEquals(111111, returnedRecord.id1)
-            assertEquals(222222, returnedRecord.id2)
-            assertEquals(62, returnedRecord.customerId)
+            assertThat(returnedRecord.id1).isEqualTo(111111)
+            assertThat(returnedRecord.id2).isEqualTo(222222)
+            assertThat(returnedRecord.customerId).isEqualTo(62)
         }
     }
 
@@ -1531,35 +1526,35 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             records.add(record)
 
             val rowsInserted = mapper.insertMultiple(records)
-            assertEquals(6, rowsInserted)
+            assertThat(rowsInserted).isEqualTo(6)
 
             // check generated keys
-            assertEquals(57, records[0].customerId)
-            assertEquals(58, records[1].customerId)
-            assertEquals(59, records[2].customerId)
-            assertEquals(60, records[3].customerId)
-            assertEquals(61, records[4].customerId)
-            assertEquals(62, records[5].customerId)
+            assertThat(records[0].customerId).isEqualTo(57)
+            assertThat(records[1].customerId).isEqualTo(58)
+            assertThat(records[2].customerId).isEqualTo(59)
+            assertThat(records[3].customerId).isEqualTo(60)
+            assertThat(records[4].customerId).isEqualTo(61)
+            assertThat(records[5].customerId).isEqualTo(62)
 
             val answer = mapper.select {
                 where { awfulTable.firstFirstName isLike "B%" }
                 orderBy(awfulTable.customerId)
             }
-            assertEquals(3, answer.size)
+            assertThat(answer.size).isEqualTo(3)
             var returnedRecord = answer[0]
-            assertEquals(1111, returnedRecord.id1)
-            assertEquals(2222, returnedRecord.id2)
-            assertEquals(60, returnedRecord.customerId)
+            assertThat(returnedRecord.id1).isEqualTo(1111)
+            assertThat(returnedRecord.id2).isEqualTo(2222)
+            assertThat(returnedRecord.customerId).isEqualTo(60)
 
             returnedRecord = answer[1]
-            assertEquals(11111, returnedRecord.id1)
-            assertEquals(22222, returnedRecord.id2)
-            assertEquals(61, returnedRecord.customerId)
+            assertThat(returnedRecord.id1).isEqualTo(11111)
+            assertThat(returnedRecord.id2).isEqualTo(22222)
+            assertThat(returnedRecord.customerId).isEqualTo(61)
 
             returnedRecord = answer[2]
-            assertEquals(111111, returnedRecord.id1)
-            assertEquals(222222, returnedRecord.id2)
-            assertEquals(62, returnedRecord.customerId)
+            assertThat(returnedRecord.id1).isEqualTo(111111)
+            assertThat(returnedRecord.id2).isEqualTo(222222)
+            assertThat(returnedRecord.customerId).isEqualTo(62)
         }
     }
 
@@ -1602,16 +1597,16 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
                 where { awfulTable.firstFirstName isNotLike "B%" }
                 orderBy(awfulTable.customerId)
             }
-            assertEquals(3, answer.size)
+            assertThat(answer.size).isEqualTo(3)
             var returnedRecord = answer[0]
-            assertEquals(1, returnedRecord.id1)
-            assertEquals(2, returnedRecord.id2)
+            assertThat(returnedRecord.id1).isEqualTo(1)
+            assertThat(returnedRecord.id2).isEqualTo(2)
             returnedRecord = answer[1]
-            assertEquals(11, returnedRecord.id1)
-            assertEquals(22, returnedRecord.id2)
+            assertThat(returnedRecord.id1).isEqualTo(11)
+            assertThat(returnedRecord.id2).isEqualTo(22)
             returnedRecord = answer[2]
-            assertEquals(111, returnedRecord.id1)
-            assertEquals(222, returnedRecord.id2)
+            assertThat(returnedRecord.id1).isEqualTo(111)
+            assertThat(returnedRecord.id2).isEqualTo(222)
         }
     }
 
@@ -1661,13 +1656,13 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
                 orderBy(awfulTable.customerId)
             }
 
-            assertEquals(2, answer.size)
+            assertThat(answer.size).isEqualTo(2)
             var returnedRecord = answer[0]
-            assertEquals(11, returnedRecord.id1)
-            assertEquals(22, returnedRecord.id2)
+            assertThat(returnedRecord.id1).isEqualTo(11)
+            assertThat(returnedRecord.id2).isEqualTo(22)
             returnedRecord = answer[1]
-            assertEquals(111111, returnedRecord.id1)
-            assertEquals(222222, returnedRecord.id2)
+            assertThat(returnedRecord.id1).isEqualTo(111111)
+            assertThat(returnedRecord.id2).isEqualTo(222222)
         }
     }
 
@@ -1711,13 +1706,13 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
                 orderBy(awfulTable.customerId)
             }
 
-            assertEquals(2, answer.size)
+            assertThat(answer.size).isEqualTo(2)
             var returnedRecord = answer[0]
-            assertEquals(1, returnedRecord.id1)
-            assertEquals(2, returnedRecord.id2)
+            assertThat(returnedRecord.id1).isEqualTo(1)
+            assertThat(returnedRecord.id2).isEqualTo(2)
             returnedRecord = answer[1]
-            assertEquals(11, returnedRecord.id1)
-            assertEquals(22, returnedRecord.id2)
+            assertThat(returnedRecord.id1).isEqualTo(11)
+            assertThat(returnedRecord.id2).isEqualTo(22)
         }
     }
 
@@ -1757,7 +1752,7 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             mapper.insert(record)
 
             val answer = mapper.select { where { awfulTable.id1 isBetween 1 and 1000 } }
-            assertEquals(3, answer.size)
+            assertThat(answer.size).isEqualTo(3)
         }
     }
 
@@ -1800,19 +1795,19 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
                 orderBy(awfulTable.customerId.descending())
             }
 
-            assertEquals(6, answer.size)
+            assertThat(answer.size).isEqualTo(6)
             var returnedRecord = answer[0]
-            assertEquals(111111, returnedRecord.id1)
+            assertThat(returnedRecord.id1).isEqualTo(111111)
             returnedRecord = answer[1]
-            assertEquals(11111, returnedRecord.id1)
+            assertThat(returnedRecord.id1).isEqualTo(11111)
             returnedRecord = answer[2]
-            assertEquals(1111, returnedRecord.id1)
+            assertThat(returnedRecord.id1).isEqualTo(1111)
             returnedRecord = answer[3]
-            assertEquals(111, returnedRecord.id1)
+            assertThat(returnedRecord.id1).isEqualTo(111)
             returnedRecord = answer[4]
-            assertEquals(11, returnedRecord.id1)
+            assertThat(returnedRecord.id1).isEqualTo(11)
             returnedRecord = answer[5]
-            assertEquals(1, returnedRecord.id1)
+            assertThat(returnedRecord.id1).isEqualTo(1)
         }
     }
 
@@ -1831,10 +1826,10 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             mapper.insert(record)
 
             var rows = mapper.count { where { awfulTable.eMail isLike "fred@%" } }
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             rows = mapper.count { allRows() }
-            assertEquals(2, rows)
+            assertThat(rows).isEqualTo(2)
         }
     }
 
@@ -1853,8 +1848,8 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
 
             assertThat(returnedRecord).isNotNull
             if (returnedRecord != null) {
-                assertEquals(t1.id, returnedRecord.id)
-                assertEquals(t1.translation, returnedRecord.translation)
+                assertThat(returnedRecord.id).isEqualTo(t1.id)
+                assertThat(returnedRecord.translation).isEqualTo(t1.translation)
             }
 
             val t2 = t1.copy(translation = "Italian")
@@ -1863,8 +1858,8 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             returnedRecord = mapper.selectByPrimaryKey(2)
             assertThat(returnedRecord).isNotNull
             if (returnedRecord != null) {
-                assertEquals(t2.id, returnedRecord.id)
-                assertEquals(t2.translation, returnedRecord.translation)
+                assertThat(returnedRecord.id).isEqualTo(t2.id)
+                assertThat(returnedRecord.translation).isEqualTo(t2.translation)
             }
         }
     }
@@ -1883,8 +1878,8 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
             var returnedRecord = mapper.selectByPrimaryKey(2)
             assertThat(returnedRecord).isNotNull
             if (returnedRecord != null) {
-                assertEquals(id1.id, returnedRecord.id)
-                assertEquals(id1.description, returnedRecord.description)
+                assertThat(returnedRecord.id).isEqualTo(id1.id)
+                assertThat(returnedRecord.description).isEqualTo(id1.description)
             }
 
             val id3 = id1.copy(description = "Italian")
@@ -1894,8 +1889,8 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
 
             assertThat(returnedRecord).isNotNull
             if (returnedRecord != null) {
-                assertEquals(id3.id, returnedRecord.id)
-                assertEquals(id3.description, returnedRecord.description)
+                assertThat(returnedRecord.id).isEqualTo(id3.id)
+                assertThat(returnedRecord.description).isEqualTo(id3.description)
             }
         }
     }

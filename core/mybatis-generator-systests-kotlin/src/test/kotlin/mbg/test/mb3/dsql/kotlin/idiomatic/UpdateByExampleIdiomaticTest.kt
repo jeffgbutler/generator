@@ -28,7 +28,6 @@ import mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper.PkonlyDynamicSqlSuppo
 import mbg.test.mb3.generated.dsql.kotlin.idiomatic.model.*
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.data.Offset
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 /**
@@ -107,14 +106,14 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
                 updateAllColumns(updateRecord)
                 where { fieldsonly.integerfield isEqualTo 5 }
             }
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             val answer = mapper.select { where { fieldsonly.integerfield isEqualTo 22 } }
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
             record = answer[0]
-            assertNull(record.doublefield)
-            assertNull(record.floatfield)
-            assertEquals(record.integerfield!!, 22)
+            assertThat(record.doublefield).isNull()
+            assertThat(record.floatfield).isNull()
+            assertThat(22).isEqualTo(record.integerfield!!)
         }
     }
 
@@ -137,7 +136,7 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
                 updateAllColumns(updateKey)
                 where { pkonly.id isEqualTo 7 }
             }
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             val returnedRows = mapper.count {
                 where {
@@ -145,7 +144,7 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
                     and { pkonly.seqNum isEqualTo 3 }
                 }
             }
-            assertEquals(1, returnedRows)
+            assertThat(returnedRows).isEqualTo(1)
         }
     }
 
@@ -163,7 +162,7 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
                 set(pkfieldstable.firstname) equalTo "Fred"
                 where { pkfieldstable.lastname isLike "J%" }
             }
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             val returnedRows = mapper.count {
                 where {
@@ -173,7 +172,7 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
                     and { pkfieldstable.id2 isEqualTo 4 }
                 }
             }
-            assertEquals(1, returnedRows)
+            assertThat(returnedRows).isEqualTo(1)
         }
     }
 
@@ -197,7 +196,7 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
                     and { pkfieldstable.id2 isEqualTo 4 }
                 }
             }
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             val returnedRows = mapper.count {
                 where {
@@ -206,7 +205,7 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
                     and { pkfieldstable.id2 isEqualTo 4 }
                 }
             }
-            assertEquals(1, returnedRows)
+            assertThat(returnedRows).isEqualTo(1)
         }
     }
 
@@ -226,16 +225,16 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
                 set(pkblobs.blob1) equalTo newBlob
                 where { pkblobs.id isGreaterThan 4 }
             }
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             val answer = mapper.select { where { pkblobs.id isGreaterThan 4 } }
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
 
             val returnedRecord = answer[0]
 
-            assertEquals(6, returnedRecord.id)
-            assertTrue(blobsAreEqual(newBlob, returnedRecord.blob1))
-            assertTrue(blobsAreEqual(record.blob2, returnedRecord.blob2))
+            assertThat(returnedRecord.id).isEqualTo(6)
+            assertThat(blobsAreEqual(newBlob, returnedRecord.blob1)).isTrue()
+            assertThat(blobsAreEqual(record.blob2, returnedRecord.blob2)).isTrue()
         }
     }
 
@@ -255,16 +254,16 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
                 updateAllColumns(newRecord)
                 where { pkblobs.id isGreaterThan 4 }
             }
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             val answer = mapper.select { where { pkblobs.id isGreaterThan 4 } }
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
 
             val returnedRecord = answer[0]
 
-            assertEquals(8, returnedRecord.id)
-            assertNull(returnedRecord.blob1)
-            assertNull(returnedRecord.blob2)
+            assertThat(returnedRecord.id).isEqualTo(8)
+            assertThat(returnedRecord.blob1).isNull()
+            assertThat(returnedRecord.blob2).isNull()
         }
     }
 
@@ -282,18 +281,18 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
                 set(pkfieldsblobs.firstname) equalTo "Fred"
                 where { pkfieldsblobs.id1 isNotEqualTo 3 }
             }
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             val answer = mapper.select { where { pkfieldsblobs.id1 isNotEqualTo 3 } }
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
 
             val returnedRecord = answer[0]
 
-            assertEquals(record.id1, returnedRecord.id1)
-            assertEquals(record.id2, returnedRecord.id2)
-            assertEquals("Fred", returnedRecord.firstname)
-            assertEquals(record.lastname, returnedRecord.lastname)
-            assertTrue(blobsAreEqual(record.blob1, returnedRecord.blob1))
+            assertThat(returnedRecord.id1).isEqualTo(record.id1)
+            assertThat(returnedRecord.id2).isEqualTo(record.id2)
+            assertThat(returnedRecord.firstname).isEqualTo("Fred")
+            assertThat(returnedRecord.lastname).isEqualTo(record.lastname)
+            assertThat(blobsAreEqual(record.blob1, returnedRecord.blob1)).isTrue()
         }
     }
 
@@ -313,18 +312,18 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
                 updateAllColumns(newRecord)
                 where { pkfieldsblobs.id1 isEqualTo 3 }
             }
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             val answer = mapper.select { where { pkfieldsblobs.id1 isEqualTo 3 } }
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
 
             val returnedRecord = answer[0]
 
-            assertEquals(newRecord.id1, returnedRecord.id1)
-            assertEquals(newRecord.id2, returnedRecord.id2)
-            assertEquals(newRecord.firstname, returnedRecord.firstname)
-            assertNull(returnedRecord.lastname)
-            assertNull(returnedRecord.blob1)
+            assertThat(returnedRecord.id1).isEqualTo(newRecord.id1)
+            assertThat(returnedRecord.id2).isEqualTo(newRecord.id2)
+            assertThat(returnedRecord.firstname).isEqualTo(newRecord.firstname)
+            assertThat(returnedRecord.lastname).isNull()
+            assertThat(returnedRecord.blob1).isNull()
         }
     }
 
@@ -342,17 +341,17 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
                 set(fieldsblobs.lastname) equalTo "Doe"
                 where { fieldsblobs.firstname isLike "S%" }
             }
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             val answer = mapper.select { where { fieldsblobs.firstname isLike "S%" } }
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
 
             val returnedRecord = answer[0]
 
-            assertEquals(record.firstname, returnedRecord.firstname)
-            assertEquals("Doe", returnedRecord.lastname)
-            assertTrue(blobsAreEqual(record.blob1, returnedRecord.blob1))
-            assertTrue(blobsAreEqual(record.blob2, returnedRecord.blob2))
+            assertThat(returnedRecord.firstname).isEqualTo(record.firstname)
+            assertThat(returnedRecord.lastname).isEqualTo("Doe")
+            assertThat(blobsAreEqual(record.blob1, returnedRecord.blob1)).isTrue()
+            assertThat(blobsAreEqual(record.blob2, returnedRecord.blob2)).isTrue()
         }
     }
 
@@ -372,17 +371,17 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
                 updateAllColumns(newRecord)
                 where { fieldsblobs.firstname isLike "S%" }
             }
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             val answer = mapper.select { where { fieldsblobs.firstname isLike "S%" } }
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
 
             val returnedRecord = answer[0]
 
-            assertEquals(newRecord.firstname, returnedRecord.firstname)
-            assertEquals(newRecord.lastname, returnedRecord.lastname)
-            assertNull(returnedRecord.blob1)
-            assertNull(returnedRecord.blob2)
+            assertThat(returnedRecord.firstname).isEqualTo(newRecord.firstname)
+            assertThat(returnedRecord.lastname).isEqualTo(newRecord.lastname)
+            assertThat(returnedRecord.blob1).isNull()
+            assertThat(returnedRecord.blob2).isNull()
         }
     }
 
@@ -404,25 +403,25 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
                 set(awfulTable.firstFirstName) equalTo "Alonzo"
                 where { awfulTable.eMail isLike "barney@%" }
             }
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             val answer = mapper.select { where { awfulTable.eMail isLike "barney@%" } }
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
 
             val returnedRecord = answer[0]
 
-            assertEquals(record.customerId, returnedRecord.customerId)
-            assertEquals(record.eMail, returnedRecord.eMail)
-            assertEquals(record.emailaddress, returnedRecord.emailaddress)
-            assertEquals("Alonzo", returnedRecord.firstFirstName)
-            assertEquals(record.from, returnedRecord.from)
-            assertEquals(record.id1!!, returnedRecord.id1)
-            assertEquals(record.id2!!, returnedRecord.id2)
-            assertEquals(record.id5!!, returnedRecord.id5)
-            assertEquals(record.id6!!, returnedRecord.id6)
-            assertEquals(record.id7!!, returnedRecord.id7)
-            assertEquals(record.secondFirstName, returnedRecord.secondFirstName)
-            assertEquals(record.thirdFirstName, returnedRecord.thirdFirstName)
+            assertThat(returnedRecord.customerId).isEqualTo(record.customerId)
+            assertThat(returnedRecord.eMail).isEqualTo(record.eMail)
+            assertThat(returnedRecord.emailaddress).isEqualTo(record.emailaddress)
+            assertThat(returnedRecord.firstFirstName).isEqualTo("Alonzo")
+            assertThat(returnedRecord.from).isEqualTo(record.from)
+            assertThat(returnedRecord.id1).isEqualTo(record.id1!!)
+            assertThat(returnedRecord.id2).isEqualTo(record.id2!!)
+            assertThat(returnedRecord.id5).isEqualTo(record.id5!!)
+            assertThat(returnedRecord.id6).isEqualTo(record.id6!!)
+            assertThat(returnedRecord.id7).isEqualTo(record.id7!!)
+            assertThat(returnedRecord.secondFirstName).isEqualTo(record.secondFirstName)
+            assertThat(returnedRecord.thirdFirstName).isEqualTo(record.thirdFirstName)
         }
     }
 
@@ -447,25 +446,25 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
                 updateAllColumns(newRecord)
                 where { awfulTable.eMail isLike "fred@%" }
             }
-            assertEquals(1, rows)
+            assertThat(rows).isEqualTo(1)
 
             val answer = mapper.select { where { awfulTable.customerId isEqualTo 57 } }
-            assertEquals(1, answer.size)
+            assertThat(answer.size).isEqualTo(1)
 
             val returnedRecord = answer[0]
 
-            assertEquals(newRecord.customerId!!, returnedRecord.customerId)
-            assertNull(returnedRecord.eMail)
-            assertNull(returnedRecord.emailaddress)
-            assertEquals(newRecord.firstFirstName, returnedRecord.firstFirstName)
-            assertNull(returnedRecord.from)
-            assertEquals(newRecord.id1!!, returnedRecord.id1)
-            assertEquals(newRecord.id2!!, returnedRecord.id2)
-            assertEquals(newRecord.id5!!, returnedRecord.id5)
-            assertEquals(newRecord.id6!!, returnedRecord.id6)
-            assertEquals(newRecord.id7!!, returnedRecord.id7)
-            assertNull(returnedRecord.secondFirstName)
-            assertNull(returnedRecord.thirdFirstName)
+            assertThat(returnedRecord.customerId).isEqualTo(newRecord.customerId!!)
+            assertThat(returnedRecord.eMail).isNull()
+            assertThat(returnedRecord.emailaddress).isNull()
+            assertThat(returnedRecord.firstFirstName).isEqualTo(newRecord.firstFirstName)
+            assertThat(returnedRecord.from).isNull()
+            assertThat(returnedRecord.id1).isEqualTo(newRecord.id1!!)
+            assertThat(returnedRecord.id2).isEqualTo(newRecord.id2!!)
+            assertThat(returnedRecord.id5).isEqualTo(newRecord.id5!!)
+            assertThat(returnedRecord.id6).isEqualTo(newRecord.id6!!)
+            assertThat(returnedRecord.id7).isEqualTo(newRecord.id7!!)
+            assertThat(returnedRecord.secondFirstName).isNull()
+            assertThat(returnedRecord.thirdFirstName).isNull()
         }
     }
 }
