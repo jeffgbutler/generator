@@ -86,32 +86,21 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
     fun testMyObjectUpdateByPrimaryKey() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(MyObjectMapper::class.java)
-            val record = MyObject()
-            var fn = FirstName()
-            fn.value = "Jeff"
-            record.firstname = fn
-            record.lastname = "Smith"
-            record.id1 = 1
-            record.id2 = 2
-
+            val record = MyObject(2, 1, FirstName("Jeff"), "Smith")
             mapper.insert(record)
 
-            fn = FirstName()
-            fn.value = "Scott"
-            record.firstname = fn
-            record.lastname = "Jones"
-
-            val rows = mapper.updateByPrimaryKey(record)
+            val updateRecord = record.copy(firstname = FirstName("Scott"), lastname = "Jones")
+            val rows = mapper.updateByPrimaryKey(updateRecord)
             assertThat(rows).isEqualTo(1)
 
             val record2 = mapper.selectByPrimaryKey(2, 1)
 
             assertThat(record2).isNotNull
             if (record2 != null) {
-                assertEquals(record.firstname, record2.firstname)
-                assertEquals(record.lastname, record2.lastname)
-                assertEquals(record.id1!!, record2.id1)
-                assertEquals(record.id2!!, record2.id2)
+                assertEquals(updateRecord.firstname, record2.firstname)
+                assertEquals(updateRecord.lastname, record2.lastname)
+                assertEquals(updateRecord.id1!!, record2.id1)
+                assertEquals(updateRecord.id2!!, record2.id2)
             }
         }
     }
@@ -120,24 +109,10 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
     fun testMyObjectUpdateByPrimaryKeySelective() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(MyObjectMapper::class.java)
-            val record = MyObject()
-            var fn = FirstName()
-            fn.value = "Jeff"
-            record.firstname = fn
-            record.lastname = "Smith"
-            record.decimal60field = 5
-            record.id1 = 1
-            record.id2 = 2
-
+            val record = MyObject(2, 1, FirstName("Jeff"), "Smith", decimal60field = 5)
             mapper.insert(record)
 
-            val newRecord = MyObject()
-            newRecord.id1 = 1
-            newRecord.id2 = 2
-            fn = FirstName()
-            fn.value = "Scott"
-            newRecord.firstname = fn
-            record.startDate = Date()
+            val newRecord = MyObject(2, 1, FirstName("Scott"), startDate = Date())
 
             val rows = mapper.updateByPrimaryKeySelective(newRecord)
             assertEquals(1, rows)
@@ -164,14 +139,7 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
     fun testMyObjectDeleteByPrimaryKey() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(MyObjectMapper::class.java)
-            val record = MyObject()
-            val fn = FirstName()
-            fn.value = "Jeff"
-            record.firstname = fn
-            record.lastname = "Smith"
-            record.id1 = 1
-            record.id2 = 2
-
+            val record = MyObject(2, 1, FirstName("Jeff"), "Smith")
             mapper.insert(record)
 
             val rows = mapper.deleteByPrimaryKey(2, 1)
@@ -186,23 +154,10 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
     fun testMyObjectDeleteByExample() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(MyObjectMapper::class.java)
-            var record = MyObject()
-            var fn = FirstName()
-            fn.value = "Jeff"
-            record.firstname = fn
-            record.lastname = "Smith"
-            record.id1 = 1
-            record.id2 = 2
+            var record = MyObject(2, 1, FirstName("Jeff"), "Smith")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Bob"
-            record.firstname = fn
-            record.lastname = "Jones"
-            record.id1 = 3
-            record.id2 = 4
-
+            record = MyObject(4, 3, FirstName("Bob"), "Jones")
             mapper.insert(record)
 
             var answer = mapper.select { allRows() }
@@ -221,22 +176,10 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
     fun testMyObjectSelectByPrimaryKey() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(MyObjectMapper::class.java)
-            val record = MyObject()
-            var fn = FirstName()
-            fn.value = "Jeff"
-            record.firstname = fn
-            record.lastname = "Smith"
-            record.id1 = 1
-            record.id2 = 2
+            val record = MyObject(2, 1, FirstName("Jeff"), "Smith")
             mapper.insert(record)
 
-            val record1 = MyObject()
-            fn = FirstName()
-            fn.value = "Bob"
-            record1.firstname = fn
-            record1.lastname = "Jones"
-            record1.id1 = 3
-            record1.id2 = 4
+            val record1 = MyObject(4, 3, FirstName("Bob"), "Jones")
             mapper.insert(record1)
 
             val newRecord = mapper.selectByPrimaryKey(4, 3)
@@ -255,58 +198,22 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
     fun testMyObjectSelectByExampleLike() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(MyObjectMapper::class.java)
-            var record = MyObject()
-            var fn = FirstName()
-            fn.value = "Fred"
-            record.firstname = fn
-            record.lastname = "Flintstone"
-            record.id1 = 1
-            record.id2 = 1
+            var record = MyObject(1, 1, FirstName("Fred"), "Flintstone")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Wilma"
-            record.firstname = fn
-            record.lastname = "Flintstone"
-            record.id1 = 1
-            record.id2 = 2
+            record = MyObject(2, 1, FirstName("Wilma"), "Flintstone")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Pebbles"
-            record.firstname = fn
-            record.lastname = "Flintstone"
-            record.id1 = 1
-            record.id2 = 3
+            record = MyObject(3, 1, FirstName("Pebbles"), "Flintstone")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Barney"
-            record.firstname = fn
-            record.lastname = "Rubble"
-            record.id1 = 2
-            record.id2 = 1
+            record = MyObject(1, 2, FirstName("Barney"), "Rubble")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Betty"
-            record.firstname = fn
-            record.lastname = "Rubble"
-            record.id1 = 2
-            record.id2 = 2
+            record = MyObject(2, 2, FirstName("Betty"), "Rubble")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Bamm Bamm"
-            record.firstname = fn
-            record.lastname = "Rubble"
-            record.id1 = 2
-            record.id2 = 3
+            record = MyObject(3, 2, FirstName("Bamm Bamm"), "Rubble")
             mapper.insert(record)
 
             val fn1 = FirstName()
@@ -334,58 +241,22 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
     fun testMyObjectSelectByExampleNotLike() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(MyObjectMapper::class.java)
-            var record = MyObject()
-            var fn = FirstName()
-            fn.value = "Fred"
-            record.firstname = fn
-            record.lastname = "Flintstone"
-            record.id1 = 1
-            record.id2 = 1
+            var record = MyObject(1, 1, FirstName("Fred"), "Flintstone")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Wilma"
-            record.firstname = fn
-            record.lastname = "Flintstone"
-            record.id1 = 1
-            record.id2 = 2
+            record = MyObject(2, 1, FirstName("Wilma"), "Flintstone")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Pebbles"
-            record.firstname = fn
-            record.lastname = "Flintstone"
-            record.id1 = 1
-            record.id2 = 3
+            record = MyObject(3, 1, FirstName("Pebbles"), "Flintstone")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Barney"
-            record.firstname = fn
-            record.lastname = "Rubble"
-            record.id1 = 2
-            record.id2 = 1
+            record = MyObject(1, 2, FirstName("Barney"), "Rubble")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Betty"
-            record.firstname = fn
-            record.lastname = "Rubble"
-            record.id1 = 2
-            record.id2 = 2
+            record = MyObject(2, 2, FirstName("Betty"), "Rubble")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Bamm Bamm"
-            record.firstname = fn
-            record.lastname = "Rubble"
-            record.id1 = 2
-            record.id2 = 3
+            record = MyObject(3, 2, FirstName("Bamm Bamm"), "Rubble")
             mapper.insert(record)
 
             val fn1 = FirstName()
@@ -414,29 +285,12 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(MyObjectMapper::class.java)
 
-            var fn = FirstName()
-            fn.value = "Fred"
-            mapper.insert(MyObject(id1 = 1, id2 = 1, firstname = fn, lastname = "Flintstone"))
-
-            fn = FirstName()
-            fn.value = "Wilma"
-            mapper.insert(MyObject(id1 = 1, id2 = 2, firstname = fn, lastname = "Flintstone"))
-
-            fn = FirstName()
-            fn.value = "Pebbles"
-            mapper.insert(MyObject(id1 = 1, id2 = 3, firstname = fn, lastname = "Flintstone"))
-
-            fn = FirstName()
-            fn.value = "Barney"
-            mapper.insert(MyObject(id1 = 2, id2 = 1, firstname = fn, lastname = "Rubble"))
-
-            fn = FirstName()
-            fn.value = "Betty"
-            mapper.insert(MyObject(id1 = 2, id2 = 2, firstname = fn, lastname = "Rubble"))
-
-            fn = FirstName()
-            fn.value = "Bamm Bamm"
-            mapper.insert(MyObject(id1 = 2, id2 = 3, firstname = fn, lastname = "Rubble"))
+            mapper.insert(MyObject(id1 = 1, id2 = 1, firstname = FirstName("Fred"), lastname = "Flintstone"))
+            mapper.insert(MyObject(id1 = 1, id2 = 2, firstname = FirstName("Wilma"), lastname = "Flintstone"))
+            mapper.insert(MyObject(id1 = 1, id2 = 3, firstname = FirstName("Pebbles"), lastname = "Flintstone"))
+            mapper.insert(MyObject(id1 = 2, id2 = 1, firstname = FirstName("Barney"), lastname = "Rubble"))
+            mapper.insert(MyObject(id1 = 2, id2 = 2, firstname = FirstName("Betty"), lastname = "Rubble"))
+            mapper.insert(MyObject(id1 = 2, id2 = 3, firstname = FirstName("Bamm Bamm"), lastname = "Rubble"))
 
             val fn1 = FirstName()
             fn1.value = "B%"
@@ -468,58 +322,22 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
     fun testMyObjectSelectByExampleIn() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(MyObjectMapper::class.java)
-            var record = MyObject()
-            var fn = FirstName()
-            fn.value = "Fred"
-            record.firstname = fn
-            record.lastname = "Flintstone"
-            record.id1 = 1
-            record.id2 = 1
+            var record = MyObject(1, 1, FirstName("Fred"), "Flintstone")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Wilma"
-            record.firstname = fn
-            record.lastname = "Flintstone"
-            record.id1 = 1
-            record.id2 = 2
+            record = MyObject(2, 1, FirstName("Wilma"), "Flintstone")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Pebbles"
-            record.firstname = fn
-            record.lastname = "Flintstone"
-            record.id1 = 1
-            record.id2 = 3
+            record = MyObject(3, 1, FirstName("Pebbles"), "Flintstone")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Barney"
-            record.firstname = fn
-            record.lastname = "Rubble"
-            record.id1 = 2
-            record.id2 = 1
+            record = MyObject(1, 2, FirstName("Barney"), "Rubble")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Betty"
-            record.firstname = fn
-            record.lastname = "Rubble"
-            record.id1 = 2
-            record.id2 = 2
+            record = MyObject(2, 2, FirstName("Betty"), "Rubble")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Bamm Bamm"
-            record.firstname = fn
-            record.lastname = "Rubble"
-            record.id1 = 2
-            record.id2 = 3
+            record = MyObject(3, 2, FirstName("Bamm Bamm"), "Rubble")
             mapper.insert(record)
 
             val ids = listOf(1, 3)
@@ -555,58 +373,22 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
     fun testMyObjectSelectByExampleBetween() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(MyObjectMapper::class.java)
-            var record = MyObject()
-            var fn = FirstName()
-            fn.value = "Fred"
-            record.firstname = fn
-            record.lastname = "Flintstone"
-            record.id1 = 1
-            record.id2 = 1
+            var record = MyObject(1, 1, FirstName("Fred"), "Flintstone")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Wilma"
-            record.firstname = fn
-            record.lastname = "Flintstone"
-            record.id1 = 1
-            record.id2 = 2
+            record = MyObject(2, 1, FirstName("Wilma"), "Flintstone")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Pebbles"
-            record.firstname = fn
-            record.lastname = "Flintstone"
-            record.id1 = 1
-            record.id2 = 3
+            record = MyObject(3, 1, FirstName("Pebbles"), "Flintstone")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Barney"
-            record.firstname = fn
-            record.lastname = "Rubble"
-            record.id1 = 2
-            record.id2 = 1
+            record = MyObject(1, 2, FirstName("Barney"), "Rubble")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Betty"
-            record.firstname = fn
-            record.lastname = "Rubble"
-            record.id1 = 2
-            record.id2 = 2
+            record = MyObject(2, 2, FirstName("Betty"), "Rubble")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Bamm Bamm"
-            record.firstname = fn
-            record.lastname = "Rubble"
-            record.id1 = 2
-            record.id2 = 3
+            record = MyObject(3, 2, FirstName("Bamm Bamm"), "Rubble")
             mapper.insert(record)
 
             val answer = mapper.select {
@@ -621,28 +403,12 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
     fun testMyObjectSelectByExampleTimeEquals() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(MyObjectMapper::class.java)
-            val record = MyObject()
-            record.startDate = Date()
-            record.decimal100field = 10L
-            record.decimal155field = 15.12345
-            record.decimal60field = 6
-            val fn = FirstName()
-            fn.value = "Jeff"
-            record.firstname = fn
-            record.id1 = 1
-            record.id2 = 2
-            record.lastname = "Butler"
-
-            val myTime = MyTime()
-            myTime.hours = 12
-            myTime.minutes = 34
-            myTime.seconds = 5
-            record.timefield = myTime
-            record.timestampfield = Date()
-
+            val record = MyObject(2, 1, FirstName("Jeff"), "Butler", Date(),
+                timefield = MyTime(12, 34, 5), timestampfield = Date(), decimal60field = 6,
+                decimal100field = 10L, decimal155field = 15.12345)
             mapper.insert(record)
 
-            val results = mapper.select { where { MY_OBJECT.TIMEFIELD isEqualTo myTime } }
+            val results = mapper.select { where { MY_OBJECT.TIMEFIELD isEqualTo MyTime(12, 34, 5) } }
             assertEquals(1, results.size)
 
             val returnedRecord = results[0]
@@ -668,30 +434,15 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
     fun testMyObjectUpdateByExampleSelective() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(MyObjectMapper::class.java)
-            var record = MyObject()
-            var fn = FirstName()
-            fn.value = "Jeff"
-            record.firstname = fn
-            record.lastname = "Smith"
-            record.id1 = 1
-            record.id2 = 2
+            var record = MyObject(2, 1, FirstName("Jeff"), "Smith")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Bob"
-            record.firstname = fn
-            record.lastname = "Jones"
-            record.id1 = 3
-            record.id2 = 4
-
+            record = MyObject(4, 3, FirstName("Bob"), "Jones")
             mapper.insert(record)
 
-            val newRecord = MyObject()
-            newRecord.lastname = "Barker"
+            val newRecord = MyObject(lastname = "Barker")
 
-            val fn1 = FirstName()
-            fn1.value = "B%"
+            val fn1 = FirstName("B%")
 
             val rows = mapper.update {
                 updateSelectiveColumns(newRecord)
@@ -714,29 +465,13 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
     fun testMyObjectUpdateByExample() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(MyObjectMapper::class.java)
-            var record = MyObject()
-            var fn = FirstName()
-            fn.value = "Jeff"
-            record.firstname = fn
-            record.lastname = "Smith"
-            record.id1 = 1
-            record.id2 = 2
+            var record = MyObject(2, 1, FirstName("Jeff"), "Smith")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Bob"
-            record.firstname = fn
-            record.lastname = "Jones"
-            record.id1 = 3
-            record.id2 = 4
-
+            record = MyObject(4, 3, FirstName("Bob"), "Jones")
             mapper.insert(record)
 
-            val newRecord = MyObject()
-            newRecord.lastname = "Barker"
-            newRecord.id1 = 3
-            newRecord.id2 = 4
+            val newRecord = MyObject(4, 3, lastname = "Barker")
 
             val rows = mapper.update {
                 updateAllColumns(newRecord)
@@ -805,10 +540,7 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
     fun testRegexRenameInsert() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(RegexrenameMapper::class.java)
-            val record = Regexrename()
-            record.address = "123 Main Street"
-            record.name = "Fred"
-            record.zipCode = "99999"
+            val record = Regexrename(name = "Fred", address = "123 Main Street", zipCode = "99999")
 
             mapper.insert(record)
             // test generated id
@@ -830,8 +562,7 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
     fun testRegexRenameInsertSelective() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(RegexrenameMapper::class.java)
-            val record = Regexrename()
-            record.zipCode = "99999"
+            val record = Regexrename(zipCode = "99999")
 
             mapper.insertSelective(record)
             assertEquals(1, record.id)
@@ -852,58 +583,22 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
     fun testMyObjectSelectByExampleLikeInsensitive() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(MyObjectMapper::class.java)
-            var record = MyObject()
-            var fn = FirstName()
-            fn.value = "Fred"
-            record.firstname = fn
-            record.lastname = "Flintstone"
-            record.id1 = 1
-            record.id2 = 1
+            var record = MyObject(1, 1, FirstName("Fred"), "Flintstone")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Wilma"
-            record.firstname = fn
-            record.lastname = "Flintstone"
-            record.id1 = 1
-            record.id2 = 2
+            record = MyObject(2, 1, FirstName("Wilma"), "Flintstone")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Pebbles"
-            record.firstname = fn
-            record.lastname = "Flintstone"
-            record.id1 = 1
-            record.id2 = 3
+            record = MyObject(3, 1, FirstName("Pebbles"), "Flintstone")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Barney"
-            record.firstname = fn
-            record.lastname = "Rubble"
-            record.id1 = 2
-            record.id2 = 1
+            record = MyObject(1, 2, FirstName("Barney"), "Rubble")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Betty"
-            record.firstname = fn
-            record.lastname = "Rubble"
-            record.id1 = 2
-            record.id2 = 2
+            record = MyObject(2, 2, FirstName("Betty"), "Rubble")
             mapper.insert(record)
 
-            record = MyObject()
-            fn = FirstName()
-            fn.value = "Bamm Bamm"
-            record.firstname = fn
-            record.lastname = "Rubble"
-            record.id1 = 2
-            record.id2 = 3
+            record = MyObject(3, 2, FirstName("Bamm Bamm"), "Rubble")
             mapper.insert(record)
 
             var answer = mapper.select {
@@ -932,9 +627,7 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(EnumTestMapper::class.java)
 
-            val enumTest = EnumTest()
-            enumTest.id = 1
-            enumTest.name = TestEnum.FRED
+            val enumTest = EnumTest(1, TestEnum.FRED)
             val rows = mapper.insert(enumTest)
             assertEquals(1, rows)
 
@@ -952,14 +645,8 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(EnumTestMapper::class.java)
             val records = listOf(
-                EnumTest().apply {
-                    id = 1
-                    name = TestEnum.FRED
-                },
-                EnumTest().apply {
-                    id = 2
-                    name = TestEnum.BARNEY
-                }
+                EnumTest(1, TestEnum.FRED),
+                EnumTest(2, TestEnum.BARNEY)
             )
 
             val rows = mapper.insertMultiple(records)
@@ -980,9 +667,7 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
             val mapper = sqlSession.getMapper(EnumOrdinalTestMapper::class.java)
 
 
-            val enumTest = EnumOrdinalTest()
-            enumTest.id = 1
-            enumTest.name = TestEnum.FRED
+            val enumTest = EnumOrdinalTest(1, TestEnum.FRED)
 
             val rows = mapper.insert(enumTest)
             assertEquals(1, rows)
@@ -1001,14 +686,8 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(EnumOrdinalTestMapper::class.java)
             val records = listOf(
-                EnumOrdinalTest().apply {
-                    id = 1
-                    name = TestEnum.FRED
-                },
-                EnumOrdinalTest().apply {
-                    id = 2
-                    name = TestEnum.BARNEY
-                }
+                EnumOrdinalTest(1, TestEnum.FRED),
+                EnumOrdinalTest(2, TestEnum.BARNEY)
             )
 
             val rows = mapper.insertMultiple(records)

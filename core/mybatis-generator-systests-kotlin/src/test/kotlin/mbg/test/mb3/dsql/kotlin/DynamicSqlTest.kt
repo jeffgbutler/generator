@@ -353,20 +353,10 @@ class DynamicSqlTest : AbstractTest() {
     fun testPKFieldsInsert() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(PkfieldsMapper::class.java)
-            val record = Pkfields()
-            record.datefield = LocalDate.now()
-            record.decimal100field = 10L
-            record.decimal155field = BigDecimal("15.12345")
-            record.decimal30field = 3
-            record.decimal60field = 6
-            record.firstname = "Jeff"
-            record.id1 = 1
-            record.id2 = 2
-            record.lastname = "Butler"
-            record.timefield = LocalTime.of(13, 2, 4)
-            record.timestampfield = LocalDateTime.now()
-            record.stringboolean = true
-
+            val record = Pkfields(id2 = 2, id1 = 1, firstname = "Jeff", lastname = "Butler",
+                datefield = LocalDate.now(), timefield = LocalTime.of(13, 2, 4),
+                timestampfield = LocalDateTime.now(), decimal30field = 3, decimal60field = 6,
+                decimal100field = 10L, decimal155field = BigDecimal("15.12345"), stringboolean = true)
             mapper.insert(record)
 
             val returnedRecord = mapper.selectByPrimaryKey(2, 1)
@@ -381,28 +371,23 @@ class DynamicSqlTest : AbstractTest() {
     fun testPKFieldsUpdateByPrimaryKey() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(PkfieldsMapper::class.java)
-            val record = Pkfields()
-            record.firstname = "Jeff"
-            record.lastname = "Smith"
-            record.id1 = 1
-            record.id2 = 2
+            val record = Pkfields(2, 1, "Jeff", "Smith")
 
             mapper.insert(record)
 
-            record.firstname = "Scott"
-            record.lastname = "Jones"
+            val updateRecord = record.copy(firstname = "Scott", lastname = "Jones")
 
-            val rows = mapper.updateByPrimaryKey(record)
+            val rows = mapper.updateByPrimaryKey(updateRecord)
             assertThat(rows).isEqualTo(1)
 
             val record2 = mapper.selectByPrimaryKey(2, 1)
 
             assertThat(record2).isNotNull
             if (record2 != null) {
-                assertEquals(record.firstname, record2.firstname)
-                assertEquals(record.lastname, record2.lastname)
-                assertEquals(record.id1!!, record2.id1)
-                assertEquals(record.id2!!, record2.id2)
+                assertEquals(updateRecord.firstname, record2.firstname)
+                assertEquals(updateRecord.lastname, record2.lastname)
+                assertEquals(updateRecord.id1!!, record2.id1)
+                assertEquals(updateRecord.id2!!, record2.id2)
             }
         }
     }
@@ -892,12 +877,7 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(PkfieldsblobsMapper::class.java)
-            val record = Pkfieldsblobs()
-            record.id1 = 3
-            record.id2 = 4
-            record.firstname = "Jeff"
-            record.lastname = "Smith"
-            record.blob1 = generateRandomBlob()
+            val record = Pkfieldsblobs(3, 4, "Jeff", "Smith", generateRandomBlob())
             mapper.insert(record)
 
             val answer = mapper.select { allRows() }
@@ -917,20 +897,10 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(PkfieldsblobsMapper::class.java)
-            val record = Pkfieldsblobs()
-            record.id1 = 3
-            record.id2 = 4
-            record.firstname = "Jeff"
-            record.lastname = "Smith"
-            record.blob1 = generateRandomBlob()
+            val record = Pkfieldsblobs(3, 4, "Jeff", "Smith", generateRandomBlob())
             mapper.insert(record)
 
-            val updateRecord = Pkfieldsblobs()
-            updateRecord.id1 = 3
-            updateRecord.id2 = 4
-            updateRecord.firstname = "Scott"
-            updateRecord.lastname = "Jones"
-            updateRecord.blob1 = generateRandomBlob()
+            val updateRecord = Pkfieldsblobs(3, 4, "Scott", "Jones", generateRandomBlob())
 
             val rows = mapper.updateByPrimaryKey(updateRecord)
             assertEquals(1, rows)
@@ -953,18 +923,10 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(PkfieldsblobsMapper::class.java)
-            val record = Pkfieldsblobs()
-            record.id1 = 3
-            record.id2 = 4
-            record.firstname = "Jeff"
-            record.lastname = "Smith"
-            record.blob1 = generateRandomBlob()
+            val record = Pkfieldsblobs(3, 4, "Jeff", "Smith", generateRandomBlob())
             mapper.insert(record)
 
-            val updateRecord = Pkfieldsblobs()
-            updateRecord.id1 = 3
-            updateRecord.id2 = 4
-            updateRecord.lastname = "Jones"
+            val updateRecord = Pkfieldsblobs(3, 4, lastname = "Jones")
 
             val rows = mapper.updateByPrimaryKeySelective(updateRecord)
             assertEquals(1, rows)
@@ -985,20 +947,10 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(PkfieldsblobsMapper::class.java)
-            var record = Pkfieldsblobs()
-            record.id1 = 3
-            record.id2 = 4
-            record.firstname = "Jeff"
-            record.lastname = "Smith"
-            record.blob1 = generateRandomBlob()
+            var record = Pkfieldsblobs(3, 4, "Jeff", "Smith", generateRandomBlob())
             mapper.insert(record)
 
-            record = Pkfieldsblobs()
-            record.id1 = 5
-            record.id2 = 6
-            record.firstname = "Scott"
-            record.lastname = "Jones"
-            record.blob1 = generateRandomBlob()
+            record = Pkfieldsblobs(5, 6, "Scott", "Jones", generateRandomBlob())
             mapper.insert(record)
 
             var answer = mapper.select { allRows() }
@@ -1017,20 +969,10 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(PkfieldsblobsMapper::class.java)
-            var record = Pkfieldsblobs()
-            record.id1 = 3
-            record.id2 = 4
-            record.firstname = "Jeff"
-            record.lastname = "Smith"
-            record.blob1 = generateRandomBlob()
+            var record = Pkfieldsblobs(3, 4, "Jeff", "Smith", generateRandomBlob())
             mapper.insert(record)
 
-            record = Pkfieldsblobs()
-            record.id1 = 5
-            record.id2 = 6
-            record.firstname = "Scott"
-            record.lastname = "Jones"
-            record.blob1 = generateRandomBlob()
+            record = Pkfieldsblobs(5, 6, "Scott", "Jones", generateRandomBlob())
             mapper.insert(record)
 
             var answer = mapper.select { allRows() }
@@ -1049,20 +991,10 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(PkfieldsblobsMapper::class.java)
-            val record = Pkfieldsblobs()
-            record.id1 = 3
-            record.id2 = 4
-            record.firstname = "Jeff"
-            record.lastname = "Smith"
-            record.blob1 = generateRandomBlob()
+            val record = Pkfieldsblobs(3, 4, "Jeff", "Smith", generateRandomBlob())
             mapper.insert(record)
 
-            val record1 = Pkfieldsblobs()
-            record1.id1 = 5
-            record1.id2 = 6
-            record1.firstname = "Scott"
-            record1.lastname = "Jones"
-            record1.blob1 = generateRandomBlob()
+            val record1 = Pkfieldsblobs(5, 6, "Scott", "Jones", generateRandomBlob())
             mapper.insert(record1)
 
             val answer = mapper.select { allRows() }
@@ -1086,20 +1018,10 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(PkfieldsblobsMapper::class.java)
-            var record = Pkfieldsblobs()
-            record.id1 = 3
-            record.id2 = 4
-            record.firstname = "Jeff"
-            record.lastname = "Smith"
-            record.blob1 = generateRandomBlob()
+            var record = Pkfieldsblobs(3, 4, "Jeff", "Smith", generateRandomBlob())
             mapper.insert(record)
 
-            record = Pkfieldsblobs()
-            record.id1 = 5
-            record.id2 = 6
-            record.firstname = "Scott"
-            record.lastname = "Jones"
-            record.blob1 = generateRandomBlob()
+            record = Pkfieldsblobs(5, 6, "Scott", "Jones", generateRandomBlob())
             mapper.insert(record)
 
             val answer = mapper.select { where { pkfieldsblobs.id2 isEqualTo 6 } }
@@ -1121,20 +1043,10 @@ class DynamicSqlTest : AbstractTest() {
             val mapper = sqlSession.getMapper(PkfieldsblobsMapper::class.java)
             val records = mutableListOf<Pkfieldsblobs>()
 
-            var record = Pkfieldsblobs()
-            record.id1 = 3
-            record.id2 = 4
-            record.firstname = "Jeff"
-            record.lastname = "Smith"
-            record.blob1 = generateRandomBlob()
+            var record = Pkfieldsblobs(3, 4, "Jeff", "Smith", generateRandomBlob())
             records.add(record)
 
-            record = Pkfieldsblobs()
-            record.id1 = 5
-            record.id2 = 6
-            record.firstname = "Scott"
-            record.lastname = "Jones"
-            record.blob1 = generateRandomBlob()
+            record = Pkfieldsblobs(5, 6, "Scott", "Jones", generateRandomBlob())
             records.add(record)
 
             val rowsInserted = mapper.insertMultiple(records)
@@ -1157,20 +1069,10 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(PkfieldsblobsMapper::class.java)
-            var record = Pkfieldsblobs()
-            record.id1 = 3
-            record.id2 = 4
-            record.firstname = "Jeff"
-            record.lastname = "Smith"
-            record.blob1 = generateRandomBlob()
+            var record = Pkfieldsblobs(3, 4, "Jeff", "Smith", generateRandomBlob())
             mapper.insert(record)
 
-            record = Pkfieldsblobs()
-            record.id1 = 5
-            record.id2 = 6
-            record.firstname = "Scott"
-            record.lastname = "Jones"
-            record.blob1 = generateRandomBlob()
+            record = Pkfieldsblobs(5, 6, "Scott", "Jones", generateRandomBlob())
             mapper.insert(record)
 
             val answer = mapper.select { allRows() }
@@ -1183,11 +1085,7 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(FieldsblobsMapper::class.java)
-            val record = Fieldsblobs()
-            record.firstname = "Jeff"
-            record.lastname = "Smith"
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            val record = Fieldsblobs("Jeff", "Smith", generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
             val answer = mapper.select { allRows() }
@@ -1206,18 +1104,10 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(FieldsblobsMapper::class.java)
-            var record = Fieldsblobs()
-            record.firstname = "Jeff"
-            record.lastname = "Smith"
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            var record = Fieldsblobs("Jeff", "Smith", generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
-            record = Fieldsblobs()
-            record.firstname = "Scott"
-            record.lastname = "Jones"
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            record = Fieldsblobs("Scott", "Jones", generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
             var answer = mapper.select { allRows() }
@@ -1236,18 +1126,10 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(FieldsblobsMapper::class.java)
-            var record = Fieldsblobs()
-            record.firstname = "Jeff"
-            record.lastname = "Smith"
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            var record = Fieldsblobs("Jeff", "Smith", generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
-            record = Fieldsblobs()
-            record.firstname = "Scott"
-            record.lastname = "Jones"
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            record = Fieldsblobs("Scott", "Jones", generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
             val answer = mapper.select { where { fieldsblobs.firstname isLike "S%" } }
@@ -1268,18 +1150,10 @@ class DynamicSqlTest : AbstractTest() {
             val mapper = sqlSession.getMapper(FieldsblobsMapper::class.java)
             val records = mutableListOf<Fieldsblobs>()
 
-            var record = Fieldsblobs()
-            record.firstname = "Jeff"
-            record.lastname = "Smith"
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            var record = Fieldsblobs("Jeff", "Smith", generateRandomBlob(), generateRandomBlob())
             records.add(record)
 
-            record = Fieldsblobs()
-            record.firstname = "Scott"
-            record.lastname = "Jones"
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            record = Fieldsblobs("Scott", "Jones", generateRandomBlob(), generateRandomBlob())
             records.add(record)
 
             val rowsInserted = mapper.insertMultiple(records)
@@ -1301,18 +1175,10 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(FieldsblobsMapper::class.java)
-            var record = Fieldsblobs()
-            record.firstname = "Jeff"
-            record.lastname = "Smith"
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            var record = Fieldsblobs("Jeff", "Smith", generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
-            record = Fieldsblobs()
-            record.firstname = "Scott"
-            record.lastname = "Jones"
-            record.blob1 = generateRandomBlob()
-            record.blob2 = generateRandomBlob()
+            record = Fieldsblobs("Scott", "Jones", generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
             val answer = mapper.select { allRows() }
@@ -1325,20 +1191,10 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(PkfieldsblobsMapper::class.java)
-            var record = Pkfieldsblobs()
-            record.id1 = 3
-            record.id2 = 4
-            record.firstname = "Jeff"
-            record.lastname = "Smith"
-            record.blob1 = generateRandomBlob()
+            var record = Pkfieldsblobs(3, 4, "Jeff", "Smith", generateRandomBlob())
             mapper.insert(record)
 
-            record = Pkfieldsblobs()
-            record.id1 = 5
-            record.id2 = 6
-            record.firstname = "Scott"
-            record.lastname = "Jones"
-            record.blob1 = generateRandomBlob()
+            record = Pkfieldsblobs(5, 6, "Scott", "Jones", generateRandomBlob())
             mapper.insert(record)
 
             var rows = mapper.count { where { pkfieldsblobs.id1 isNotEqualTo 3 } }
@@ -1354,21 +1210,10 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(AwfulTableMapper::class.java)
-            val record = AwfulTable()
-            record.eMail = "fred@fred.com"
-            record.emailaddress = "alsofred@fred.com"
-            record.firstFirstName = "fred1"
-            record.from = "from field"
-            record.id1 = 1
-            record.id2 = 2
-            record.id5 = 5
-            record.id6 = 6
-            record.id7 = 7
-            record.secondFirstName = "fred2"
-            record.thirdFirstName = "fred3"
-            record.active = true
-            record.active1 = false
-            record.active2 = byteArrayOf(-128, 127)
+            val record = AwfulTable(firstFirstName = "Fred", secondFirstName = "fred2", thirdFirstName = "fred3",
+                eMail = "fred@fred.com", id1 = 1, id2 = 2, id5 = 5, id6 = 6, id7 = 7,
+                emailaddress = "alsofred@fred.com", from = "from field", active = true, active1 = false,
+                active2 = byteArrayOf(-128, 127))
 
             mapper.insert(record)
             val generatedCustomerId = record.customerId
@@ -1405,18 +1250,8 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(AwfulTableMapper::class.java)
-            val record = AwfulTable()
-
-            record.eMail = "fred@fred.com"
-            record.emailaddress = "alsofred@fred.com"
-            record.from = "from field"
-            record.id1 = 1
-            record.id2 = 2
-            record.id5 = 5
-            record.id6 = 6
-            record.id7 = 7
-            record.secondFirstName = "fred2"
-            record.thirdFirstName = "fred3"
+            val record = AwfulTable(secondFirstName = "fred2", thirdFirstName = "fred3", eMail = "fred@fred.com",
+                id1 = 1, id2 = 2, id5 = 5, id6 = 6, id7 = 7, emailaddress = "alscfred@fred.com", from = "from field")
 
             mapper.insertSelective(record)
             val generatedCustomerId = record.customerId
@@ -1447,32 +1282,22 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(AwfulTableMapper::class.java)
-            val record = AwfulTable()
-            record.eMail = "fred@fred.com"
-            record.emailaddress = "alsofred@fred.com"
-            record.firstFirstName = "fred1"
-            record.from = "from field"
-            record.id1 = 1
-            record.id2 = 2
-            record.id5 = 5
-            record.id6 = 6
-            record.id7 = 7
-            record.secondFirstName = "fred2"
-            record.thirdFirstName = "fred3"
+            val record = AwfulTable(firstFirstName = "Fred", secondFirstName = "fred2", thirdFirstName = "fred3",
+                eMail = "fred@fred.com", id1 = 1, id2 = 2, id5 = 5, id6 = 6, id7 = 7,
+                emailaddress = "alsofred@fred.com", from = "from field")
 
             mapper.insert(record)
             val generatedCustomerId = record.customerId!!
 
-            record.id1 = 11
-            record.id2 = 22
+            val record2 = record.copy(id1 = 11, id2 = 22)
 
-            val rows = mapper.updateByPrimaryKey(record)
+            val rows = mapper.updateByPrimaryKey(record2)
             assertEquals(1, rows)
 
             val returnedRecord = mapper.selectByPrimaryKey(generatedCustomerId)
 
             assertThat(returnedRecord).isNotNull
-            assertThat(returnedRecord).usingRecursiveComparison().isEqualTo(record)
+            assertThat(returnedRecord).usingRecursiveComparison().isEqualTo(record2)
         }
     }
 
@@ -1481,26 +1306,13 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(AwfulTableMapper::class.java)
-            val record = AwfulTable()
-            record.eMail = "fred@fred.com"
-            record.emailaddress = "alsofred@fred.com"
-            record.firstFirstName = "fred1"
-            record.from = "from field"
-            record.id1 = 1
-            record.id2 = 2
-            record.id5 = 5
-            record.id6 = 6
-            record.id7 = 7
-            record.secondFirstName = "fred2"
-            record.thirdFirstName = "fred3"
-
+            val record = AwfulTable(firstFirstName = "Fred", secondFirstName = "fred2", thirdFirstName = "fred3",
+                eMail = "fred@fred.com", id1 = 1, id2 = 2, id5 = 5, id6 = 6, id7 = 7,
+                emailaddress = "alsofred@fred.com", from = "from field")
             mapper.insert(record)
             val generatedCustomerId = record.customerId!!
 
-            val newRecord = AwfulTable()
-            newRecord.customerId = generatedCustomerId
-            newRecord.id1 = 11
-            newRecord.id2 = 22
+            val newRecord = AwfulTable(customerId = generatedCustomerId, id1 = 11, id2 = 22)
 
             val rows = mapper.updateByPrimaryKeySelective(newRecord)
             assertEquals(1, rows)
@@ -1513,7 +1325,6 @@ class DynamicSqlTest : AbstractTest() {
                 assertEquals(record.eMail, returnedRecord.eMail)
                 assertEquals(record.emailaddress, returnedRecord.emailaddress)
                 assertEquals(record.firstFirstName, returnedRecord.firstFirstName)
-                assertEquals(record.from, returnedRecord.from)
                 assertEquals(newRecord.id1!!, returnedRecord.id1)
                 assertEquals(newRecord.id2!!, returnedRecord.id2)
                 assertEquals(record.id5!!, returnedRecord.id5)
@@ -1530,18 +1341,9 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(AwfulTableMapper::class.java)
-            val record = AwfulTable()
-            record.eMail = "fred@fred.com"
-            record.emailaddress = "alsofred@fred.com"
-            record.firstFirstName = "fred1"
-            record.from = "from field"
-            record.id1 = 1
-            record.id2 = 2
-            record.id5 = 5
-            record.id6 = 6
-            record.id7 = 7
-            record.secondFirstName = "fred2"
-            record.thirdFirstName = "fred3"
+            val record = AwfulTable(firstFirstName = "Fred", secondFirstName = "fred2", thirdFirstName = "fred3",
+                eMail = "fred@fred.com", id1 = 1, id2 = 2, id5 = 5, id6 = 6, id7 = 7,
+                emailaddress = "alsofred@fred.com", from = "from field")
 
             mapper.insert(record)
             val generatedCustomerId = record.customerId
@@ -1559,34 +1361,14 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(AwfulTableMapper::class.java)
-            var record = AwfulTable()
-            record.eMail = "fred@fred.com"
-            record.emailaddress = "alsofred@fred.com"
-            record.firstFirstName = "fred1"
-            record.from = "from field"
-            record.id1 = 1
-            record.id2 = 2
-            record.id5 = 5
-            record.id6 = 6
-            record.id7 = 7
-            record.secondFirstName = "fred2"
-            record.thirdFirstName = "fred3"
-
+            var record = AwfulTable(firstFirstName = "Fred", secondFirstName = "fred2", thirdFirstName = "fred3",
+                eMail = "fred@fred.com", id1 = 1, id2 = 2, id5 = 5, id6 = 6, id7 = 7,
+                emailaddress = "alsofred@fred.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "fred2@fred.com"
-            record.emailaddress = "alsofred2@fred.com"
-            record.firstFirstName = "fred11"
-            record.from = "from from field"
-            record.id1 = 11
-            record.id2 = 22
-            record.id5 = 55
-            record.id6 = 66
-            record.id7 = 77
-            record.secondFirstName = "fred22"
-            record.thirdFirstName = "fred33"
-
+            record = AwfulTable(firstFirstName = "Wilma", secondFirstName = "wilma2", thirdFirstName = "wilma3",
+                eMail = "wilma@wilma.com", id1 = 11, id2 = 22, id5 = 55, id6 = 66, id7 = 77,
+                emailaddress = "alsowilma@wilma.com", from = "from field")
             mapper.insert(record)
 
             var answer = mapper.select { allRows() }
@@ -1605,34 +1387,15 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(AwfulTableMapper::class.java)
-            val record = AwfulTable()
-            record.eMail = "fred@fred.com"
-            record.emailaddress = "alsofred@fred.com"
-            record.firstFirstName = "fred1"
-            record.from = "from field"
-            record.id1 = 1
-            record.id2 = 2
-            record.id5 = 5
-            record.id6 = 6
-            record.id7 = 7
-            record.secondFirstName = "fred2"
-            record.thirdFirstName = "fred3"
+            val record = AwfulTable(firstFirstName = "Fred", secondFirstName = "fred2", thirdFirstName = "fred3",
+                eMail = "fred@fred.com", id1 = 1, id2 = 2, id5 = 5, id6 = 6, id7 = 7,
+                emailaddress = "alsofred@fred.com", from = "from field")
 
             mapper.insert(record)
 
-            val record1 = AwfulTable()
-            record1.eMail = "fred2@fred.com"
-            record1.emailaddress = "alsofred2@fred.com"
-            record1.firstFirstName = "fred11"
-            record1.from = "from from field"
-            record1.id1 = 11
-            record1.id2 = 22
-            record1.id5 = 55
-            record1.id6 = 66
-            record1.id7 = 77
-            record1.secondFirstName = "fred22"
-            record1.thirdFirstName = "fred33"
-
+            val record1 = AwfulTable(firstFirstName = "Wilma", secondFirstName = "wilma2", thirdFirstName = "wilma3",
+                eMail = "wilma@wilma.com", id1 = 11, id2 = 22, id5 = 55, id6 = 66, id7 = 77,
+                emailaddress = "alsowilma@wilma.com", from = "from field")
             mapper.insert(record1)
             val generatedKey = record1.customerId!!
 
@@ -1661,92 +1424,38 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(AwfulTableMapper::class.java)
-            var record = AwfulTable()
-            record.eMail = "fred@fred.com"
-            record.emailaddress = "alsofred@fred.com"
-            record.firstFirstName = "fred1"
-            record.from = "from field"
-            record.id1 = 1
-            record.id2 = 2
-            record.id5 = 5
-            record.id6 = 6
-            record.id7 = 7
-            record.secondFirstName = "fred2"
-            record.thirdFirstName = "fred3"
+            var record = AwfulTable(firstFirstName = "Fred", secondFirstName = "fred2", thirdFirstName = "fred3",
+                eMail = "fred@fred.com", id1 = 1, id2 = 2, id5 = 5, id6 = 6, id7 = 7,
+                emailaddress = "alsofred@fred.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "wilma@wilma.com"
-            record.emailaddress = "alsoWilma@wilma.com"
-            record.firstFirstName = "wilma1"
-            record.from = "from field"
-            record.id1 = 11
-            record.id2 = 22
-            record.id5 = 55
-            record.id6 = 66
-            record.id7 = 77
-            record.secondFirstName = "wilma2"
-            record.thirdFirstName = "wilma3"
+            record = AwfulTable(firstFirstName = "Wilma", secondFirstName = "wilma2", thirdFirstName = "wilma3",
+                eMail = "wilma@wilma.com", id1 = 11, id2 = 22, id5 = 55, id6 = 66, id7 = 77,
+                emailaddress = "alsowilma@wilma.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "pebbles@pebbles.com"
-            record.emailaddress = "alsoPebbles@pebbles.com"
-            record.firstFirstName = "pebbles1"
-            record.from = "from field"
-            record.id1 = 111
-            record.id2 = 222
-            record.id5 = 555
-            record.id6 = 666
-            record.id7 = 777
-            record.secondFirstName = "pebbles2"
-            record.thirdFirstName = "pebbles3"
+            record = AwfulTable(firstFirstName = "Pebbles", secondFirstName = "pebbles2", thirdFirstName = "pebbles3",
+                eMail = "pebbles@pebbles.com", id1 = 111, id2 = 222, id5 = 555, id6 = 666, id7 = 777,
+                emailaddress = "alsopebbles@pebbles.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "barney@barney.com"
-            record.emailaddress = "alsoBarney@barney.com"
-            record.firstFirstName = "barney1"
-            record.from = "from field"
-            record.id1 = 1111
-            record.id2 = 2222
-            record.id5 = 5555
-            record.id6 = 6666
-            record.id7 = 7777
-            record.secondFirstName = "barney2"
-            record.thirdFirstName = "barney3"
+            record = AwfulTable(firstFirstName = "Barney", secondFirstName = "barney2", thirdFirstName = "barney3",
+                eMail = "barney@barney.com", id1 = 1111, id2 = 2222, id5 = 5555, id6 = 6666, id7 = 7777,
+                emailaddress = "alsobarney@barney.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "betty@betty.com"
-            record.emailaddress = "alsoBetty@betty.com"
-            record.firstFirstName = "betty1"
-            record.from = "from field"
-            record.id1 = 11111
-            record.id2 = 22222
-            record.id5 = 55555
-            record.id6 = 66666
-            record.id7 = 77777
-            record.secondFirstName = "betty2"
-            record.thirdFirstName = "betty3"
+            record = AwfulTable(firstFirstName = "Betty", secondFirstName = "betty2", thirdFirstName = "betty3",
+                eMail = "betty@betty.com", id1 = 11111, id2 = 22222, id5 = 55555, id6 = 66666, id7 = 77777,
+                emailaddress = "alsobetty@betty.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "bammbamm@bammbamm.com"
-            record.emailaddress = "alsoBammbamm@bammbamm.com"
-            record.firstFirstName = "bammbamm1"
-            record.from = "from field"
-            record.id1 = 111111
-            record.id2 = 222222
-            record.id5 = 555555
-            record.id6 = 666666
-            record.id7 = 777777
-            record.secondFirstName = "bammbamm2"
-            record.thirdFirstName = "bammbamm3"
+            record = AwfulTable(firstFirstName = "BammBamm", secondFirstName = "bammbamm2", thirdFirstName = "bammbamm3",
+                eMail = "bammbamm@bammbamm.com", id1 = 111111, id2 = 222222, id5 = 555555, id6 = 666666, id7 = 777777,
+                emailaddress = "alsobammbamm@bammbamm.com", from = "from field")
             mapper.insert(record)
 
             val answer = mapper.select {
-                where { awfulTable.firstFirstName isLike "b%" }
+                where { awfulTable.firstFirstName isLike "B%" }
                 orderBy(awfulTable.customerId)
             }
             assertEquals(3, answer.size)
@@ -1774,88 +1483,34 @@ class DynamicSqlTest : AbstractTest() {
             val mapper = sqlSession.getMapper(AwfulTableMapper::class.java)
             val records = mutableListOf<AwfulTable>()
 
-            var record = AwfulTable()
-            record.eMail = "fred@fred.com"
-            record.emailaddress = "alsofred@fred.com"
-            record.firstFirstName = "fred1"
-            record.from = "from field"
-            record.id1 = 1
-            record.id2 = 2
-            record.id5 = 5
-            record.id6 = 6
-            record.id7 = 7
-            record.secondFirstName = "fred2"
-            record.thirdFirstName = "fred3"
+            var record = AwfulTable(firstFirstName = "Fred", secondFirstName = "fred2", thirdFirstName = "fred3",
+                eMail = "fred@fred.com", id1 = 1, id2 = 2, id5 = 5, id6 = 6, id7 = 7,
+                emailaddress = "alsofred@fred.com", from = "from field")
             records.add(record)
 
-            record = AwfulTable()
-            record.eMail = "wilma@wilma.com"
-            record.emailaddress = "alsoWilma@wilma.com"
-            record.firstFirstName = "wilma1"
-            record.from = "from field"
-            record.id1 = 11
-            record.id2 = 22
-            record.id5 = 55
-            record.id6 = 66
-            record.id7 = 77
-            record.secondFirstName = "wilma2"
-            record.thirdFirstName = "wilma3"
+            record = AwfulTable(firstFirstName = "Wilma", secondFirstName = "wilma2", thirdFirstName = "wilma3",
+                eMail = "wilma@wilma.com", id1 = 11, id2 = 22, id5 = 55, id6 = 66, id7 = 77,
+                emailaddress = "alsowilma@wilma.com", from = "from field")
             records.add(record)
 
-            record = AwfulTable()
-            record.eMail = "pebbles@pebbles.com"
-            record.emailaddress = "alsoPebbles@pebbles.com"
-            record.firstFirstName = "pebbles1"
-            record.from = "from field"
-            record.id1 = 111
-            record.id2 = 222
-            record.id5 = 555
-            record.id6 = 666
-            record.id7 = 777
-            record.secondFirstName = "pebbles2"
-            record.thirdFirstName = "pebbles3"
+            record = AwfulTable(firstFirstName = "Pebbles", secondFirstName = "pebbles2", thirdFirstName = "pebbles3",
+                eMail = "pebbles@pebbles.com", id1 = 111, id2 = 222, id5 = 555, id6 = 666, id7 = 777,
+                emailaddress = "alsopebbles@pebbles.com", from = "from field")
             records.add(record)
 
-            record = AwfulTable()
-            record.eMail = "barney@barney.com"
-            record.emailaddress = "alsoBarney@barney.com"
-            record.firstFirstName = "barney1"
-            record.from = "from field"
-            record.id1 = 1111
-            record.id2 = 2222
-            record.id5 = 5555
-            record.id6 = 6666
-            record.id7 = 7777
-            record.secondFirstName = "barney2"
-            record.thirdFirstName = "barney3"
+            record = AwfulTable(firstFirstName = "Barney", secondFirstName = "barney2", thirdFirstName = "barney3",
+                eMail = "barney@barney.com", id1 = 1111, id2 = 2222, id5 = 5555, id6 = 6666, id7 = 7777,
+                emailaddress = "alsobarney@barney.com", from = "from field")
             records.add(record)
 
-            record = AwfulTable()
-            record.eMail = "betty@betty.com"
-            record.emailaddress = "alsoBetty@betty.com"
-            record.firstFirstName = "betty1"
-            record.from = "from field"
-            record.id1 = 11111
-            record.id2 = 22222
-            record.id5 = 55555
-            record.id6 = 66666
-            record.id7 = 77777
-            record.secondFirstName = "betty2"
-            record.thirdFirstName = "betty3"
+            record = AwfulTable(firstFirstName = "Betty", secondFirstName = "betty2", thirdFirstName = "betty3",
+                eMail = "betty@betty.com", id1 = 11111, id2 = 22222, id5 = 55555, id6 = 66666, id7 = 77777,
+                emailaddress = "alsobetty@betty.com", from = "from field")
             records.add(record)
 
-            record = AwfulTable()
-            record.eMail = "bammbamm@bammbamm.com"
-            record.emailaddress = "alsoBammbamm@bammbamm.com"
-            record.firstFirstName = "bammbamm1"
-            record.from = "from field"
-            record.id1 = 111111
-            record.id2 = 222222
-            record.id5 = 555555
-            record.id6 = 666666
-            record.id7 = 777777
-            record.secondFirstName = "bammbamm2"
-            record.thirdFirstName = "bammbamm3"
+            record = AwfulTable(firstFirstName = "BammBamm", secondFirstName = "bammbamm2", thirdFirstName = "bammbamm3",
+                eMail = "bammbamm@bammbamm.com", id1 = 111111, id2 = 222222, id5 = 555555, id6 = 666666, id7 = 777777,
+                emailaddress = "alsobammbamm@bammbamm.com", from = "from field")
             records.add(record)
 
             val rowsInserted = mapper.insertMultiple(records)
@@ -1870,7 +1525,7 @@ class DynamicSqlTest : AbstractTest() {
             assertEquals(62, records[5].customerId)
 
             val answer = mapper.select {
-                where { awfulTable.firstFirstName isLike "b%" }
+                where { awfulTable.firstFirstName isLike "B%" }
                 orderBy(awfulTable.customerId)
             }
             assertEquals(3, answer.size)
@@ -1896,92 +1551,38 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(AwfulTableMapper::class.java)
-            var record = AwfulTable()
-            record.eMail = "fred@fred.com"
-            record.emailaddress = "alsofred@fred.com"
-            record.firstFirstName = "fred1"
-            record.from = "from field"
-            record.id1 = 1
-            record.id2 = 2
-            record.id5 = 5
-            record.id6 = 6
-            record.id7 = 7
-            record.secondFirstName = "fred2"
-            record.thirdFirstName = "fred3"
+            var record = AwfulTable(firstFirstName = "Fred", secondFirstName = "fred2", thirdFirstName = "fred3",
+                eMail = "fred@fred.com", id1 = 1, id2 = 2, id5 = 5, id6 = 6, id7 = 7,
+                emailaddress = "alsofred@fred.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "wilma@wilma.com"
-            record.emailaddress = "alsoWilma@wilma.com"
-            record.firstFirstName = "wilma1"
-            record.from = "from field"
-            record.id1 = 11
-            record.id2 = 22
-            record.id5 = 55
-            record.id6 = 66
-            record.id7 = 77
-            record.secondFirstName = "wilma2"
-            record.thirdFirstName = "wilma3"
+            record = AwfulTable(firstFirstName = "Wilma", secondFirstName = "wilma2", thirdFirstName = "wilma3",
+                eMail = "wilma@wilma.com", id1 = 11, id2 = 22, id5 = 55, id6 = 66, id7 = 77,
+                emailaddress = "alsowilma@wilma.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "pebbles@pebbles.com"
-            record.emailaddress = "alsoPebbles@pebbles.com"
-            record.firstFirstName = "pebbles1"
-            record.from = "from field"
-            record.id1 = 111
-            record.id2 = 222
-            record.id5 = 555
-            record.id6 = 666
-            record.id7 = 777
-            record.secondFirstName = "pebbles2"
-            record.thirdFirstName = "pebbles3"
+            record = AwfulTable(firstFirstName = "Pebbles", secondFirstName = "pebbles2", thirdFirstName = "pebbles3",
+                eMail = "pebbles@pebbles.com", id1 = 111, id2 = 222, id5 = 555, id6 = 666, id7 = 777,
+                emailaddress = "alsopebbles@pebbles.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "barney@barney.com"
-            record.emailaddress = "alsoBarney@barney.com"
-            record.firstFirstName = "barney1"
-            record.from = "from field"
-            record.id1 = 1111
-            record.id2 = 2222
-            record.id5 = 5555
-            record.id6 = 6666
-            record.id7 = 7777
-            record.secondFirstName = "barney2"
-            record.thirdFirstName = "barney3"
+            record = AwfulTable(firstFirstName = "Barney", secondFirstName = "barney2", thirdFirstName = "barney3",
+                eMail = "barney@barney.com", id1 = 1111, id2 = 2222, id5 = 5555, id6 = 6666, id7 = 7777,
+                emailaddress = "alsobarney@barney.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "betty@betty.com"
-            record.emailaddress = "alsoBetty@betty.com"
-            record.firstFirstName = "betty1"
-            record.from = "from field"
-            record.id1 = 11111
-            record.id2 = 22222
-            record.id5 = 55555
-            record.id6 = 66666
-            record.id7 = 77777
-            record.secondFirstName = "betty2"
-            record.thirdFirstName = "betty3"
+            record = AwfulTable(firstFirstName = "Betty", secondFirstName = "betty2", thirdFirstName = "betty3",
+                eMail = "betty@betty.com", id1 = 11111, id2 = 22222, id5 = 55555, id6 = 66666, id7 = 77777,
+                emailaddress = "alsobetty@betty.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "bammbamm@bammbamm.com"
-            record.emailaddress = "alsoBammbamm@bammbamm.com"
-            record.firstFirstName = "bammbamm1"
-            record.from = "from field"
-            record.id1 = 111111
-            record.id2 = 222222
-            record.id5 = 555555
-            record.id6 = 666666
-            record.id7 = 777777
-            record.secondFirstName = "bammbamm2"
-            record.thirdFirstName = "bammbamm3"
+            record = AwfulTable(firstFirstName = "BammBamm", secondFirstName = "bammbamm2", thirdFirstName = "bammbamm3",
+                eMail = "bammbamm@bammbamm.com", id1 = 111111, id2 = 222222, id5 = 555555, id6 = 666666, id7 = 777777,
+                emailaddress = "alsobammbamm@bammbamm.com", from = "from field")
             mapper.insert(record)
 
             val answer = mapper.select {
-                where { awfulTable.firstFirstName isNotLike "b%" }
+                where { awfulTable.firstFirstName isNotLike "B%" }
                 orderBy(awfulTable.customerId)
             }
             assertEquals(3, answer.size)
@@ -2002,97 +1603,43 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(AwfulTableMapper::class.java)
-            var record = AwfulTable()
-            record.eMail = "fred@fred.com"
-            record.emailaddress = "alsofred@fred.com"
-            record.firstFirstName = "fred1"
-            record.from = "from field"
-            record.id1 = 1
-            record.id2 = 2
-            record.id5 = 5
-            record.id6 = 6
-            record.id7 = 7
-            record.secondFirstName = "fred2"
-            record.thirdFirstName = "fred3"
+            var record = AwfulTable(firstFirstName = "Fred", secondFirstName = "fred2", thirdFirstName = "fred3",
+                eMail = "fred@fred.com", id1 = 1, id2 = 2, id5 = 5, id6 = 6, id7 = 7,
+                emailaddress = "alsofred@fred.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "wilma@wilma.com"
-            record.emailaddress = "alsoWilma@wilma.com"
-            record.firstFirstName = "wilma1"
-            record.from = "from field"
-            record.id1 = 11
-            record.id2 = 22
-            record.id5 = 55
-            record.id6 = 66
-            record.id7 = 77
-            record.secondFirstName = "wilma2"
-            record.thirdFirstName = "wilma3"
+            record = AwfulTable(firstFirstName = "Wilma", secondFirstName = "wilma2", thirdFirstName = "wilma3",
+                eMail = "wilma@wilma.com", id1 = 11, id2 = 22, id5 = 55, id6 = 66, id7 = 77,
+                emailaddress = "alsowilma@wilma.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "pebbles@pebbles.com"
-            record.emailaddress = "alsoPebbles@pebbles.com"
-            record.firstFirstName = "pebbles1"
-            record.from = "from field"
-            record.id1 = 111
-            record.id2 = 222
-            record.id5 = 555
-            record.id6 = 666
-            record.id7 = 777
-            record.secondFirstName = "pebbles2"
-            record.thirdFirstName = "pebbles3"
+            record = AwfulTable(firstFirstName = "Pebbles", secondFirstName = "pebbles2", thirdFirstName = "pebbles3",
+                eMail = "pebbles@pebbles.com", id1 = 111, id2 = 222, id5 = 555, id6 = 666, id7 = 777,
+                emailaddress = "alsopebbles@pebbles.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "barney@barney.com"
-            record.emailaddress = "alsoBarney@barney.com"
-            record.firstFirstName = "barney1"
-            record.from = "from field"
-            record.id1 = 1111
-            record.id2 = 2222
-            record.id5 = 5555
-            record.id6 = 6666
-            record.id7 = 7777
-            record.secondFirstName = "barney2"
-            record.thirdFirstName = "barney3"
+            record = AwfulTable(firstFirstName = "Barney", secondFirstName = "barney2", thirdFirstName = "barney3",
+                eMail = "barney@barney.com", id1 = 1111, id2 = 2222, id5 = 5555, id6 = 6666, id7 = 7777,
+                emailaddress = "alsobarney@barney.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "betty@betty.com"
-            record.emailaddress = "alsoBetty@betty.com"
-            record.firstFirstName = "betty1"
-            record.from = "from field"
-            record.id1 = 11111
-            record.id2 = 22222
-            record.id5 = 55555
-            record.id6 = 66666
-            record.id7 = 77777
-            record.secondFirstName = "betty2"
-            record.thirdFirstName = "betty3"
+            record = AwfulTable(firstFirstName = "Betty", secondFirstName = "betty2", thirdFirstName = "betty3",
+                eMail = "betty@betty.com", id1 = 11111, id2 = 22222, id5 = 55555, id6 = 66666, id7 = 77777,
+                emailaddress = "alsobetty@betty.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "bammbamm@bammbamm.com"
-            record.emailaddress = "alsoBammbamm@bammbamm.com"
-            record.firstFirstName = "bammbamm1"
-            record.from = "from field"
-            record.id1 = 111111
-            record.id2 = 222222
-            record.id5 = 555555
-            record.id6 = 666666
-            record.id7 = 777777
-            record.secondFirstName = "bammbamm2"
-            record.thirdFirstName = "bammbamm3"
+            record = AwfulTable(firstFirstName = "BammBamm", secondFirstName = "bammbamm2", thirdFirstName = "bammbamm3",
+                eMail = "bammbamm@bammbamm.com", id1 = 111111, id2 = 222222, id5 = 555555, id6 = 666666, id7 = 777777,
+                emailaddress = "alsobammbamm@bammbamm.com", from = "from field")
             mapper.insert(record)
 
             val answer = mapper.select {
                 where {
                     group {
-                        awfulTable.firstFirstName isLike "b%"
+                        awfulTable.firstFirstName isLike "B%"
                         and { awfulTable.id2 isEqualTo 222222 }
                     }
-                    or { awfulTable.firstFirstName isLike "wi%" }
+                    or { awfulTable.firstFirstName isLike "Wi%" }
                 }
                 orderBy(awfulTable.customerId)
             }
@@ -2112,88 +1659,34 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(AwfulTableMapper::class.java)
-            var record = AwfulTable()
-            record.eMail = "fred@fred.com"
-            record.emailaddress = "alsofred@fred.com"
-            record.firstFirstName = "fred1"
-            record.from = "from field"
-            record.id1 = 1
-            record.id2 = 2
-            record.id5 = 5
-            record.id6 = 6
-            record.id7 = 7
-            record.secondFirstName = "fred2"
-            record.thirdFirstName = "fred3"
+            var record = AwfulTable(firstFirstName = "Fred", secondFirstName = "fred2", thirdFirstName = "fred3",
+                eMail = "fred@fred.com", id1 = 1, id2 = 2, id5 = 5, id6 = 6, id7 = 7,
+                emailaddress = "alsofred@fred.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "wilma@wilma.com"
-            record.emailaddress = "alsoWilma@wilma.com"
-            record.firstFirstName = "wilma1"
-            record.from = "from field"
-            record.id1 = 11
-            record.id2 = 22
-            record.id5 = 55
-            record.id6 = 66
-            record.id7 = 77
-            record.secondFirstName = "wilma2"
-            record.thirdFirstName = "wilma3"
+            record = AwfulTable(firstFirstName = "Wilma", secondFirstName = "wilma2", thirdFirstName = "wilma3",
+                eMail = "wilma@wilma.com", id1 = 11, id2 = 22, id5 = 55, id6 = 66, id7 = 77,
+                emailaddress = "alsowilma@wilma.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "pebbles@pebbles.com"
-            record.emailaddress = "alsoPebbles@pebbles.com"
-            record.firstFirstName = "pebbles1"
-            record.from = "from field"
-            record.id1 = 111
-            record.id2 = 222
-            record.id5 = 555
-            record.id6 = 666
-            record.id7 = 777
-            record.secondFirstName = "pebbles2"
-            record.thirdFirstName = "pebbles3"
+            record = AwfulTable(firstFirstName = "Pebbles", secondFirstName = "pebbles2", thirdFirstName = "pebbles3",
+                eMail = "pebbles@pebbles.com", id1 = 111, id2 = 222, id5 = 555, id6 = 666, id7 = 777,
+                emailaddress = "alsopebbles@pebbles.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "barney@barney.com"
-            record.emailaddress = "alsoBarney@barney.com"
-            record.firstFirstName = "barney1"
-            record.from = "from field"
-            record.id1 = 1111
-            record.id2 = 2222
-            record.id5 = 5555
-            record.id6 = 6666
-            record.id7 = 7777
-            record.secondFirstName = "barney2"
-            record.thirdFirstName = "barney3"
+            record = AwfulTable(firstFirstName = "Barney", secondFirstName = "barney2", thirdFirstName = "barney3",
+                eMail = "barney@barney.com", id1 = 1111, id2 = 2222, id5 = 5555, id6 = 6666, id7 = 7777,
+                emailaddress = "alsobarney@barney.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "betty@betty.com"
-            record.emailaddress = "alsoBetty@betty.com"
-            record.firstFirstName = "betty1"
-            record.from = "from field"
-            record.id1 = 11111
-            record.id2 = 22222
-            record.id5 = 55555
-            record.id6 = 66666
-            record.id7 = 77777
-            record.secondFirstName = "betty2"
-            record.thirdFirstName = "betty3"
+            record = AwfulTable(firstFirstName = "Betty", secondFirstName = "betty2", thirdFirstName = "betty3",
+                eMail = "betty@betty.com", id1 = 11111, id2 = 22222, id5 = 55555, id6 = 66666, id7 = 77777,
+                emailaddress = "alsobetty@betty.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "bammbamm@bammbamm.com"
-            record.emailaddress = "alsoBammbamm@bammbamm.com"
-            record.firstFirstName = "bammbamm1"
-            record.from = "from field"
-            record.id1 = 111111
-            record.id2 = 222222
-            record.id5 = 555555
-            record.id6 = 666666
-            record.id7 = 777777
-            record.secondFirstName = "bammbamm2"
-            record.thirdFirstName = "bammbamm3"
+            record = AwfulTable(firstFirstName = "BammBamm", secondFirstName = "bammbamm2", thirdFirstName = "bammbamm3",
+                eMail = "bammbamm@bammbamm.com", id1 = 111111, id2 = 222222, id5 = 555555, id6 = 666666, id7 = 777777,
+                emailaddress = "alsobammbamm@bammbamm.com", from = "from field")
             mapper.insert(record)
 
             val answer = mapper.select {
@@ -2216,88 +1709,34 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
 
             val mapper = sqlSession.getMapper(AwfulTableMapper::class.java)
-            var record = AwfulTable()
-            record.eMail = "fred@fred.com"
-            record.emailaddress = "alsofred@fred.com"
-            record.firstFirstName = "fred1"
-            record.from = "from field"
-            record.id1 = 1
-            record.id2 = 2
-            record.id5 = 5
-            record.id6 = 6
-            record.id7 = 7
-            record.secondFirstName = "fred2"
-            record.thirdFirstName = "fred3"
+            var record = AwfulTable(firstFirstName = "Fred", secondFirstName = "fred2", thirdFirstName = "fred3",
+                eMail = "fred@fred.com", id1 = 1, id2 = 2, id5 = 5, id6 = 6, id7 = 7,
+                emailaddress = "alsofred@fred.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "wilma@wilma.com"
-            record.emailaddress = "alsoWilma@wilma.com"
-            record.firstFirstName = "wilma1"
-            record.from = "from field"
-            record.id1 = 11
-            record.id2 = 22
-            record.id5 = 55
-            record.id6 = 66
-            record.id7 = 77
-            record.secondFirstName = "wilma2"
-            record.thirdFirstName = "wilma3"
+            record = AwfulTable(firstFirstName = "Wilma", secondFirstName = "wilma2", thirdFirstName = "wilma3",
+                eMail = "wilma@wilma.com", id1 = 11, id2 = 22, id5 = 55, id6 = 66, id7 = 77,
+                emailaddress = "alsowilma@wilma.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "pebbles@pebbles.com"
-            record.emailaddress = "alsoPebbles@pebbles.com"
-            record.firstFirstName = "pebbles1"
-            record.from = "from field"
-            record.id1 = 111
-            record.id2 = 222
-            record.id5 = 555
-            record.id6 = 666
-            record.id7 = 777
-            record.secondFirstName = "pebbles2"
-            record.thirdFirstName = "pebbles3"
+            record = AwfulTable(firstFirstName = "Pebbles", secondFirstName = "pebbles2", thirdFirstName = "pebbles3",
+                eMail = "pebbles@pebbles.com", id1 = 111, id2 = 222, id5 = 555, id6 = 666, id7 = 777,
+                emailaddress = "alsopebbles@pebbles.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "barney@barney.com"
-            record.emailaddress = "alsoBarney@barney.com"
-            record.firstFirstName = "barney1"
-            record.from = "from field"
-            record.id1 = 1111
-            record.id2 = 2222
-            record.id5 = 5555
-            record.id6 = 6666
-            record.id7 = 7777
-            record.secondFirstName = "barney2"
-            record.thirdFirstName = "barney3"
+            record = AwfulTable(firstFirstName = "Barney", secondFirstName = "barney2", thirdFirstName = "barney3",
+                eMail = "barney@barney.com", id1 = 1111, id2 = 2222, id5 = 5555, id6 = 6666, id7 = 7777,
+                emailaddress = "alsobarney@barney.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "betty@betty.com"
-            record.emailaddress = "alsoBetty@betty.com"
-            record.firstFirstName = "betty1"
-            record.from = "from field"
-            record.id1 = 11111
-            record.id2 = 22222
-            record.id5 = 55555
-            record.id6 = 66666
-            record.id7 = 77777
-            record.secondFirstName = "betty2"
-            record.thirdFirstName = "betty3"
+            record = AwfulTable(firstFirstName = "Betty", secondFirstName = "betty2", thirdFirstName = "betty3",
+                eMail = "betty@betty.com", id1 = 11111, id2 = 22222, id5 = 55555, id6 = 66666, id7 = 77777,
+                emailaddress = "alsobetty@betty.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "bammbamm@bammbamm.com"
-            record.emailaddress = "alsoBammbamm@bammbamm.com"
-            record.firstFirstName = "bammbamm1"
-            record.from = "from field"
-            record.id1 = 111111
-            record.id2 = 222222
-            record.id5 = 555555
-            record.id6 = 666666
-            record.id7 = 777777
-            record.secondFirstName = "bammbamm2"
-            record.thirdFirstName = "bammbamm3"
+            record = AwfulTable(firstFirstName = "BammBamm", secondFirstName = "bammbamm2", thirdFirstName = "bammbamm3",
+                eMail = "bammbamm@bammbamm.com", id1 = 111111, id2 = 222222, id5 = 555555, id6 = 666666, id7 = 777777,
+                emailaddress = "alsobammbamm@bammbamm.com", from = "from field")
             mapper.insert(record)
 
             val answer = mapper.select { where { awfulTable.id1 isBetween 1 and 1000 } }
@@ -2309,88 +1748,34 @@ class DynamicSqlTest : AbstractTest() {
     fun testAwfulTableSelectByExampleNoCriteria() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(AwfulTableMapper::class.java)
-            var record = AwfulTable()
-            record.eMail = "fred@fred.com"
-            record.emailaddress = "alsofred@fred.com"
-            record.firstFirstName = "fred1"
-            record.from = "from field"
-            record.id1 = 1
-            record.id2 = 2
-            record.id5 = 5
-            record.id6 = 6
-            record.id7 = 7
-            record.secondFirstName = "fred2"
-            record.thirdFirstName = "fred3"
+            var record = AwfulTable(firstFirstName = "Fred", secondFirstName = "fred2", thirdFirstName = "fred3",
+                eMail = "fred@fred.com", id1 = 1, id2 = 2, id5 = 5, id6 = 6, id7 = 7,
+                emailaddress = "alsofred@fred.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "wilma@wilma.com"
-            record.emailaddress = "alsoWilma@wilma.com"
-            record.firstFirstName = "wilma1"
-            record.from = "from field"
-            record.id1 = 11
-            record.id2 = 22
-            record.id5 = 55
-            record.id6 = 66
-            record.id7 = 77
-            record.secondFirstName = "wilma2"
-            record.thirdFirstName = "wilma3"
+            record = AwfulTable(firstFirstName = "Wilma", secondFirstName = "wilma2", thirdFirstName = "wilma3",
+                eMail = "wilma@wilma.com", id1 = 11, id2 = 22, id5 = 55, id6 = 66, id7 = 77,
+                emailaddress = "alsowilma@wilma.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "pebbles@pebbles.com"
-            record.emailaddress = "alsoPebbles@pebbles.com"
-            record.firstFirstName = "pebbles1"
-            record.from = "from field"
-            record.id1 = 111
-            record.id2 = 222
-            record.id5 = 555
-            record.id6 = 666
-            record.id7 = 777
-            record.secondFirstName = "pebbles2"
-            record.thirdFirstName = "pebbles3"
+            record = AwfulTable(firstFirstName = "Pebbles", secondFirstName = "pebbles2", thirdFirstName = "pebbles3",
+                eMail = "pebbles@pebbles.com", id1 = 111, id2 = 222, id5 = 555, id6 = 666, id7 = 777,
+                emailaddress = "alsopebbles@pebbles.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "barney@barney.com"
-            record.emailaddress = "alsoBarney@barney.com"
-            record.firstFirstName = "barney1"
-            record.from = "from field"
-            record.id1 = 1111
-            record.id2 = 2222
-            record.id5 = 5555
-            record.id6 = 6666
-            record.id7 = 7777
-            record.secondFirstName = "barney2"
-            record.thirdFirstName = "barney3"
+            record = AwfulTable(firstFirstName = "Barney", secondFirstName = "barney2", thirdFirstName = "barney3",
+                eMail = "barney@barney.com", id1 = 1111, id2 = 2222, id5 = 5555, id6 = 6666, id7 = 7777,
+                emailaddress = "alsobarney@barney.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "betty@betty.com"
-            record.emailaddress = "alsoBetty@betty.com"
-            record.firstFirstName = "betty1"
-            record.from = "from field"
-            record.id1 = 11111
-            record.id2 = 22222
-            record.id5 = 55555
-            record.id6 = 66666
-            record.id7 = 77777
-            record.secondFirstName = "betty2"
-            record.thirdFirstName = "betty3"
+            record = AwfulTable(firstFirstName = "Betty", secondFirstName = "betty2", thirdFirstName = "betty3",
+                eMail = "betty@betty.com", id1 = 11111, id2 = 22222, id5 = 55555, id6 = 66666, id7 = 77777,
+                emailaddress = "alsobetty@betty.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "bammbamm@bammbamm.com"
-            record.emailaddress = "alsoBammbamm@bammbamm.com"
-            record.firstFirstName = "bammbamm1"
-            record.from = "from field"
-            record.id1 = 111111
-            record.id2 = 222222
-            record.id5 = 555555
-            record.id6 = 666666
-            record.id7 = 777777
-            record.secondFirstName = "bammbamm2"
-            record.thirdFirstName = "bammbamm3"
+            record = AwfulTable(firstFirstName = "BammBamm", secondFirstName = "bammbamm2", thirdFirstName = "bammbamm3",
+                eMail = "bammbamm@bammbamm.com", id1 = 111111, id2 = 222222, id5 = 555555, id6 = 666666, id7 = 777777,
+                emailaddress = "alsobammbamm@bammbamm.com", from = "from field")
             mapper.insert(record)
 
             val answer = mapper.select {
@@ -2418,34 +1803,14 @@ class DynamicSqlTest : AbstractTest() {
     fun testAwfulTablecount() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(AwfulTableMapper::class.java)
-            var record = AwfulTable()
-            record.eMail = "fred@fred.com"
-            record.emailaddress = "alsofred@fred.com"
-            record.firstFirstName = "fred1"
-            record.from = "from field"
-            record.id1 = 1
-            record.id2 = 2
-            record.id5 = 5
-            record.id6 = 6
-            record.id7 = 7
-            record.secondFirstName = "fred2"
-            record.thirdFirstName = "fred3"
-
+            var record = AwfulTable(firstFirstName = "Fred", secondFirstName = "fred2", thirdFirstName = "fred3",
+                eMail = "fred@fred.com", id1 = 1, id2 = 2, id5 = 5, id6 = 6, id7 = 7,
+                emailaddress = "alsofred@fred.com", from = "from field")
             mapper.insert(record)
 
-            record = AwfulTable()
-            record.eMail = "fred2@fred.com"
-            record.emailaddress = "alsofred2@fred.com"
-            record.firstFirstName = "fred11"
-            record.from = "from from field"
-            record.id1 = 11
-            record.id2 = 22
-            record.id5 = 55
-            record.id6 = 66
-            record.id7 = 77
-            record.secondFirstName = "fred22"
-            record.thirdFirstName = "fred33"
-
+            record = AwfulTable(firstFirstName = "Wilma", secondFirstName = "wilma2", thirdFirstName = "wilma3",
+                eMail = "wilma@wilma.com", id1 = 11, id2 = 22, id5 = 55, id6 = 66, id7 = 77,
+                emailaddress = "alsowilma@wilma.com", from = "from field")
             mapper.insert(record)
 
             var rows = mapper.count { where { awfulTable.eMail isLike "fred@%" } }
@@ -2475,14 +1840,14 @@ class DynamicSqlTest : AbstractTest() {
                 assertEquals(t1.translation, returnedRecord.translation)
             }
 
-            t1.translation = "Italian"
-            mapper.updateByPrimaryKey(t1)
+            val t2 = t1.copy(translation = "Italian")
+            mapper.updateByPrimaryKey(t2)
 
             returnedRecord = mapper.selectByPrimaryKey(2)
             assertThat(returnedRecord).isNotNull
             if (returnedRecord != null) {
-                assertEquals(t1.id, returnedRecord.id)
-                assertEquals(t1.translation, returnedRecord.translation)
+                assertEquals(t2.id, returnedRecord.id)
+                assertEquals(t2.translation, returnedRecord.translation)
             }
         }
     }
@@ -2492,14 +1857,10 @@ class DynamicSqlTest : AbstractTest() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(IdMapper::class.java)
 
-            val id = Id()
-            id.id = 1
-            id.description = "Spanish"
+            val id = Id(1, "Spanish")
             mapper.insert(id)
 
-            val id1 = Id()
-            id1.id = 2
-            id1.description = "French"
+            val id1 = Id(2, "French")
             mapper.insert(id1)
 
             var returnedRecord = mapper.selectByPrimaryKey(2)
@@ -2509,91 +1870,16 @@ class DynamicSqlTest : AbstractTest() {
                 assertEquals(id1.description, returnedRecord.description)
             }
 
-            id1.description = "Italian"
-            mapper.updateByPrimaryKey(id1)
+            val id3 = id1.copy(description = "Italian")
+            mapper.updateByPrimaryKey(id3)
 
             returnedRecord = mapper.selectByPrimaryKey(2)
 
             assertThat(returnedRecord).isNotNull
             if (returnedRecord != null) {
-                assertEquals(id1.id!!, returnedRecord.id)
-                assertEquals(id1.description, returnedRecord.description)
+                assertEquals(id3.id!!, returnedRecord.id)
+                assertEquals(id3.description, returnedRecord.description)
             }
         }
-    }
-
-    @Test
-    fun testEquals1() {
-        val pkfields1 = Pkfields()
-        assertThat(pkfields1).isNotNull
-    }
-
-    @Test
-    fun testEquals2() {
-        val pkfields1 = Pkfields()
-        val pkfields2 = Pkfields()
-        assertThat(pkfields1).isEqualTo(pkfields2)
-    }
-
-    @Test
-    fun testEquals3() {
-        val pkfields1 = Pkfields()
-        pkfields1.id1 = 2
-
-        val pkfields2 = Pkfields()
-        pkfields2.id1 = 2
-
-        assertThat(pkfields1).isEqualTo(pkfields2)
-    }
-
-    @Test
-    fun testEquals4() {
-        val pkfields1 = Pkfields()
-        pkfields1.id1 = 2
-
-        val pkfields2 = Pkfields()
-        pkfields2.id1 = 3
-
-        assertThat(pkfields1).isNotEqualTo(pkfields2)
-    }
-
-    @Test
-    fun testEquals5() {
-        val awfulTable1 = AwfulTable()
-        awfulTable1.active = false
-        awfulTable1.customerId = 3
-        awfulTable1.eMail = "fred@fred.com"
-        awfulTable1.emailaddress = "fred@fred.com"
-        awfulTable1.firstFirstName = "Fred"
-        awfulTable1.from = "from"
-        awfulTable1.id1 = 22
-        awfulTable1.id2 = 33
-        awfulTable1.id5 = 55
-        awfulTable1.id6 = 66
-        awfulTable1.id7 = 77
-        awfulTable1.lastName = "Rubble"
-        awfulTable1.secondFirstName = "Bamm Bamm"
-        awfulTable1.thirdFirstName = "Pebbles"
-
-        val awfulTable2 = AwfulTable()
-        awfulTable2.active = false
-        awfulTable2.customerId = 3
-        awfulTable2.eMail = "fred@fred.com"
-        awfulTable2.emailaddress = "fred@fred.com"
-        awfulTable2.firstFirstName = "Fred"
-        awfulTable2.from = "from"
-        awfulTable2.id1 = 22
-        awfulTable2.id2 = 33
-        awfulTable2.id5 = 55
-        awfulTable2.id6 = 66
-        awfulTable2.id7 = 77
-        awfulTable2.lastName = "Rubble"
-        awfulTable2.secondFirstName = "Bamm Bamm"
-        awfulTable2.thirdFirstName = "Pebbles"
-
-        assertThat(awfulTable1).isEqualTo(awfulTable2)
-
-        awfulTable2.active = true
-        assertThat(awfulTable1).isNotEqualTo(awfulTable2)
     }
 }
