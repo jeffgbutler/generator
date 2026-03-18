@@ -51,6 +51,7 @@ public class InsertSelectiveExtensionFunctionGenerator extends AbstractKotlinMap
         List<IntrospectedColumn> columns = ListUtilities.filterColumnsForInsert(introspectedTable.getAllColumns());
         if (introspectedTable.respectNullabilityForKotlin()
                 && columns.stream().noneMatch(IntrospectedColumn::isNullable)) {
+            // if there aren't any nullable columns, no need for insertSelective - it would be the same as insert
             return Optional.empty();
         }
 

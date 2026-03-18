@@ -42,11 +42,7 @@ public class UpdateSelectiveColumnsExtensionFunctionGenerator extends AbstractKo
 
     @Override
     public Optional<KotlinFunctionAndImports> generateFunctionAndImports() {
-        List<IntrospectedColumn> updateColumns =
-                ListUtilities.filterColumnsForUpdate(introspectedTable.getAllColumns());
-
-        if (introspectedTable.respectNullabilityForKotlin()
-                && updateColumns.stream().noneMatch(IntrospectedColumn::isNullable)) {
+        if (introspectedTable.respectNullabilityForKotlin()) {
             return Optional.empty();
         }
 
@@ -63,6 +59,8 @@ public class UpdateSelectiveColumnsExtensionFunctionGenerator extends AbstractKo
 
         commentGenerator.addGeneralFunctionComment(function, introspectedTable, imports);
 
+        List<IntrospectedColumn> updateColumns =
+                ListUtilities.filterColumnsForUpdate(introspectedTable.getAllColumns());
         return KotlinFunctionAndImports.withFunction(function)
                 .withImports(imports)
                 .withImports(recordType.getImportList())

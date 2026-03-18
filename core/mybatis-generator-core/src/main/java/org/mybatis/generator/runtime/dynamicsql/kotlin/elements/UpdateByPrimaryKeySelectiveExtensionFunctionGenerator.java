@@ -28,7 +28,6 @@ import org.mybatis.generator.api.dom.kotlin.KotlinArg;
 import org.mybatis.generator.api.dom.kotlin.KotlinFile;
 import org.mybatis.generator.api.dom.kotlin.KotlinFunction;
 import org.mybatis.generator.runtime.KotlinFunctionAndImports;
-import org.mybatis.generator.runtime.mybatis3.ListUtilities;
 
 public class UpdateByPrimaryKeySelectiveExtensionFunctionGenerator extends AbstractKotlinMapperFunctionGenerator {
     private final FullyQualifiedKotlinType recordType;
@@ -48,9 +47,7 @@ public class UpdateByPrimaryKeySelectiveExtensionFunctionGenerator extends Abstr
             return Optional.empty();
         }
 
-        List<IntrospectedColumn> columns = introspectedTable.getNonPrimaryKeyColumns();
-        if (introspectedTable.respectNullabilityForKotlin()
-                && columns.stream().noneMatch(IntrospectedColumn::isNullable)) {
+        if (introspectedTable.respectNullabilityForKotlin()) {
             return Optional.empty();
         }
 
@@ -66,6 +63,7 @@ public class UpdateByPrimaryKeySelectiveExtensionFunctionGenerator extends Abstr
 
         commentGenerator.addGeneralFunctionComment(function, introspectedTable, imports);
 
+        List<IntrospectedColumn> columns = introspectedTable.getNonPrimaryKeyColumns();
         return KotlinFunctionAndImports.withFunction(function)
                 .withImports(imports)
                 .withImports(recordType.getImportList())

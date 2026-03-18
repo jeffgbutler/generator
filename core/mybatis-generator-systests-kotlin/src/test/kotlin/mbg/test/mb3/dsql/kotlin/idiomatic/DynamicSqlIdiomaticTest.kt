@@ -13,22 +13,22 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package mbg.test.mb3.dsql.kotlin
+package mbg.test.mb3.dsql.kotlin.idiomatic
 
 import mbg.test.common.util.TestUtilities.blobsAreEqual
 import mbg.test.common.util.TestUtilities.generateRandomBlob
-import mbg.test.mb3.generated.dsql.kotlin.mapper.*
-import mbg.test.mb3.generated.dsql.kotlin.mapper.AwfulTableDynamicSqlSupport.awfulTable
-import mbg.test.mb3.generated.dsql.kotlin.mapper.FieldsblobsDynamicSqlSupport.fieldsblobs
-import mbg.test.mb3.generated.dsql.kotlin.mapper.FieldsonlyDynamicSqlSupport.fieldsonly
-import mbg.test.mb3.generated.dsql.kotlin.mapper.PkblobsDynamicSqlSupport.pkblobs
-import mbg.test.mb3.generated.dsql.kotlin.mapper.PkfieldsDynamicSqlSupport.pkfieldstable
-import mbg.test.mb3.generated.dsql.kotlin.mapper.PkfieldsblobsDynamicSqlSupport.pkfieldsblobs
-import mbg.test.mb3.generated.dsql.kotlin.mapper.PkonlyDynamicSqlSupport.pkonly
-import mbg.test.mb3.generated.dsql.kotlin.mapper.mbgtest.*
-import mbg.test.mb3.generated.dsql.kotlin.model.*
-import mbg.test.mb3.generated.dsql.kotlin.model.mbgtest.Id
-import mbg.test.mb3.generated.dsql.kotlin.model.mbgtest.Translation
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper.*
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper.AwfulTableDynamicSqlSupport.awfulTable
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper.FieldsblobsDynamicSqlSupport.fieldsblobs
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper.FieldsonlyDynamicSqlSupport.fieldsonly
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper.PkblobsDynamicSqlSupport.pkblobs
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper.PkfieldsDynamicSqlSupport.pkfieldstable
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper.PkfieldsblobsDynamicSqlSupport.pkfieldsblobs
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper.PkonlyDynamicSqlSupport.pkonly
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper.mbgtest.*
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.model.*
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.model.Id
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.model.Translation
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.within
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -43,7 +43,7 @@ import java.time.temporal.ChronoUnit
 /**
  * @author Jeff Butler
  */
-class DynamicSqlTest : AbstractTest() {
+class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
 
     @Test
     fun testFieldsOnlyInsert() {
@@ -386,8 +386,8 @@ class DynamicSqlTest : AbstractTest() {
             if (record2 != null) {
                 assertEquals(updateRecord.firstname, record2.firstname)
                 assertEquals(updateRecord.lastname, record2.lastname)
-                assertEquals(updateRecord.id1!!, record2.id1)
-                assertEquals(updateRecord.id2!!, record2.id2)
+                assertEquals(updateRecord.id1, record2.id1)
+                assertEquals(updateRecord.id2, record2.id2)
             }
         }
     }
@@ -399,8 +399,14 @@ class DynamicSqlTest : AbstractTest() {
             val record = Pkfields(firstname = "Jeff", lastname = "Smith", decimal60field = 5, id1 = 1, id2 = 2)
             mapper.insert(record)
 
-            val newRecord = Pkfields(id1 = 1, id2 = 2, firstname = "Scott", decimal60field = 4)
-            val rows = mapper.updateByPrimaryKeySelective(newRecord)
+            val rows = mapper.update {
+                set(pkfieldstable.firstname) equalTo "Scott"
+                set(pkfieldstable.decimal60field) equalTo 4
+                where {
+                    pkfieldstable.id1 isEqualTo 1
+                    and { pkfieldstable.id2 isEqualTo 2 }
+                }
+            }
             assertThat(rows).isEqualTo(1)
 
             val returnedRecord = mapper.selectByPrimaryKey(2, 1)
@@ -411,8 +417,8 @@ class DynamicSqlTest : AbstractTest() {
                 assertEquals(record.decimal100field, returnedRecord.decimal100field)
                 assertEquals(record.decimal155field, returnedRecord.decimal155field)
                 assertEquals(record.decimal30field, returnedRecord.decimal30field)
-                assertEquals(newRecord.decimal60field, returnedRecord.decimal60field)
-                assertEquals(newRecord.firstname, returnedRecord.firstname)
+                assertEquals(4, returnedRecord.decimal60field)
+                assertEquals("Scott", returnedRecord.firstname)
                 assertEquals(record.id1, returnedRecord.id1)
                 assertEquals(record.id2, returnedRecord.id2)
                 assertEquals(record.lastname, returnedRecord.lastname)
@@ -738,12 +744,9 @@ class DynamicSqlTest : AbstractTest() {
             mapper.insert(record)
 
             val newBlob = generateRandomBlob()
-
             mapper.update {
                 set(pkblobs.blob2) equalTo newBlob
-                where {
-                    pkblobs.id isEqualTo 3
-                }
+                where { pkblobs.id isEqualTo 3 }
             }
 
             val returnedRecord = mapper.selectByPrimaryKey(3)
@@ -890,8 +893,8 @@ class DynamicSqlTest : AbstractTest() {
             assertEquals(1, answer.size)
 
             val returnedRecord = answer[0]
-            assertEquals(record.id1!!, returnedRecord.id1)
-            assertEquals(record.id2!!, returnedRecord.id2)
+            assertEquals(record.id1, returnedRecord.id1)
+            assertEquals(record.id2, returnedRecord.id2)
             assertEquals(record.firstname, returnedRecord.firstname)
             assertEquals(record.lastname, returnedRecord.lastname)
             assertTrue(blobsAreEqual(record.blob1, returnedRecord.blob1))
@@ -917,8 +920,8 @@ class DynamicSqlTest : AbstractTest() {
             if (newRecord != null) {
                 assertEquals(updateRecord.firstname, newRecord.firstname)
                 assertEquals(updateRecord.lastname, newRecord.lastname)
-                assertEquals(record.id1!!, newRecord.id1)
-                assertEquals(record.id2!!, newRecord.id2)
+                assertEquals(record.id1, newRecord.id1)
+                assertEquals(record.id2, newRecord.id2)
                 assertTrue(blobsAreEqual(updateRecord.blob1, newRecord.blob1))
             }
         }
@@ -932,18 +935,22 @@ class DynamicSqlTest : AbstractTest() {
             val record = Pkfieldsblobs(3, 4, "Jeff", "Smith", generateRandomBlob())
             mapper.insert(record)
 
-            val updateRecord = Pkfieldsblobs(3, 4, lastname = "Jones")
-
-            val rows = mapper.updateByPrimaryKeySelective(updateRecord)
+            val rows = mapper.update {
+                set(pkfieldsblobs.lastname) equalTo "Jones"
+                where {
+                    pkfieldsblobs.id1 isEqualTo 3
+                    and { pkfieldsblobs.id2 isEqualTo 4 }
+                }
+            }
             assertEquals(1, rows)
 
             val returnedRecord = mapper.selectByPrimaryKey(3, 4)
 
             assertThat(returnedRecord).isNotNull
             assertEquals(record.firstname, returnedRecord!!.firstname)
-            assertEquals(updateRecord.lastname, returnedRecord.lastname)
-            assertEquals(record.id1!!, returnedRecord.id1)
-            assertEquals(record.id2!!, returnedRecord.id2)
+            assertEquals("Jones", returnedRecord.lastname)
+            assertEquals(record.id1, returnedRecord.id1)
+            assertEquals(record.id2, returnedRecord.id2)
             assertTrue(blobsAreEqual(record.blob1, returnedRecord.blob1))
         }
     }
@@ -1010,8 +1017,8 @@ class DynamicSqlTest : AbstractTest() {
 
             assertThat(newRecord).isNotNull
             if (newRecord != null) {
-                assertEquals(record1.id1!!, newRecord.id1)
-                assertEquals(record1.id2!!, newRecord.id2)
+                assertEquals(record1.id1, newRecord.id1)
+                assertEquals(record1.id2, newRecord.id2)
                 assertEquals(record1.firstname, newRecord.firstname)
                 assertEquals(record1.lastname, newRecord.lastname)
                 assertTrue(blobsAreEqual(record1.blob1, newRecord.blob1))
@@ -1034,8 +1041,8 @@ class DynamicSqlTest : AbstractTest() {
             assertEquals(1, answer.size)
 
             val newRecord = answer[0]
-            assertEquals(record.id1!!, newRecord.id1)
-            assertEquals(record.id2!!, newRecord.id2)
+            assertEquals(record.id1, newRecord.id1)
+            assertEquals(record.id2, newRecord.id2)
             assertEquals(record.firstname, newRecord.firstname)
             assertEquals(record.lastname, newRecord.lastname)
             assertTrue(blobsAreEqual(record.blob1, newRecord.blob1))
@@ -1062,8 +1069,8 @@ class DynamicSqlTest : AbstractTest() {
             assertEquals(1, answer.size)
 
             val newRecord = answer[0]
-            assertEquals(record.id1!!, newRecord.id1)
-            assertEquals(record.id2!!, newRecord.id2)
+            assertEquals(record.id1, newRecord.id1)
+            assertEquals(record.id2, newRecord.id2)
             assertEquals(record.firstname, newRecord.firstname)
             assertEquals(record.lastname, newRecord.lastname)
             assertTrue(blobsAreEqual(record.blob1, newRecord.blob1))
@@ -1318,9 +1325,13 @@ class DynamicSqlTest : AbstractTest() {
             mapper.insert(record)
             val generatedCustomerId = record.customerId!!
 
-            val newRecord = AwfulTable(customerId = generatedCustomerId, id1 = 11, id2 = 22)
-
-            val rows = mapper.updateByPrimaryKeySelective(newRecord)
+            val rows = mapper.update {
+                set(awfulTable.id1) equalTo 11
+                set(awfulTable.id2) equalTo 22
+                where {
+                    awfulTable.customerId isEqualTo generatedCustomerId
+                }
+            }
             assertEquals(1, rows)
 
             val returnedRecord = mapper.selectByPrimaryKey(generatedCustomerId)
@@ -1331,8 +1342,8 @@ class DynamicSqlTest : AbstractTest() {
                 assertEquals(record.eMail, returnedRecord.eMail)
                 assertEquals(record.emailaddress, returnedRecord.emailaddress)
                 assertEquals(record.firstFirstName, returnedRecord.firstFirstName)
-                assertEquals(newRecord.id1!!, returnedRecord.id1)
-                assertEquals(newRecord.id2!!, returnedRecord.id2)
+                assertEquals(11, returnedRecord.id1)
+                assertEquals(22, returnedRecord.id2)
                 assertEquals(record.id5!!, returnedRecord.id5)
                 assertEquals(record.id6!!, returnedRecord.id6)
                 assertEquals(record.id7!!, returnedRecord.id7)
@@ -1872,7 +1883,7 @@ class DynamicSqlTest : AbstractTest() {
             var returnedRecord = mapper.selectByPrimaryKey(2)
             assertThat(returnedRecord).isNotNull
             if (returnedRecord != null) {
-                assertEquals(id1.id!!, returnedRecord.id)
+                assertEquals(id1.id, returnedRecord.id)
                 assertEquals(id1.description, returnedRecord.description)
             }
 
@@ -1883,7 +1894,7 @@ class DynamicSqlTest : AbstractTest() {
 
             assertThat(returnedRecord).isNotNull
             if (returnedRecord != null) {
-                assertEquals(id3.id!!, returnedRecord.id)
+                assertEquals(id3.id, returnedRecord.id)
                 assertEquals(id3.description, returnedRecord.description)
             }
         }

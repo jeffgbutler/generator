@@ -13,19 +13,19 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package mbg.test.mb3.dsql.kotlin
+package mbg.test.mb3.dsql.kotlin.idiomatic
 
 import mbg.test.common.util.TestUtilities.blobsAreEqual
 import mbg.test.common.util.TestUtilities.generateRandomBlob
-import mbg.test.mb3.generated.dsql.kotlin.mapper.*
-import mbg.test.mb3.generated.dsql.kotlin.mapper.AwfulTableDynamicSqlSupport.awfulTable
-import mbg.test.mb3.generated.dsql.kotlin.mapper.FieldsblobsDynamicSqlSupport.fieldsblobs
-import mbg.test.mb3.generated.dsql.kotlin.mapper.FieldsonlyDynamicSqlSupport.fieldsonly
-import mbg.test.mb3.generated.dsql.kotlin.mapper.PkblobsDynamicSqlSupport.pkblobs
-import mbg.test.mb3.generated.dsql.kotlin.mapper.PkfieldsDynamicSqlSupport.pkfieldstable
-import mbg.test.mb3.generated.dsql.kotlin.mapper.PkfieldsblobsDynamicSqlSupport.pkfieldsblobs
-import mbg.test.mb3.generated.dsql.kotlin.mapper.PkonlyDynamicSqlSupport.pkonly
-import mbg.test.mb3.generated.dsql.kotlin.model.*
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper.*
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper.AwfulTableDynamicSqlSupport.awfulTable
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper.FieldsblobsDynamicSqlSupport.fieldsblobs
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper.FieldsonlyDynamicSqlSupport.fieldsonly
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper.PkblobsDynamicSqlSupport.pkblobs
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper.PkfieldsDynamicSqlSupport.pkfieldstable
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper.PkfieldsblobsDynamicSqlSupport.pkfieldsblobs
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper.PkonlyDynamicSqlSupport.pkonly
+import mbg.test.mb3.generated.dsql.kotlin.idiomatic.model.*
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.data.Offset
 import org.junit.jupiter.api.Assertions.*
@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test
  *
  * @author Jeff Butler
  */
-class UpdateByExampleTest : AbstractTest() {
+class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
 
     @Test
     fun testFieldsOnlyUpdateByExampleSelective() {
@@ -47,7 +47,7 @@ class UpdateByExampleTest : AbstractTest() {
             mapper.insert(Fieldsonly(9, 88.88, 100.11))
 
             val rows = mapper.update {
-                updateSelectiveColumns(Fieldsonly(doublefield = 99.0))
+                set(fieldsonly.doublefield) equalTo 99.0
                 where { fieldsonly.integerfield isGreaterThan 5 }
             }
 
@@ -159,10 +159,8 @@ class UpdateByExampleTest : AbstractTest() {
             record = Pkfields(4, 3, firstname = "Bob", lastname = "Jones")
             mapper.insert(record)
 
-            val updateRecord = Pkfields(firstname = "Fred")
-
             val rows = mapper.update {
-                updateSelectiveColumns(updateRecord)
+                set(pkfieldstable.firstname) equalTo "Fred"
                 where { pkfieldstable.lastname isLike "J%" }
             }
             assertEquals(1, rows)
@@ -223,6 +221,7 @@ class UpdateByExampleTest : AbstractTest() {
             mapper.insert(record)
 
             val newBlob = generateRandomBlob()
+
             val rows = mapper.update {
                 set(pkblobs.blob1) equalTo newBlob
                 where { pkblobs.id isGreaterThan 4 }
@@ -279,10 +278,8 @@ class UpdateByExampleTest : AbstractTest() {
             record = Pkfieldsblobs(5, 6, "Scott", "Jones", generateRandomBlob())
             mapper.insert(record)
 
-            val newRecord = Pkfieldsblobs(firstname = "Fred")
-
             val rows = mapper.update {
-                updateSelectiveColumns(newRecord)
+                set(pkfieldsblobs.firstname) equalTo "Fred"
                 where { pkfieldsblobs.id1 isNotEqualTo 3 }
             }
             assertEquals(1, rows)
@@ -292,9 +289,9 @@ class UpdateByExampleTest : AbstractTest() {
 
             val returnedRecord = answer[0]
 
-            assertEquals(record.id1!!, returnedRecord.id1)
-            assertEquals(record.id2!!, returnedRecord.id2)
-            assertEquals(newRecord.firstname, returnedRecord.firstname)
+            assertEquals(record.id1, returnedRecord.id1)
+            assertEquals(record.id2, returnedRecord.id2)
+            assertEquals("Fred", returnedRecord.firstname)
             assertEquals(record.lastname, returnedRecord.lastname)
             assertTrue(blobsAreEqual(record.blob1, returnedRecord.blob1))
         }
@@ -323,8 +320,8 @@ class UpdateByExampleTest : AbstractTest() {
 
             val returnedRecord = answer[0]
 
-            assertEquals(newRecord.id1!!, returnedRecord.id1)
-            assertEquals(newRecord.id2!!, returnedRecord.id2)
+            assertEquals(newRecord.id1, returnedRecord.id1)
+            assertEquals(newRecord.id2, returnedRecord.id2)
             assertEquals(newRecord.firstname, returnedRecord.firstname)
             assertNull(returnedRecord.lastname)
             assertNull(returnedRecord.blob1)
@@ -341,10 +338,8 @@ class UpdateByExampleTest : AbstractTest() {
             record = Fieldsblobs("Scott", "Jones", generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
-            val newRecord = Fieldsblobs(lastname = "Doe")
-
             val rows = mapper.update {
-                updateSelectiveColumns(newRecord)
+                set(fieldsblobs.lastname) equalTo "Doe"
                 where { fieldsblobs.firstname isLike "S%" }
             }
             assertEquals(1, rows)
@@ -355,7 +350,7 @@ class UpdateByExampleTest : AbstractTest() {
             val returnedRecord = answer[0]
 
             assertEquals(record.firstname, returnedRecord.firstname)
-            assertEquals(newRecord.lastname, returnedRecord.lastname)
+            assertEquals("Doe", returnedRecord.lastname)
             assertTrue(blobsAreEqual(record.blob1, returnedRecord.blob1))
             assertTrue(blobsAreEqual(record.blob2, returnedRecord.blob2))
         }
@@ -405,10 +400,8 @@ class UpdateByExampleTest : AbstractTest() {
                 emailaddress = "alsobarney@barney.com", from = "from field")
             mapper.insert(record)
 
-            val newRecord = AwfulTable(firstFirstName = "Alonzo")
-
             val rows = mapper.update {
-                updateSelectiveColumns(newRecord)
+                set(awfulTable.firstFirstName) equalTo "Alonzo"
                 where { awfulTable.eMail isLike "barney@%" }
             }
             assertEquals(1, rows)
@@ -421,7 +414,7 @@ class UpdateByExampleTest : AbstractTest() {
             assertEquals(record.customerId, returnedRecord.customerId)
             assertEquals(record.eMail, returnedRecord.eMail)
             assertEquals(record.emailaddress, returnedRecord.emailaddress)
-            assertEquals(newRecord.firstFirstName, returnedRecord.firstFirstName)
+            assertEquals("Alonzo", returnedRecord.firstFirstName)
             assertEquals(record.from, returnedRecord.from)
             assertEquals(record.id1!!, returnedRecord.id1)
             assertEquals(record.id2!!, returnedRecord.id2)

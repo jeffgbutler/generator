@@ -166,13 +166,13 @@ public class KotlinFragmentGenerator {
         FullyQualifiedKotlinType kt = JavaToKotlinTypeConverter.convert(introspectedColumn.getFullyQualifiedJavaType());
         imports.addAll(kt.getImportList());
 
-        if (introspectedTable.respectNullabilityForKotlin() && !introspectedColumn.isNullable()) {
+        if (!introspectedTable.respectNullabilityForKotlin() || introspectedColumn.isNullable() || introspectedColumn.isIdentity()) {
             sb.append(", javaType="); //$NON-NLS-1$
-            sb.append(kt.getShortNameWithoutTypeArguments());
+            sb.append(calculateNullableTypeForArgAnnotation(kt));
             sb.append("::class"); //$NON-NLS-1$
         } else {
             sb.append(", javaType="); //$NON-NLS-1$
-            sb.append(calculateNullableTypeForArgAnnotation(kt));
+            sb.append(kt.getShortNameWithoutTypeArguments());
             sb.append("::class"); //$NON-NLS-1$
         }
 
