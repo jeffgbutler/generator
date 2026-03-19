@@ -55,7 +55,8 @@ public class UpdateAllColumnsExtensionFunctionGenerator extends AbstractKotlinMa
         return KotlinFunctionAndImports.withFunction(function)
                 .withImports(imports)
                 .withImports(recordType.getImportList())
-                .withExtraFunctionParts(fragmentGenerator.getSetEqualLinesForUpdateStatement(introspectedTable.getAllColumns(), true))
+                .withExtraFunctionParts(fragmentGenerator.getSetEqualLinesForUpdateStatement(
+                        introspectedTable.getAllColumns(), true))
                 .buildOptional();
     }
 

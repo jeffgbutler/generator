@@ -64,13 +64,13 @@ public class KotlinDataClassGenerator extends AbstractKotlinGenerator {
             if (!introspectedTable.isImmutable() || introspectedColumn.isIdentity()) {
                 kpBuilder = KotlinProperty.newVar(introspectedColumn.getJavaProperty());
             } else {
-                kpBuilder = KotlinProperty.newVal(introspectedColumn.getJavaProperty());;
+                kpBuilder = KotlinProperty.newVal(introspectedColumn.getJavaProperty());
             }
 
             if (!introspectedTable.respectNullabilityForKotlin() || introspectedColumn.isNullable()
                     || introspectedColumn.isIdentity()) {
-                    kpBuilder.withDataType(kotlinType.getShortNameWithTypeArguments() + "?") //$NON-NLS-1$
-                            .withInitializationString("null"); //$NON-NLS-1$
+                kpBuilder.withDataType(kotlinType.getShortNameWithTypeArguments() + "?") //$NON-NLS-1$
+                        .withInitializationString("null"); //$NON-NLS-1$
             } else {
                 kpBuilder.withDataType(kotlinType.getShortNameWithTypeArguments());
             }

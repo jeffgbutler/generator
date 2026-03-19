@@ -240,7 +240,8 @@ public class FragmentGenerator {
 
     public List<String> getSetEqualLinesForUpdateStatement(List<IntrospectedColumn> columnList, String firstLinePrefix,
                                                            String subsequentLinePrefix, boolean terminate) {
-        return getSetLinesForUpdateStatement(columnList, firstLinePrefix, subsequentLinePrefix, terminate, "equalTo"); //$NON-NLS-1$
+        return getSetLinesForUpdateStatement(columnList, firstLinePrefix, subsequentLinePrefix, terminate,
+                "equalTo"); //$NON-NLS-1$
     }
 
     public List<String> getSetEqualWhenPresentLinesForUpdateStatement(List<IntrospectedColumn> columnList,

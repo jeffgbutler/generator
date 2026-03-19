@@ -166,7 +166,8 @@ public class KotlinFragmentGenerator {
         FullyQualifiedKotlinType kt = JavaToKotlinTypeConverter.convert(introspectedColumn.getFullyQualifiedJavaType());
         imports.addAll(kt.getImportList());
 
-        if (!introspectedTable.respectNullabilityForKotlin() || introspectedColumn.isNullable() || introspectedColumn.isIdentity()) {
+        if (!introspectedTable.respectNullabilityForKotlin() || introspectedColumn.isNullable()
+                || introspectedColumn.isIdentity()) {
             sb.append(", javaType="); //$NON-NLS-1$
             sb.append(calculateNullableTypeForArgAnnotation(kt));
             sb.append("::class"); //$NON-NLS-1$
@@ -197,14 +198,14 @@ public class KotlinFragmentGenerator {
      */
     private String calculateNullableTypeForArgAnnotation(FullyQualifiedKotlinType kt) {
         return switch (kt.getShortNameWithoutTypeArguments()) {
-            case "Int" -> "Integer"; //$NON-NLS-1$ //$NON-NLS-2$
-            case "Long" -> "java.lang.Long"; //$NON-NLS-1$ //$NON-NLS-2$
-            case "Short" -> "java.lang.Short"; //$NON-NLS-1$ //$NON-NLS-2$
-            case "Byte" -> "java.lang.Byte"; //$NON-NLS-1$ //$NON-NLS-2$
-            case "Float" -> "java.lang.Float"; //$NON-NLS-1$ //$NON-NLS-2$
-            case "Double" -> "java.lang.Double"; //$NON-NLS-1$ //$NON-NLS-2$
-            case "Boolean" -> "java.lang.Boolean"; //$NON-NLS-1$ //$NON-NLS-2$
-            default -> kt.getShortNameWithoutTypeArguments();
+        case "Int" -> "Integer"; //$NON-NLS-1$ //$NON-NLS-2$
+        case "Long" -> "java.lang.Long"; //$NON-NLS-1$ //$NON-NLS-2$
+        case "Short" -> "java.lang.Short"; //$NON-NLS-1$ //$NON-NLS-2$
+        case "Byte" -> "java.lang.Byte"; //$NON-NLS-1$ //$NON-NLS-2$
+        case "Float" -> "java.lang.Float"; //$NON-NLS-1$ //$NON-NLS-2$
+        case "Double" -> "java.lang.Double"; //$NON-NLS-1$ //$NON-NLS-2$
+        case "Boolean" -> "java.lang.Boolean"; //$NON-NLS-1$ //$NON-NLS-2$
+        default -> kt.getShortNameWithoutTypeArguments();
         };
     }
 
@@ -251,14 +252,15 @@ public class KotlinFragmentGenerator {
         ListUtilities.filterColumnsForUpdate(columnList).stream()
                 .filter(ic -> !introspectedTable.respectNullabilityForKotlin() || ic.isNullable())
                 .forEach(column -> {
-            FieldNameAndImport fieldNameAndImport = calculateFieldNameAndImport(tableFieldName, supportObjectImport,
-                    column);
-            builder.withImport(fieldNameAndImport.importString());
+                    FieldNameAndImport fieldNameAndImport = calculateFieldNameAndImport(tableFieldName,
+                            supportObjectImport,
+                            column);
+                    builder.withImport(fieldNameAndImport.importString());
 
-            builder.withCodeLine(OutputUtilities.kotlinIndent(1) + "set(" //$NON-NLS-1$
-                    + fieldNameAndImport.fieldName()
-                    + ") equalToWhenPresent row::" + column.getJavaProperty()); //$NON-NLS-1$
-        });
+                    builder.withCodeLine(OutputUtilities.kotlinIndent(1) + "set(" //$NON-NLS-1$
+                            + fieldNameAndImport.fieldName()
+                            + ") equalToWhenPresent row::" + column.getJavaProperty()); //$NON-NLS-1$
+                });
 
         if (terminate) {
             builder.withCodeLine("}"); //$NON-NLS-1$

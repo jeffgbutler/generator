@@ -59,8 +59,8 @@ public class UpdateByPrimaryKeyExtensionFunctionGenerator extends AbstractKotlin
         return KotlinFunctionAndImports.withFunction(function)
                 .withImports(imports)
                 .withImports(recordType.getImportList())
-                .withExtraFunctionParts(fragmentGenerator.getSetEqualLinesForUpdateStatement(introspectedTable.getNonPrimaryKeyColumns(),
-                        false))
+                .withExtraFunctionParts(fragmentGenerator.getSetEqualLinesForUpdateStatement(
+                        introspectedTable.getNonPrimaryKeyColumns(), false))
                 .withExtraFunctionParts(fragmentGenerator.getPrimaryKeyWhereClauseAndParameters(true))
                 .buildOptional();
     }
