@@ -48,17 +48,15 @@ public class InsertSelectiveExtensionFunctionGenerator extends AbstractKotlinMap
 
     @Override
     public Optional<KotlinFunctionAndImports> generateFunctionAndImports() {
-        List<IntrospectedColumn> columns = ListUtilities.filterColumnsForInsert(introspectedTable.getAllColumns());
-        if (!introspectedTable.generateKotlinV1Model()
-                && columns.stream().noneMatch(IntrospectedColumn::isNullable)) {
-            // if there aren't any nullable columns, no need for insertSelective - it would be the same as insert
+        if (!introspectedTable.generateKotlinV1Model()) {
+            // V2 model doesn't have insertSelective
             return Optional.empty();
         }
 
         Set<String> imports = new HashSet<>();
         imports.add("org.mybatis.dynamic.sql.util.kotlin.mybatis3.insert"); //$NON-NLS-1$
 
-        KotlinFunctionParts functionBody = generateBody(columns);
+        KotlinFunctionParts functionBody = generateBody();
 
         KotlinFunction function = KotlinFunction.newOneLineFunction(mapperName + ".insertSelective") //$NON-NLS-1$
                 .withArgument(KotlinArg.newArg("row") //$NON-NLS-1$
@@ -76,12 +74,13 @@ public class InsertSelectiveExtensionFunctionGenerator extends AbstractKotlinMap
                 .buildOptional();
     }
 
-    private KotlinFunctionParts generateBody(List<IntrospectedColumn> columns) {
+    private KotlinFunctionParts generateBody() {
         KotlinFunctionParts.Builder builder = new KotlinFunctionParts.Builder();
 
         builder.withCodeLine("insert(this::insert, row, " + tableFieldName //$NON-NLS-1$
                 + ") {"); //$NON-NLS-1$
 
+        List<IntrospectedColumn> columns = ListUtilities.filterColumnsForInsert(introspectedTable.getAllColumns());
         for (IntrospectedColumn column : columns) {
             KotlinFragmentGenerator.FieldNameAndImport fieldNameAndImport =
                     fragmentGenerator.calculateFieldNameAndImport(tableFieldName, supportObjectImport, column);
