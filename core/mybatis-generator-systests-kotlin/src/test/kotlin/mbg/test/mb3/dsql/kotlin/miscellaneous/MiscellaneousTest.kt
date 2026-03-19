@@ -43,24 +43,8 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
     fun testMyObjectInsertMyObject() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(MyObjectMapper::class.java)
-            val record = MyObject()
-            record.startDate = Date()
-            record.decimal100field = 10L
-            record.decimal155field = 15.12345
-            record.decimal60field = 6
-            val fn = FirstName()
-            fn.value = "Jeff"
-            record.firstname = fn
-            record.id1 = 1
-            record.id2 = 2
-            record.lastname = "Butler"
-
-            val myTime = MyTime()
-            myTime.hours = 12
-            myTime.minutes = 34
-            myTime.seconds = 5
-            record.timefield = myTime
-            record.timestampfield = Date()
+            val record = MyObject(2, 1, FirstName("Jeff"), "Butler", Date(), MyTime(12, 34, 5),
+                Date(), 6, 10L, 15.12345)
 
             mapper.insert(record)
 
