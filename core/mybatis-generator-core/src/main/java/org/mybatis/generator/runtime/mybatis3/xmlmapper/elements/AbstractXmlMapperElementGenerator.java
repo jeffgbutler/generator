@@ -279,7 +279,7 @@ public abstract class AbstractXmlMapperElementGenerator extends AbstractXmlEleme
         sb.setLength(0);
         sb.append("set "); //$NON-NLS-1$
 
-        Iterator<IntrospectedColumn> iter = ListUtilities.removeGeneratedAlwaysColumns(columns).iterator();
+        Iterator<IntrospectedColumn> iter = ListUtilities.filterColumnsForUpdate(columns).iterator();
         while (iter.hasNext()) {
             IntrospectedColumn introspectedColumn = iter.next();
 
@@ -322,7 +322,7 @@ public abstract class AbstractXmlMapperElementGenerator extends AbstractXmlEleme
         sb.setLength(0);
         sb.append("set "); //$NON-NLS-1$
 
-        Iterator<IntrospectedColumn> iter = ListUtilities.removeGeneratedAlwaysColumns(columns).iterator();
+        Iterator<IntrospectedColumn> iter = ListUtilities.filterColumnsForUpdate(columns).iterator();
         while (iter.hasNext()) {
             IntrospectedColumn introspectedColumn = iter.next();
 

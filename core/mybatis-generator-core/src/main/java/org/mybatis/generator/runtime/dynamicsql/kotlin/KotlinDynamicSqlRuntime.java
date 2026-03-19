@@ -19,6 +19,10 @@ import org.mybatis.generator.api.AbstractRuntime;
 import org.mybatis.generator.codegen.AbstractKotlinGenerator;
 
 public class KotlinDynamicSqlRuntime extends AbstractRuntime {
+    public static final String V1_DEPRECATED_ANNOTATION = """
+            @Deprecated("Please remove the setting \\"generateKotlinV1Model\\" from your \
+            generator configuration and regenerate.")""";
+
     public KotlinDynamicSqlRuntime(Builder builder) {
         super(builder);
         calculateGenerators();

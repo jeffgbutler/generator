@@ -29,6 +29,7 @@ import java.util.Optional;
 import java.util.Properties;
 
 import org.jspecify.annotations.Nullable;
+import org.mybatis.generator.api.KnownRuntime;
 import org.mybatis.generator.internal.util.messages.Messages;
 
 public class TableConfiguration extends PropertyHolder {
@@ -269,7 +270,7 @@ public class TableConfiguration extends PropertyHolder {
         return updateByExampleStatementEnabled;
     }
 
-    public void validate(List<String> errors, int listPosition, Context context) {
+    public void validate(List<String> errors, int listPosition, Context context, KnownRuntime knownRuntime) {
         if (!stringHasValue(tableName)) {
             errors.add(Messages.getString(
                     "ValidationError.6", Integer.toString(listPosition))); //$NON-NLS-1$
@@ -286,7 +287,8 @@ public class TableConfiguration extends PropertyHolder {
                         "record")); //$NON-NLS-1$
             }
 
-            if (isImmutable(context)) {
+            // we're going to allow generated keys for Kotlin even if the rest of the model is immutable
+            if (isImmutable(context) && knownRuntime != KnownRuntime.MYBATIS3_KOTLIN) {
                 errors.add(Messages.getString("ValidationError.30", fqTableName, context.getId(), //$NON-NLS-1$
                         "immutable")); //$NON-NLS-1$
             }
@@ -341,6 +343,17 @@ public class TableConfiguration extends PropertyHolder {
         return isTrue(properties.getProperty(PropertyRegistry.ANY_IMMUTABLE));
     }
 
+    public boolean generateKotlinV1Model(Context context) {
+        Properties properties;
+
+        if (getProperties().containsKey(PropertyRegistry.GENERATE_KOTLIN_V1_MODEL)) {
+            properties = getProperties();
+        } else {
+            properties = context.getJavaModelGeneratorConfiguration().getProperties();
+        }
+
+        return isTrue(properties.getProperty(PropertyRegistry.GENERATE_KOTLIN_V1_MODEL));
+    }
 
     public @Nullable DomainObjectRenamingRule getDomainObjectRenamingRule() {
         return domainObjectRenamingRule;

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2006-2025 the original author or authors.
+ *    Copyright 2006-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -29,10 +29,7 @@ class GeneratedAlwaysNoUpdatesTest : AbstractAnnotatedMiscellaneousTest() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(GeneratedalwaystestnoupdatesMapper::class.java)
 
-            val gaTest = Generatedalwaystestnoupdates()
-            gaTest.id = 1
-            gaTest.idPlus1 = 55
-            gaTest.idPlus2 = 66
+            val gaTest = Generatedalwaystestnoupdates(1)
             val rows = mapper.insert(gaTest)
             assertEquals(1, rows)
 
@@ -51,8 +48,7 @@ class GeneratedAlwaysNoUpdatesTest : AbstractAnnotatedMiscellaneousTest() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(GeneratedalwaystestnoupdatesMapper::class.java)
 
-            val gaTest = Generatedalwaystestnoupdates()
-            gaTest.id = 1
+            val gaTest = Generatedalwaystestnoupdates(1)
             val rows = mapper.insertSelective(gaTest)
             assertEquals(1, rows)
 

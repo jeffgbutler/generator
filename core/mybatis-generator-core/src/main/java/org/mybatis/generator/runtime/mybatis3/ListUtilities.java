@@ -32,13 +32,13 @@ public class ListUtilities {
 
     private ListUtilities() {}
 
-    public static List<IntrospectedColumn> removeGeneratedAlwaysColumns(List<IntrospectedColumn> columns) {
+    public static List<IntrospectedColumn> filterColumnsForUpdate(List<IntrospectedColumn> columns) {
         return columns.stream()
                 .filter(ic -> !ic.isGeneratedAlways())
                 .toList();
     }
 
-    public static List<IntrospectedColumn> removeIdentityAndGeneratedAlwaysColumns(List<IntrospectedColumn> columns) {
+    public static List<IntrospectedColumn> filterColumnsForInsert(List<IntrospectedColumn> columns) {
         return columns.stream()
                 .filter(ic -> !ic.isGeneratedAlways() && !ic.isIdentity())
                 .toList();

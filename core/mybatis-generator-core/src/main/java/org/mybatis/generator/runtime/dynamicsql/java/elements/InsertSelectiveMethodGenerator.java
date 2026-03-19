@@ -61,8 +61,7 @@ public class InsertSelectiveMethodGenerator extends AbstractJavaInterfaceMethodG
         method.addBodyLine("return MyBatis3Utils.insert(this::insert, row, " + tableFieldName //$NON-NLS-1$
                 + ", c ->"); //$NON-NLS-1$
 
-        List<IntrospectedColumn> columns = ListUtilities.removeIdentityAndGeneratedAlwaysColumns(
-                introspectedTable.getAllColumns());
+        List<IntrospectedColumn> columns = ListUtilities.filterColumnsForInsert(introspectedTable.getAllColumns());
         boolean first = true;
         for (IntrospectedColumn column : columns) {
             String fieldName = fragmentGenerator.calculateFieldName(tableFieldName, column);

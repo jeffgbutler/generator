@@ -65,7 +65,7 @@ public class ProviderUpdateByPrimaryKeySelectiveMethodGenerator extends Abstract
         method.addBodyLine(""); //$NON-NLS-1$
 
         for (IntrospectedColumn introspectedColumn :
-                ListUtilities.removeGeneratedAlwaysColumns(introspectedTable.getNonPrimaryKeyColumns())) {
+                ListUtilities.filterColumnsForUpdate(introspectedTable.getNonPrimaryKeyColumns())) {
             if (!introspectedColumn.getFullyQualifiedJavaType().isPrimitive()) {
                 method.addBodyLine(String.format("if (row.%s() != null) {", //$NON-NLS-1$
                         getCallingGetterMethodName(introspectedColumn)));

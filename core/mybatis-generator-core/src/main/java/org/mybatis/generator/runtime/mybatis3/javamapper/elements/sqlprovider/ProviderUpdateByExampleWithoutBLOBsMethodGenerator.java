@@ -62,7 +62,7 @@ public class ProviderUpdateByExampleWithoutBLOBsMethodGenerator extends Abstract
                 escapeStringForJava(introspectedTable.getAliasedFullyQualifiedRuntimeTableName())));
         method.addBodyLine(""); //$NON-NLS-1$
 
-        for (IntrospectedColumn introspectedColumn : ListUtilities.removeGeneratedAlwaysColumns(getColumns())) {
+        for (IntrospectedColumn introspectedColumn : ListUtilities.filterColumnsForUpdate(getColumns())) {
             StringBuilder sb = new StringBuilder();
             sb.append(getParameterClause(introspectedColumn));
             sb.insert(2, "row."); //$NON-NLS-1$

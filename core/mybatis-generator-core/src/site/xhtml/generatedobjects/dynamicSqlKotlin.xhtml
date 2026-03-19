@@ -50,11 +50,14 @@ about how the library works. In particular, see the
   <li>No separate "Example" class is generated</li>
   <li>There are no separate "with BLOBs" and "without BLOBs" methods.  If your table includes BLOB fields, then
       they are included in all operations.</li>
-  <li>Model classes are always generated in the "flat" model meaning there is no separate primary key class or BLOBs class</li>
-  <li>Java 8 or higher is required</li>
-  <li>Any recent version of Kotlin should work</li>
-  <li>MyBatis 3.4.2 or higher is required</li>
-  <li>MyBatis Dynamic SQL 1.4.0 or higher is required</li>
+  <li>Model classes are generated as Kotlin data classes, and there is no separate primary key class or BLOBs class.
+    The generated model classes are immutable (using "val" instead of "var") in keeping with Kotlin best practices.
+    The generated model classes use both nullable and non-nullable types that match the declared nullability
+    of corresponding database columns. The only exception to this is if a column is an identity column and a
+    &lt;generatedKey&gt; configuration element is specified. In that case the field will be generated as mutable
+    ("var") and nullable. This will allow MyBatis to retrieve the generated key and set the value in the model class.
+    It will also allow you to create a new instance without specifying a dummy valu for the generated key.
+  </li>
 </ul>
 
 <h2>Format of the "Support" classes</h2>
@@ -94,10 +97,8 @@ in either a direct or qualified manner - "id" or "tableCode.id".</p>
   <li>deleteByPrimaryKey</li>
   <li>insert - insert a single row (will insert nulls)</li>
   <li>insertMultiple - insert multiple rows (will insert nulls)</li>
-  <li>insertSelective - insert a single row and ignore null properties</li>
   <li>selectByPrimaryKey</li>
   <li>updateByPrimaryKey - will set null values</li>
-  <li>updateByPrimaryKey Selective - ignores null values</li>
 </ul>
 
 <p>There are no "by example" methods. Instead, there are general purpose methods that allow you to specify a
@@ -152,8 +153,10 @@ class SomeService {
         ...
         // Simple WHERE clause with OR
         val records = mapper.select {
-            where { id isEqualTo 3 }
-            or { description isLike "f%" }
+            where {
+                id isEqualTo 3 }
+                or { description isLike "f%" }
+            }
         }
         ...
     }
@@ -165,8 +168,8 @@ class SomeService {
             where {
                 id isLessThan 10
                 and { description isEqualTo "foo" }
+                or { description isLike "b%" }
             }
-            or { description isLike "b%" }
             orderBy(id.descending())
         }
         ...
@@ -175,8 +178,7 @@ class SomeService {
 </pre>
 
 <h2>Update Method Usage</h2>
-<p>The generated update statement is very flexible. You can now create any arbitrary update,
-as well as updates that mimic the old updateByExample and updateByExampleSelective methods.</p>
+<p>The generated update statement is very flexible. You can now create any arbitrary update.</p>
 
 <pre>
 // import the generated "support" items...
@@ -184,7 +186,6 @@ import example.TableCodeDynamicSqlSupport.description
 import example.TableCodeDynamicSqlSupport.id
 
 class SomeService {
-
     fun simpleUpdate() {
         ...
         // Flexible update - no backing record needed
@@ -195,30 +196,12 @@ class SomeService {
         }
         ...
     }
-
-    fun updateByExample(row: TableCode) {
-        ...
-        // Update like the old updateByExample method
-        val rows =  mapper.update {
-            updateAllColumns(row)
-            where { id isEqualTo 3 }
-            or { description isLike "f%" }
-        }
-        ...
-    }
-
-    fun updateByExampleSelective(row: TableCode) {
-        ...
-        // Update like the old updateByExampleSelective method
-        val rows =  mapper.update {
-            updateSelectiveColumns(row)
-            where { id isEqualTo 3 }
-            or { description isLike "f%" }
-        }
-        ...
-    }
 }
 </pre>
+
+<p>There is also an "updateByPrimaryKey" method that will update every column in a row based on the values
+  passed in a model class instance.
+</p>
 
 <h2>New Plugins</h2>
 <p>Because the *ByExample methods are not generated, it no longer makes sense to control method generation via the properties

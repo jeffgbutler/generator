@@ -30,6 +30,7 @@ import org.mybatis.generator.api.dom.kotlin.KotlinFile;
 import org.mybatis.generator.api.dom.kotlin.KotlinFunction;
 import org.mybatis.generator.runtime.KotlinFunctionAndImports;
 import org.mybatis.generator.runtime.KotlinFunctionParts;
+import org.mybatis.generator.runtime.dynamicsql.kotlin.KotlinDynamicSqlRuntime;
 import org.mybatis.generator.runtime.mybatis3.ListUtilities;
 
 public class InsertSelectiveExtensionFunctionGenerator extends AbstractKotlinMapperFunctionGenerator {
@@ -48,6 +49,10 @@ public class InsertSelectiveExtensionFunctionGenerator extends AbstractKotlinMap
 
     @Override
     public Optional<KotlinFunctionAndImports> generateFunctionAndImports() {
+        if (!introspectedTable.generateKotlinV1Model()) {
+            return Optional.empty();
+        }
+
         Set<String> imports = new HashSet<>();
         imports.add("org.mybatis.dynamic.sql.util.kotlin.mybatis3.insert"); //$NON-NLS-1$
 
@@ -58,6 +63,7 @@ public class InsertSelectiveExtensionFunctionGenerator extends AbstractKotlinMap
                         .withDataType(recordType.getShortNameWithTypeArguments())
                         .build())
                 .withCodeLines(functionBody.getCodeLines())
+                .withAnnotation(KotlinDynamicSqlRuntime.V1_DEPRECATED_ANNOTATION)
                 .build();
 
         commentGenerator.addGeneralFunctionComment(function, introspectedTable, imports);
@@ -75,14 +81,13 @@ public class InsertSelectiveExtensionFunctionGenerator extends AbstractKotlinMap
         builder.withCodeLine("insert(this::insert, row, " + tableFieldName //$NON-NLS-1$
                 + ") {"); //$NON-NLS-1$
 
-        List<IntrospectedColumn> columns =
-                ListUtilities.removeIdentityAndGeneratedAlwaysColumns(introspectedTable.getAllColumns());
+        List<IntrospectedColumn> columns = ListUtilities.filterColumnsForInsert(introspectedTable.getAllColumns());
         for (IntrospectedColumn column : columns) {
             KotlinFragmentGenerator.FieldNameAndImport fieldNameAndImport =
                     fragmentGenerator.calculateFieldNameAndImport(tableFieldName, supportObjectImport, column);
             builder.withImport(fieldNameAndImport.importString());
 
-            if (column.isSequenceColumn()) {
+            if (generateNonNullMethod(column)) {
                 builder.withCodeLine(OutputUtilities.kotlinIndent(1) + "withMappedColumn(" //$NON-NLS-1$
                         + fieldNameAndImport.fieldName()
                         + ")"); //$NON-NLS-1$
@@ -96,6 +101,11 @@ public class InsertSelectiveExtensionFunctionGenerator extends AbstractKotlinMap
 
         return builder.withCodeLine("}") //$NON-NLS-1$
                 .build();
+    }
+
+    private boolean generateNonNullMethod(IntrospectedColumn column) {
+        return column.isSequenceColumn()
+                || (!introspectedTable.generateKotlinV1Model() && !column.isNullable());
     }
 
     @Override

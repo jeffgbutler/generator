@@ -36,6 +36,8 @@ drop table GeneratedAlwaysTestNoUpdates if exists;
 drop table IgnoreManyColumns if exists;
 drop sequence TestSequence if exists;
 drop table suffix_rename if exists;
+drop table Person if exists;
+drop table Address if exists;
 
 create sequence TestSequence as integer start with 1;
 
@@ -220,3 +222,24 @@ create table mbgtest.Ids (
   description varchar(30),
   primary key (id)
 );
+
+create table Person (
+  id int not null,
+  first_name varchar(30) not null,
+  last_name varchar(30) not null,
+  birth_date date not null,
+  employed varchar(3) not null,
+  occupation varchar(30) null,
+  address_id int not null,
+  parent_id int null,
+  primary key(id)
+);
+
+create table Address (
+  id int not null,
+  street_address varchar(30) not null,
+  city varchar(30) not null,
+  state char(2) not null,
+  primary key(id)
+);
+

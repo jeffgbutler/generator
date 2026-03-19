@@ -63,7 +63,7 @@ public class UpdateByPrimaryKeySelectiveElementGenerator extends AbstractXmlMapp
         answer.addElement(dynamicElement);
 
         for (IntrospectedColumn introspectedColumn :
-                ListUtilities.removeGeneratedAlwaysColumns(introspectedTable.getNonPrimaryKeyColumns())) {
+                ListUtilities.filterColumnsForUpdate(introspectedTable.getNonPrimaryKeyColumns())) {
             sb.setLength(0);
             sb.append(introspectedColumn.getJavaProperty());
             sb.append(" != null"); //$NON-NLS-1$

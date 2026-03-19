@@ -146,7 +146,7 @@ public abstract class AbstractJavaMapperMethodGenerator extends AbstractJavaInte
         javaIndent(sb, 1);
         sb.append("\"set "); //$NON-NLS-1$
 
-        Iterator<IntrospectedColumn> iter = ListUtilities.removeGeneratedAlwaysColumns(columnList).iterator();
+        Iterator<IntrospectedColumn> iter = ListUtilities.filterColumnsForUpdate(columnList).iterator();
         while (iter.hasNext()) {
             IntrospectedColumn introspectedColumn = iter.next();
 

@@ -60,12 +60,30 @@ public class KotlinDataClassGenerator extends AbstractKotlinGenerator {
             FullyQualifiedKotlinType kotlinType =
                     JavaToKotlinTypeConverter.convert(introspectedColumn.getFullyQualifiedJavaType());
 
-            KotlinProperty kp = KotlinProperty.newVar(introspectedColumn.getJavaProperty())
-                    .withDataType(kotlinType.getShortNameWithTypeArguments() + "?") //$NON-NLS-1$
-                    .withInitializationString("null") //$NON-NLS-1$
-                    .build();
+            KotlinProperty.Builder kpBuilder;
+            if (introspectedTable.generateKotlinV1Model()) {
+                if (introspectedTable.isImmutable()) {
+                    kpBuilder = KotlinProperty.newVal(introspectedColumn.getJavaProperty());
+                } else {
+                    kpBuilder = KotlinProperty.newVar(introspectedColumn.getJavaProperty());
+                }
+            } else {
+                if (introspectedColumn.isIdentity()) {
+                    kpBuilder = KotlinProperty.newVar(introspectedColumn.getJavaProperty());
+                } else {
+                    kpBuilder = KotlinProperty.newVal(introspectedColumn.getJavaProperty());
+                }
+            }
 
-            dataClass.addConstructorProperty(kp);
+            if (introspectedTable.generateKotlinV1Model() || introspectedColumn.isNullable()
+                    || introspectedColumn.isIdentity()) {
+                kpBuilder.withDataType(kotlinType.getShortNameWithTypeArguments() + "?") //$NON-NLS-1$
+                        .withInitializationString("null"); //$NON-NLS-1$
+            } else {
+                kpBuilder.withDataType(kotlinType.getShortNameWithTypeArguments());
+            }
+
+            dataClass.addConstructorProperty(kpBuilder.build());
 
             kf.addImports(kotlinType.getImportList());
         }

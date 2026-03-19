@@ -75,7 +75,7 @@ public class InsertMultipleMethodGenerator extends AbstractJavaInterfaceMethodGe
                 + ", c ->"); //$NON-NLS-1$
 
         List<IntrospectedColumn> columns =
-                ListUtilities.removeIdentityAndGeneratedAlwaysColumns(introspectedTable.getAllColumns());
+                ListUtilities.filterColumnsForInsert(introspectedTable.getAllColumns());
         boolean first = true;
         for (IntrospectedColumn column : columns) {
             String fieldName = fragmentGenerator.calculateFieldName(tableFieldName, column);

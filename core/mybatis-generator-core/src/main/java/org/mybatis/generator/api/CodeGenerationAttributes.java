@@ -675,6 +675,10 @@ public abstract class CodeGenerationAttributes {
         return getTableConfiguration().isImmutable(context);
     }
 
+    public boolean generateKotlinV1Model() {
+        return getTableConfiguration().generateKotlinV1Model(context);
+    }
+
     public boolean isConstructorBased() {
         if (isImmutable()) {
             return true;

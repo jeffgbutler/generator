@@ -58,7 +58,7 @@ public class InsertSelectiveElementGenerator extends AbstractXmlMapperElementGen
         answer.addElement(valuesTrimElement);
 
         for (IntrospectedColumn introspectedColumn :
-                ListUtilities.removeIdentityAndGeneratedAlwaysColumns(introspectedTable.getAllColumns())) {
+                ListUtilities.filterColumnsForInsert(introspectedTable.getAllColumns())) {
 
             if (introspectedColumn.isSequenceColumn()
                     || introspectedColumn.getFullyQualifiedJavaType().isPrimitive()) {

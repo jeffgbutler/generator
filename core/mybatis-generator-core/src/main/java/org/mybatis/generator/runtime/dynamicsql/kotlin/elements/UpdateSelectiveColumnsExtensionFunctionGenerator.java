@@ -16,16 +16,20 @@
 package org.mybatis.generator.runtime.dynamicsql.kotlin.elements;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
 import org.jspecify.annotations.Nullable;
+import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.dom.kotlin.FullyQualifiedKotlinType;
 import org.mybatis.generator.api.dom.kotlin.KotlinArg;
 import org.mybatis.generator.api.dom.kotlin.KotlinFile;
 import org.mybatis.generator.api.dom.kotlin.KotlinFunction;
 import org.mybatis.generator.runtime.KotlinFunctionAndImports;
+import org.mybatis.generator.runtime.dynamicsql.kotlin.KotlinDynamicSqlRuntime;
+import org.mybatis.generator.runtime.mybatis3.ListUtilities;
 
 public class UpdateSelectiveColumnsExtensionFunctionGenerator extends AbstractKotlinMapperFunctionGenerator {
     private final FullyQualifiedKotlinType recordType;
@@ -39,6 +43,10 @@ public class UpdateSelectiveColumnsExtensionFunctionGenerator extends AbstractKo
 
     @Override
     public Optional<KotlinFunctionAndImports> generateFunctionAndImports() {
+        if (!introspectedTable.generateKotlinV1Model()) {
+            return Optional.empty();
+        }
+
         Set<String> imports = new HashSet<>();
         imports.add("org.mybatis.dynamic.sql.util.kotlin.KotlinUpdateBuilder"); //$NON-NLS-1$
 
@@ -47,15 +55,18 @@ public class UpdateSelectiveColumnsExtensionFunctionGenerator extends AbstractKo
                 .withArgument(KotlinArg.newArg("row") //$NON-NLS-1$
                         .withDataType(recordType.getShortNameWithTypeArguments())
                         .build())
+                .withAnnotation(KotlinDynamicSqlRuntime.V1_DEPRECATED_ANNOTATION)
                 .withCodeLine("apply {")
                 .build();
 
         commentGenerator.addGeneralFunctionComment(function, introspectedTable, imports);
 
+        List<IntrospectedColumn> updateColumns =
+                ListUtilities.filterColumnsForUpdate(introspectedTable.getAllColumns());
         return KotlinFunctionAndImports.withFunction(function)
                 .withImports(imports)
                 .withImports(recordType.getImportList())
-                .withExtraFunctionParts(fragmentGenerator.getSetEqualWhenPresentLines(introspectedTable.getAllColumns(),
+                .withExtraFunctionParts(fragmentGenerator.getSetEqualWhenPresentLinesForUpdateStatement(updateColumns,
                         true))
                 .buildOptional();
     }

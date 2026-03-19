@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2006-2025 the original author or authors.
+       Copyright 2006-2026 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -122,13 +122,14 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
     <td>
       This property is used to select whether MyBatis Generator will generate immutable
       model classes - this means that the classes will not have "setter" methods and
-      the constructor will accept values for each field in the class.
+      the constructor will accept values for each field in the class. For Kotlin, the data class
+      will be generated with "val" properties instead of "var" properties.
       <p>If true, this forces the model classes to be built with parameterized constructors
          regardless of the value of the "constructorBased" property.</p>
       <p>This property can be overridden by the corresponding property in a
       <a href="table.html">&lt;table&gt;</a> element.</p>
       <p><i>The default value is false.</i></p>
-      <p><i>This property is ignored if the target runtime is "MyBatis3Kotlin"</i></p></td>
+    </td>
   </tr>
   <tr>
     <td valign="top">rootClass</td>
@@ -163,6 +164,19 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
       <a href="columnOverride.html">&lt;columnOverride&gt;</a> element.
       <p><i>The default value is false.</i></p>
       <p><i>This property is ignored if the target runtime is "MyBatis3Kotlin"</i></p></td>
+  </tr>
+  <tr>
+    <td valign="top">generateKotlinV1Model</td>
+    <td>If true, then the Kotlin runtime will generate model and mapper classes similar to the
+      classes generated in version 1.x of MBG. If false, then the generated models will be immutable and
+      the model classes will respect the nullability of corresponding database columns. In addition, several
+      mapper methods from V1 will not be generated as they don't function as expected when the
+      models have a correct understanding of column nullability.
+      <p>Can be overridden with the <code>generateKotlinV1Model</code> property in a
+        <a href="table.html">&lt;table&gt;</a> element.
+      </p>
+      <p>This property will be removed in a future version of MBG, and V1 models will no longer be supported.</p>
+      <p><i>The default value is false.</i></p></td>
   </tr>
 </table>
 

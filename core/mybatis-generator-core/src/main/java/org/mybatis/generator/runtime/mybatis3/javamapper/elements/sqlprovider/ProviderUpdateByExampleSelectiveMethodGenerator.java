@@ -78,7 +78,7 @@ public class ProviderUpdateByExampleSelectiveMethodGenerator extends AbstractJav
         method.addBodyLine(""); //$NON-NLS-1$
 
         for (IntrospectedColumn introspectedColumn :
-                ListUtilities.removeGeneratedAlwaysColumns(introspectedTable.getAllColumns())) {
+                ListUtilities.filterColumnsForUpdate(introspectedTable.getAllColumns())) {
             if (!introspectedColumn.getFullyQualifiedJavaType().isPrimitive()) {
                 method.addBodyLine(String.format("if (row.%s() != null) {", //$NON-NLS-1$
                         getCallingGetterMethodName(introspectedColumn)));

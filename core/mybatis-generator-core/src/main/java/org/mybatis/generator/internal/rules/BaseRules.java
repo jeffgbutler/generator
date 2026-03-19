@@ -109,7 +109,7 @@ public abstract class BaseRules implements Rules {
             return false;
         }
 
-        if (ListUtilities.removeGeneratedAlwaysColumns(introspectedTable.getBaseColumns()).isEmpty()) {
+        if (ListUtilities.filterColumnsForUpdate(introspectedTable.getBaseColumns()).isEmpty()) {
             return false;
         }
 
@@ -132,7 +132,7 @@ public abstract class BaseRules implements Rules {
             return false;
         }
 
-        if (ListUtilities.removeGeneratedAlwaysColumns(introspectedTable.getNonPrimaryKeyColumns()).isEmpty()) {
+        if (ListUtilities.filterColumnsForUpdate(introspectedTable.getNonPrimaryKeyColumns()).isEmpty()) {
             return false;
         }
 
@@ -155,7 +155,7 @@ public abstract class BaseRules implements Rules {
             return false;
         }
 
-        if (ListUtilities.removeGeneratedAlwaysColumns(introspectedTable.getNonPrimaryKeyColumns()).isEmpty()) {
+        if (ListUtilities.filterColumnsForUpdate(introspectedTable.getNonPrimaryKeyColumns()).isEmpty()) {
             return false;
         }
 
@@ -449,7 +449,7 @@ public abstract class BaseRules implements Rules {
 
     @Override
     public boolean generateUpdateByPrimaryKeyForDSQL() {
-        if (ListUtilities.removeGeneratedAlwaysColumns(introspectedTable.getNonPrimaryKeyColumns()).isEmpty()) {
+        if (ListUtilities.filterColumnsForUpdate(introspectedTable.getNonPrimaryKeyColumns()).isEmpty()) {
             return false;
         }
 

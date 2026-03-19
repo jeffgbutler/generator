@@ -58,7 +58,8 @@ public class UpdateByPrimaryKeyMethodGenerator extends AbstractJavaInterfaceMeth
 
         method.addBodyLine("return update(c ->"); //$NON-NLS-1$
 
-        method.addBodyLines(fragmentGenerator.getSetEqualLines(introspectedTable.getNonPrimaryKeyColumns(),
+        method.addBodyLines(fragmentGenerator.getSetEqualLinesForUpdateStatement(
+                introspectedTable.getNonPrimaryKeyColumns(),
                 OutputUtilities.javaIndent(1) + "c", OutputUtilities.javaIndent(1), false)); //$NON-NLS-1$
         method.addBodyLines(fragmentGenerator.getPrimaryKeyWhereClauseForUpdate(OutputUtilities.javaIndent(1)));
 

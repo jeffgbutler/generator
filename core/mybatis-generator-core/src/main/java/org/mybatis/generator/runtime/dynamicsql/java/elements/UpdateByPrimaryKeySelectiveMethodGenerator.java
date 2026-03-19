@@ -59,7 +59,8 @@ public class UpdateByPrimaryKeySelectiveMethodGenerator extends AbstractJavaInte
         method.addBodyLine("return update(c ->"); //$NON-NLS-1$
 
         method.addBodyLines(
-                fragmentGenerator.getSetEqualWhenPresentLines(introspectedTable.getNonPrimaryKeyColumns(),
+                fragmentGenerator.getSetEqualWhenPresentLinesForUpdateStatement(
+                        introspectedTable.getNonPrimaryKeyColumns(),
                         OutputUtilities.javaIndent(1) + "c", OutputUtilities.javaIndent(1), false)); //$NON-NLS-1$
         method.addBodyLines(fragmentGenerator.getPrimaryKeyWhereClauseForUpdate(OutputUtilities.javaIndent(1)));
 

@@ -31,12 +31,7 @@ class GeneratedAlwaysTest : AbstractAnnotatedMiscellaneousTest() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(GeneratedalwaystestMapper::class.java)
 
-            val gaTest = Generatedalwaystest()
-            gaTest.id = 1
-            gaTest.name = "fred"
-            gaTest.idPlus1 = 55
-            gaTest.idPlus2 = 66
-            gaTest.blob1 = generateRandomBlob()
+            val gaTest = Generatedalwaystest(1, "fred", blob1 = generateRandomBlob())
             val rows = mapper.insert(gaTest)
             assertEquals(1, rows)
 
@@ -57,11 +52,7 @@ class GeneratedAlwaysTest : AbstractAnnotatedMiscellaneousTest() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(GeneratedalwaystestMapper::class.java)
 
-            val gaTest = Generatedalwaystest()
-            gaTest.id = 1
-            gaTest.name = "fred"
-            gaTest.idPlus1 = 55
-            gaTest.idPlus2 = 66
+            val gaTest = Generatedalwaystest(1, "fred")
             val rows = mapper.insert(gaTest)
             assertEquals(1, rows)
 
@@ -82,22 +73,14 @@ class GeneratedAlwaysTest : AbstractAnnotatedMiscellaneousTest() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(GeneratedalwaystestMapper::class.java)
 
-            val gaTest = Generatedalwaystest()
-            gaTest.id = 1
-            gaTest.name = "fred"
-            gaTest.idPlus1 = 55 // should be ignored
-            gaTest.idPlus2 = 66 // should be ignored
-            gaTest.blob1 = generateRandomBlob()
+            val gaTest = Generatedalwaystest(1, "fred", blob1 = generateRandomBlob())
             var rows = mapper.insert(gaTest)
             assertEquals(1, rows)
 
-            gaTest.name = "barney"
-            gaTest.idPlus1 = 77 // should be ignored
-            gaTest.idPlus2 = 88 // should be ignored
-            gaTest.blob1 = generateRandomBlob()
+            val updateRecord = gaTest.copy(name = "Barney", blob1 = generateRandomBlob())
 
             rows = mapper.update {
-                updateAllColumns(gaTest)
+                updateAllColumns(updateRecord)
                 where {
                     GENERATEDALWAYSTEST.ID_PLUS1 isEqualTo 2
                     and { GENERATEDALWAYSTEST.ID_PLUS2 isEqualTo 3 }
@@ -117,9 +100,9 @@ class GeneratedAlwaysTest : AbstractAnnotatedMiscellaneousTest() {
             assertEquals(1, returnedRecord.id)
             assertEquals(2, returnedRecord.idPlus1)
             assertEquals(3, returnedRecord.idPlus2)
-            assertEquals("barney", returnedRecord.name)
+            assertEquals("Barney", returnedRecord.name)
             // should not have updated the BLOB in a regular update by primary key
-            assertTrue(blobsAreEqual(gaTest.blob1, returnedRecord.blob1))
+            assertTrue(blobsAreEqual(updateRecord.blob1, returnedRecord.blob1))
         }
     }
 
@@ -128,22 +111,14 @@ class GeneratedAlwaysTest : AbstractAnnotatedMiscellaneousTest() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(GeneratedalwaystestMapper::class.java)
 
-            val gaTest = Generatedalwaystest()
-            gaTest.id = 1
-            gaTest.name = "fred"
-            gaTest.idPlus1 = 55 // should be ignored
-            gaTest.idPlus2 = 66 // should be ignored
-            gaTest.blob1 = generateRandomBlob()
+            val gaTest = Generatedalwaystest(1, "fred", blob1 = generateRandomBlob())
             var rows = mapper.insert(gaTest)
             assertEquals(1, rows)
 
-            gaTest.name = null
-            gaTest.idPlus1 = 77 // should be ignored
-            gaTest.idPlus2 = 88 // should be ignored
-            gaTest.blob1 = generateRandomBlob()
+            val newBlob = generateRandomBlob()
 
             rows = mapper.update {
-                updateSelectiveColumns(gaTest)
+                set(GENERATEDALWAYSTEST.BLOB1) equalTo newBlob
                 where {
                     GENERATEDALWAYSTEST.ID_PLUS1 isEqualTo 2
                     and { GENERATEDALWAYSTEST.ID_PLUS2  isEqualTo 3 }
@@ -164,7 +139,7 @@ class GeneratedAlwaysTest : AbstractAnnotatedMiscellaneousTest() {
             assertEquals(2, returnedRecord.idPlus1)
             assertEquals(3, returnedRecord.idPlus2)
             assertEquals("fred", returnedRecord.name)
-            assertTrue(blobsAreEqual(gaTest.blob1, returnedRecord.blob1))
+            assertTrue(blobsAreEqual(newBlob, returnedRecord.blob1))
         }
     }
 
@@ -173,22 +148,13 @@ class GeneratedAlwaysTest : AbstractAnnotatedMiscellaneousTest() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(GeneratedalwaystestMapper::class.java)
 
-            val gaTest = Generatedalwaystest()
-            gaTest.id = 1
-            gaTest.name = "fred"
-            gaTest.idPlus1 = 55 // should be ignored
-            gaTest.idPlus2 = 66 // should be ignored
-            gaTest.blob1 = generateRandomBlob()
+            val gaTest = Generatedalwaystest(1, "fred", blob1 = generateRandomBlob())
             var rows = mapper.insert(gaTest)
             assertEquals(1, rows)
 
-            gaTest.name = "barney"
-            gaTest.idPlus1 = 77 // should be ignored
-            gaTest.idPlus2 = 88 // should be ignored
-            gaTest.blob1 = generateRandomBlob()
-
+            val copy = gaTest.copy(name = "barney", blob1 = generateRandomBlob())
             rows = mapper.update {
-                updateAllColumns(gaTest)
+                updateAllColumns(copy)
                 where {
                     GENERATEDALWAYSTEST.ID_PLUS1 isEqualTo 2
                     and { GENERATEDALWAYSTEST.ID_PLUS2 isEqualTo 3 }
@@ -209,7 +175,7 @@ class GeneratedAlwaysTest : AbstractAnnotatedMiscellaneousTest() {
             assertEquals(2, returnedRecord.idPlus1)
             assertEquals(3, returnedRecord.idPlus2)
             assertEquals("barney", returnedRecord.name)
-            assertTrue(blobsAreEqual(gaTest.blob1, returnedRecord.blob1))
+            assertTrue(blobsAreEqual(copy.blob1, returnedRecord.blob1))
         }
     }
 
@@ -218,20 +184,13 @@ class GeneratedAlwaysTest : AbstractAnnotatedMiscellaneousTest() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(GeneratedalwaystestMapper::class.java)
 
-            val gaTest = Generatedalwaystest()
-            gaTest.id = 1
-            gaTest.name = "fred"
-            gaTest.idPlus1 = 55 // should be ignored
-            gaTest.idPlus2 = 66 // should be ignored
-            gaTest.blob1 = generateRandomBlob()
+            val gaTest = Generatedalwaystest(1, "fred", blob1 = generateRandomBlob())
             var rows = mapper.insert(gaTest)
             assertEquals(1, rows)
 
-            gaTest.name = "barney"
-            gaTest.idPlus1 = 77 // should be ignored
-            gaTest.idPlus2 = 88 // should be ignored
-            gaTest.blob1 = generateRandomBlob()
-            rows = mapper.updateByPrimaryKey(gaTest)
+            val newBlob = generateRandomBlob()
+            val copy = gaTest.copy(name = "barney", blob1 = newBlob)
+            rows = mapper.updateByPrimaryKey(copy)
             assertEquals(1, rows)
 
             val returnedRecords = mapper.select { allRows() }
@@ -242,7 +201,7 @@ class GeneratedAlwaysTest : AbstractAnnotatedMiscellaneousTest() {
             assertEquals(2, returnedRecord.idPlus1)
             assertEquals(3, returnedRecord.idPlus2)
             assertEquals("barney", returnedRecord.name)
-            assertTrue(blobsAreEqual(gaTest.blob1, returnedRecord.blob1))
+            assertTrue(blobsAreEqual(newBlob, returnedRecord.blob1))
         }
     }
 
@@ -251,20 +210,13 @@ class GeneratedAlwaysTest : AbstractAnnotatedMiscellaneousTest() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(GeneratedalwaystestMapper::class.java)
 
-            val gaTest = Generatedalwaystest()
-            gaTest.id = 1
-            gaTest.name = "fred"
-            gaTest.idPlus1 = 55 // should be ignored
-            gaTest.idPlus2 = 66 // should be ignored
-            gaTest.blob1 = generateRandomBlob()
+            val gaTest = Generatedalwaystest(1, "fred", blob1 = generateRandomBlob())
             var rows = mapper.insert(gaTest)
             assertEquals(1, rows)
 
-            gaTest.name = null
-            gaTest.idPlus1 = 77 // should be ignored
-            gaTest.idPlus2 = 88 // should be ignored
-            gaTest.blob1 = generateRandomBlob()
-            rows = mapper.updateByPrimaryKeySelective(gaTest)
+            val newBlob = generateRandomBlob()
+            val copy = gaTest.copy(name = null, blob1 = newBlob)
+            rows = mapper.updateByPrimaryKeySelective(copy)
             assertEquals(1, rows)
 
             val returnedRecords = mapper.select { allRows() }
@@ -275,7 +227,7 @@ class GeneratedAlwaysTest : AbstractAnnotatedMiscellaneousTest() {
             assertEquals(2, returnedRecord.idPlus1)
             assertEquals(3, returnedRecord.idPlus2)
             assertEquals("fred", returnedRecord.name)
-            assertTrue(blobsAreEqual(gaTest.blob1, returnedRecord.blob1))
+            assertTrue(blobsAreEqual(newBlob, returnedRecord.blob1))
         }
     }
 
@@ -284,20 +236,13 @@ class GeneratedAlwaysTest : AbstractAnnotatedMiscellaneousTest() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(GeneratedalwaystestMapper::class.java)
 
-            val gaTest = Generatedalwaystest()
-            gaTest.id = 1
-            gaTest.name = "fred"
-            gaTest.idPlus1 = 55 // should be ignored
-            gaTest.idPlus2 = 66 // should be ignored
-            gaTest.blob1 = generateRandomBlob()
+            val gaTest = Generatedalwaystest(1, "fred", blob1 = generateRandomBlob())
             var rows = mapper.insert(gaTest)
             assertEquals(1, rows)
 
-            gaTest.name = "barney"
-            gaTest.idPlus1 = 77 // should be ignored
-            gaTest.idPlus2 = 88 // should be ignored
-            gaTest.blob1 = generateRandomBlob()
-            rows = mapper.updateByPrimaryKey(gaTest)
+            val newBlob = generateRandomBlob()
+            val copy = gaTest.copy(name = "barney", blob1 = newBlob)
+            rows = mapper.updateByPrimaryKey(copy)
             assertEquals(1, rows)
 
             val returnedRecords = mapper.select { allRows() }
@@ -308,7 +253,7 @@ class GeneratedAlwaysTest : AbstractAnnotatedMiscellaneousTest() {
             assertEquals(2, returnedRecord.idPlus1)
             assertEquals(3, returnedRecord.idPlus2)
             assertEquals("barney", returnedRecord.name)
-            assertTrue(blobsAreEqual(gaTest.blob1, returnedRecord.blob1))
+            assertTrue(blobsAreEqual(newBlob, returnedRecord.blob1))
         }
     }
 }

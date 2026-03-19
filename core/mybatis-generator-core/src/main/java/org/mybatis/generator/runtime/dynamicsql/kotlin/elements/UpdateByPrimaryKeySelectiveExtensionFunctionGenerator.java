@@ -16,16 +16,19 @@
 package org.mybatis.generator.runtime.dynamicsql.kotlin.elements;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
 import org.jspecify.annotations.Nullable;
+import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.dom.kotlin.FullyQualifiedKotlinType;
 import org.mybatis.generator.api.dom.kotlin.KotlinArg;
 import org.mybatis.generator.api.dom.kotlin.KotlinFile;
 import org.mybatis.generator.api.dom.kotlin.KotlinFunction;
 import org.mybatis.generator.runtime.KotlinFunctionAndImports;
+import org.mybatis.generator.runtime.dynamicsql.kotlin.KotlinDynamicSqlRuntime;
 
 public class UpdateByPrimaryKeySelectiveExtensionFunctionGenerator extends AbstractKotlinMapperFunctionGenerator {
     private final FullyQualifiedKotlinType recordType;
@@ -45,6 +48,10 @@ public class UpdateByPrimaryKeySelectiveExtensionFunctionGenerator extends Abstr
             return Optional.empty();
         }
 
+        if (!introspectedTable.generateKotlinV1Model()) {
+            return Optional.empty();
+        }
+
         Set<String> imports = new HashSet<>();
 
         KotlinFunction function = KotlinFunction
@@ -52,16 +59,18 @@ public class UpdateByPrimaryKeySelectiveExtensionFunctionGenerator extends Abstr
                 .withArgument(KotlinArg.newArg("row") //$NON-NLS-1$
                         .withDataType(recordType.getShortNameWithTypeArguments())
                         .build())
+                .withAnnotation(KotlinDynamicSqlRuntime.V1_DEPRECATED_ANNOTATION)
                 .withCodeLine("update {") //$NON-NLS-1$
                 .build();
 
         commentGenerator.addGeneralFunctionComment(function, introspectedTable, imports);
 
+        List<IntrospectedColumn> columns = introspectedTable.getNonPrimaryKeyColumns();
         return KotlinFunctionAndImports.withFunction(function)
                 .withImports(imports)
                 .withImports(recordType.getImportList())
-                .withExtraFunctionParts(fragmentGenerator.getSetEqualWhenPresentLines(
-                        introspectedTable.getNonPrimaryKeyColumns(), false))
+                .withExtraFunctionParts(fragmentGenerator.getSetEqualWhenPresentLinesForUpdateStatement(columns,
+                        false))
                 .withExtraFunctionParts(fragmentGenerator.getPrimaryKeyWhereClauseAndParameters(true))
                 .buildOptional();
     }

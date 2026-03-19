@@ -54,7 +54,7 @@ public class UpdateByExampleSelectiveElementGenerator extends AbstractXmlMapperE
         answer.addElement(dynamicElement);
 
         for (IntrospectedColumn introspectedColumn :
-                ListUtilities.removeGeneratedAlwaysColumns(introspectedTable.getAllColumns())) {
+                ListUtilities.filterColumnsForUpdate(introspectedTable.getAllColumns())) {
             sb.setLength(0);
             sb.append(introspectedColumn.getJavaProperty("row.")); //$NON-NLS-1$
             sb.append(" != null"); //$NON-NLS-1$
