@@ -188,11 +188,9 @@ class GeneratedAlwaysTest : AbstractAnnotatedMiscellaneousTest() {
             var rows = mapper.insert(gaTest)
             assertEquals(1, rows)
 
-            gaTest.name = "barney"
-            gaTest.idPlus1 = 77 // should be ignored
-            gaTest.idPlus2 = 88 // should be ignored
-            gaTest.blob1 = generateRandomBlob()
-            rows = mapper.updateByPrimaryKey(gaTest)
+            val newBlob = generateRandomBlob()
+            val copy = gaTest.copy(name = "barney", blob1 = newBlob)
+            rows = mapper.updateByPrimaryKey(copy)
             assertEquals(1, rows)
 
             val returnedRecords = mapper.select { allRows() }
@@ -203,7 +201,7 @@ class GeneratedAlwaysTest : AbstractAnnotatedMiscellaneousTest() {
             assertEquals(2, returnedRecord.idPlus1)
             assertEquals(3, returnedRecord.idPlus2)
             assertEquals("barney", returnedRecord.name)
-            assertTrue(blobsAreEqual(gaTest.blob1, returnedRecord.blob1))
+            assertTrue(blobsAreEqual(newBlob, returnedRecord.blob1))
         }
     }
 
@@ -216,11 +214,9 @@ class GeneratedAlwaysTest : AbstractAnnotatedMiscellaneousTest() {
             var rows = mapper.insert(gaTest)
             assertEquals(1, rows)
 
-            gaTest.name = null
-            gaTest.idPlus1 = 77 // should be ignored
-            gaTest.idPlus2 = 88 // should be ignored
-            gaTest.blob1 = generateRandomBlob()
-            rows = mapper.updateByPrimaryKeySelective(gaTest)
+            val newBlob = generateRandomBlob()
+            val copy = gaTest.copy(name = null, blob1 = newBlob)
+            rows = mapper.updateByPrimaryKeySelective(copy)
             assertEquals(1, rows)
 
             val returnedRecords = mapper.select { allRows() }
@@ -231,7 +227,7 @@ class GeneratedAlwaysTest : AbstractAnnotatedMiscellaneousTest() {
             assertEquals(2, returnedRecord.idPlus1)
             assertEquals(3, returnedRecord.idPlus2)
             assertEquals("fred", returnedRecord.name)
-            assertTrue(blobsAreEqual(gaTest.blob1, returnedRecord.blob1))
+            assertTrue(blobsAreEqual(newBlob, returnedRecord.blob1))
         }
     }
 
@@ -244,11 +240,9 @@ class GeneratedAlwaysTest : AbstractAnnotatedMiscellaneousTest() {
             var rows = mapper.insert(gaTest)
             assertEquals(1, rows)
 
-            gaTest.name = "barney"
-            gaTest.idPlus1 = 77 // should be ignored
-            gaTest.idPlus2 = 88 // should be ignored
-            gaTest.blob1 = generateRandomBlob()
-            rows = mapper.updateByPrimaryKey(gaTest)
+            val newBlob = generateRandomBlob()
+            val copy = gaTest.copy(name = "barney", blob1 = newBlob)
+            rows = mapper.updateByPrimaryKey(copy)
             assertEquals(1, rows)
 
             val returnedRecords = mapper.select { allRows() }
@@ -259,7 +253,7 @@ class GeneratedAlwaysTest : AbstractAnnotatedMiscellaneousTest() {
             assertEquals(2, returnedRecord.idPlus1)
             assertEquals(3, returnedRecord.idPlus2)
             assertEquals("barney", returnedRecord.name)
-            assertTrue(blobsAreEqual(gaTest.blob1, returnedRecord.blob1))
+            assertTrue(blobsAreEqual(newBlob, returnedRecord.blob1))
         }
     }
 }

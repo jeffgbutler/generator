@@ -34,6 +34,7 @@
     <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.model" targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />
       <property name="trimStrings" value="true" />
+      <property name="generateKotlinV1Model" value="true"/>
     </javaModelGenerator>
 
     <javaClientGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.mapper"  targetProject="MAVEN">
@@ -42,8 +43,7 @@
 
     <table tableName="FieldsOnly" />
     <table tableName="PKOnly">
-      <property name="immutable" value="true"/>
-      <property name="respectNullabilityForKotlin" value="true"/>
+      <property name="generateKotlinV1Model" value="false"/>
     </table>
     <table tableName="PKFields" alias="B" >
       <property name="selectAllOrderByClause" value="ID1, ID2"/>
@@ -52,8 +52,7 @@
       <columnOverride column="stringBoolean" javaType="boolean" typeHandler="mbg.test.mb3.common.StringBooleanTypeHandler"/>
     </table>
     <table tableName="PKBlobs">
-      <property name="immutable" value="true"/>
-      <property name="respectNullabilityForKotlin" value="true"/>
+      <property name="generateKotlinV1Model" value="false"/>
     </table>
     <table tableName="PKFieldsBlobs" />
     <table tableName="FieldsBlobs" />
@@ -88,10 +87,7 @@
       <property name="useJSR310Types" value="true"/>
     </javaTypeResolver>
 
-    <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.idiomatic.model" targetProject="MAVEN">
-      <property name="immutable" value="true"/>
-      <property name="respectNullabilityForKotlin" value="true"/>
-    </javaModelGenerator>
+    <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.idiomatic.model" targetProject="MAVEN" />
 
     <javaClientGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper"  targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />
@@ -192,6 +188,7 @@
     <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.miscellaneous.model" targetProject="MAVEN">
       <property name="trimStrings" value="true" />
       <property name="rootClass" value="mbg.test.common.BaseClass" />
+      <property name="generateKotlinV1Model" value="true"/>
     </javaModelGenerator>
 
     <javaClientGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.miscellaneous.mapper"  targetProject="MAVEN">
@@ -249,12 +246,12 @@
     <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.modelonly" targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />
       <property name="trimStrings" value="true" />
+      <property name="generateKotlinV1Model" value="true"/>
     </javaModelGenerator>
 
     <table tableName="FieldsOnly" />
     <table tableName="PKOnly">
       <property name="immutable" value="true"/>
-      <property name="respectNullabilityForKotlin" value="true"/>
     </table>
     <table tableName="PKFields" alias="B" >
       <property name="selectAllOrderByClause" value="ID1, ID2"/>
@@ -263,7 +260,6 @@
     </table>
     <table tableName="PKBlobs">
       <property name="immutable" value="true"/>
-      <property name="respectNullabilityForKotlin" value="true"/>
     </table>
     <table tableName="PKFieldsBlobs" />
     <table tableName="FieldsBlobs" />

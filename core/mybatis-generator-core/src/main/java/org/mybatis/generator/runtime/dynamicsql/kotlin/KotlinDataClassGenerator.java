@@ -67,7 +67,7 @@ public class KotlinDataClassGenerator extends AbstractKotlinGenerator {
                 kpBuilder = KotlinProperty.newVal(introspectedColumn.getJavaProperty());
             }
 
-            if (!introspectedTable.respectNullabilityForKotlin() || introspectedColumn.isNullable()
+            if (introspectedTable.generateKotlinV1Model() || introspectedColumn.isNullable()
                     || introspectedColumn.isIdentity()) {
                 kpBuilder.withDataType(kotlinType.getShortNameWithTypeArguments() + "?") //$NON-NLS-1$
                         .withInitializationString("null"); //$NON-NLS-1$

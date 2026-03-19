@@ -34,7 +34,7 @@ public class PropertyRegistry {
     public static final String ANY_ROOT_CLASS = "rootClass"; //$NON-NLS-1$
     public static final String ANY_IMMUTABLE = "immutable"; //$NON-NLS-1$
     public static final String ANY_CONSTRUCTOR_BASED = "constructorBased"; //$NON-NLS-1$
-    public static final String RESPECT_NULLABILITY_FOR_KOTLIN = "respectNullabilityForKotlin"; //$NON-NLS-1$
+    public static final String GENERATE_KOTLIN_V1_MODEL = "generateKotlinV1Model"; //$NON-NLS-1$
 
     /**
      * recognized by table and java client generator.

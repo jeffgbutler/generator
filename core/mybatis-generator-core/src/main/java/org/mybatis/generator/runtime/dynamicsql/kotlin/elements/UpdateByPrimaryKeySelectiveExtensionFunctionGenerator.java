@@ -47,7 +47,7 @@ public class UpdateByPrimaryKeySelectiveExtensionFunctionGenerator extends Abstr
             return Optional.empty();
         }
 
-        if (introspectedTable.respectNullabilityForKotlin()) {
+        if (!introspectedTable.generateKotlinV1Model()) {
             return Optional.empty();
         }
 

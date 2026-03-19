@@ -42,7 +42,7 @@ public class UpdateSelectiveColumnsExtensionFunctionGenerator extends AbstractKo
 
     @Override
     public Optional<KotlinFunctionAndImports> generateFunctionAndImports() {
-        if (introspectedTable.respectNullabilityForKotlin()) {
+        if (!introspectedTable.generateKotlinV1Model()) {
             return Optional.empty();
         }
 

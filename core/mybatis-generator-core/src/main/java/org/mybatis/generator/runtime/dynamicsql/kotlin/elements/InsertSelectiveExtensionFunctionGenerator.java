@@ -49,7 +49,7 @@ public class InsertSelectiveExtensionFunctionGenerator extends AbstractKotlinMap
     @Override
     public Optional<KotlinFunctionAndImports> generateFunctionAndImports() {
         List<IntrospectedColumn> columns = ListUtilities.filterColumnsForInsert(introspectedTable.getAllColumns());
-        if (introspectedTable.respectNullabilityForKotlin()
+        if (!introspectedTable.generateKotlinV1Model()
                 && columns.stream().noneMatch(IntrospectedColumn::isNullable)) {
             // if there aren't any nullable columns, no need for insertSelective - it would be the same as insert
             return Optional.empty();
@@ -105,7 +105,7 @@ public class InsertSelectiveExtensionFunctionGenerator extends AbstractKotlinMap
 
     private boolean generateNonNullMethod(IntrospectedColumn column) {
         return column.isSequenceColumn()
-                || (introspectedTable.respectNullabilityForKotlin() && !column.isNullable());
+                || (!introspectedTable.generateKotlinV1Model() && !column.isNullable());
     }
 
     @Override

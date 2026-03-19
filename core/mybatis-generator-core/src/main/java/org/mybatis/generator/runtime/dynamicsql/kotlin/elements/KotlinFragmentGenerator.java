@@ -61,7 +61,7 @@ public class KotlinFragmentGenerator {
         for (IntrospectedColumn column : introspectedTable.getPrimaryKeyColumns()) {
             String argName;
             if (forUpdate) {
-                if (!introspectedTable.respectNullabilityForKotlin() || column.isNullable() || column.isIdentity()) {
+                if (introspectedTable.generateKotlinV1Model() || column.isNullable() || column.isIdentity()) {
                     argName = "row." + column.getJavaProperty() + "!!"; //$NON-NLS-1$ //$NON-NLS-2$
                 } else {
                     argName = "row." + column.getJavaProperty(); //$NON-NLS-1$
@@ -166,7 +166,7 @@ public class KotlinFragmentGenerator {
         FullyQualifiedKotlinType kt = JavaToKotlinTypeConverter.convert(introspectedColumn.getFullyQualifiedJavaType());
         imports.addAll(kt.getImportList());
 
-        if (!introspectedTable.respectNullabilityForKotlin() || introspectedColumn.isNullable()
+        if (introspectedTable.generateKotlinV1Model() || introspectedColumn.isNullable()
                 || introspectedColumn.isIdentity()) {
             sb.append(", javaType="); //$NON-NLS-1$
             sb.append(calculateNullableTypeForArgAnnotation(kt));
@@ -225,16 +225,15 @@ public class KotlinFragmentGenerator {
                 builder.withCodeLine(OutputUtilities.kotlinIndent(1) + "set(" //$NON-NLS-1$
                         + fieldNameAndImport.fieldName()
                         + ") equalTo row." + column.getJavaProperty() + "!!"); //$NON-NLS-1$ //$NON-NLS-2$
-
-            } else if (introspectedTable.respectNullabilityForKotlin() && !column.isNullable()) {
+            } else if (introspectedTable.generateKotlinV1Model() || column.isNullable()) {
+                builder.withCodeLine(OutputUtilities.kotlinIndent(1) + "set(" //$NON-NLS-1$
+                        + fieldNameAndImport.fieldName()
+                        + ") equalToOrNull row::" + column.getJavaProperty()); //$NON-NLS-1$
+            } else {
                 builder.withCodeLine(OutputUtilities.kotlinIndent(1) + "set(" //$NON-NLS-1$
                         + fieldNameAndImport.fieldName()
                         + ") equalTo row::" + column.getJavaProperty()); //$NON-NLS-1$
 
-            } else {
-                builder.withCodeLine(OutputUtilities.kotlinIndent(1) + "set(" //$NON-NLS-1$
-                        + fieldNameAndImport.fieldName()
-                        + ") equalToOrNull row::" + column.getJavaProperty()); //$NON-NLS-1$
             }
         }
 
@@ -250,7 +249,7 @@ public class KotlinFragmentGenerator {
         KotlinFunctionParts.Builder builder = new KotlinFunctionParts.Builder();
 
         ListUtilities.filterColumnsForUpdate(columnList).stream()
-                .filter(ic -> !introspectedTable.respectNullabilityForKotlin() || ic.isNullable())
+                .filter(ic -> introspectedTable.generateKotlinV1Model() || ic.isNullable())
                 .forEach(column -> {
                     FieldNameAndImport fieldNameAndImport = calculateFieldNameAndImport(tableFieldName,
                             supportObjectImport,

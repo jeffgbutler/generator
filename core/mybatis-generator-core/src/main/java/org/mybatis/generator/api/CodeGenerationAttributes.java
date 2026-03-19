@@ -675,8 +675,8 @@ public abstract class CodeGenerationAttributes {
         return getTableConfiguration().isImmutable(context);
     }
 
-    public boolean respectNullabilityForKotlin() {
-        return getTableConfiguration().respectNullabilityForKotlin(context);
+    public boolean generateKotlinV1Model() {
+        return getTableConfiguration().generateKotlinV1Model(context);
     }
 
     public boolean isConstructorBased() {

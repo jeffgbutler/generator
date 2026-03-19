@@ -343,16 +343,16 @@ public class TableConfiguration extends PropertyHolder {
         return isTrue(properties.getProperty(PropertyRegistry.ANY_IMMUTABLE));
     }
 
-    public boolean respectNullabilityForKotlin(Context context) {
+    public boolean generateKotlinV1Model(Context context) {
         Properties properties;
 
-        if (getProperties().containsKey(PropertyRegistry.RESPECT_NULLABILITY_FOR_KOTLIN)) {
+        if (getProperties().containsKey(PropertyRegistry.GENERATE_KOTLIN_V1_MODEL)) {
             properties = getProperties();
         } else {
             properties = context.getJavaModelGeneratorConfiguration().getProperties();
         }
 
-        return isTrue(properties.getProperty(PropertyRegistry.RESPECT_NULLABILITY_FOR_KOTLIN));
+        return isTrue(properties.getProperty(PropertyRegistry.GENERATE_KOTLIN_V1_MODEL));
     }
 
     public @Nullable DomainObjectRenamingRule getDomainObjectRenamingRule() {
