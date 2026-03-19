@@ -544,12 +544,22 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
   <tr>
     <td valign="top">useCompoundPropertyNames</td>
     <td>If true, then
-        MBG will use generate property names by contatenating the column name with the
-        column reparks.  This can be usefull in databases created by 4th generation languages
+        MBG will generate property names by contatenating the column name with the
+        column reparks.  This can be useful in databases created by 4th generation languages
         where the column names are generated (e.g. FLD2237), but the remarks contain useful
         information (e.g. "customer id").  In this case, MBG will generate a property
         name of FLD2237_CustomerId.
         <p><i>The default value is false.</i></p></td>
+  </tr>
+  <tr>
+    <td valign="top">generateKotlinV1Model</td>
+    <td>If true, then the Kotlin runtime will generate model and mapper classes similar to the
+      classes generated in version 1.x of MBG. If false, then the generated models will be immutable and
+      the model classes will respect the nullability of corresponding database columns. In addition, several
+      mapper methods from V1 will not be generated as they don't function as expected when the
+      models have a correct understanding of column nullability.
+      <p>This property will be removed in a future version of MBG, and V1 models will no longer be supported.</p>
+      <p><i>The default value is false.</i></p></td>
   </tr>
 </table>
 

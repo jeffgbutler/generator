@@ -147,6 +147,23 @@ may impact users. Please read these release notes for details.
       <li>The generator will now respect the "immutable" property on a &lt;table&gt; or
         &lt;javaModelGenerator&gt; configuration.
       </li>
+      <li>The default model type for Kotlin is now immutable (using "val" instead of "var" in most cases).
+        In addition, the model classes respect the "nullable" setting on database columns. So if a
+        column is defined as "NOT NULL," then the generated data class will use a non-nullable type to represent
+        the column. This change also cascaded into a better implementation of the generated mappers
+        and, therefore, the following generated methods are no longer generated:
+        <ul>
+          <li>insertSelective</li>
+          <li>updateAllColumns</li>
+          <li>updateByPrimaryKeySelective</li>
+          <li>updateSelectiveColumns</li>
+        </ul>
+        <p>You can revert to the prior version of a generated model by specifying
+          &lt;property name="generateKotlinV1Model" value="true" /&gt; in a &lt;table&gt; or
+          &lt;modelGenerator&gt; configuration element. This setting will no longer be supported and will be removed
+          in a future version of the generator.
+        </p>
+      </li>
     </ul>
   </li>
 </ul>
