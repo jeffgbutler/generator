@@ -61,10 +61,18 @@ public class KotlinDataClassGenerator extends AbstractKotlinGenerator {
                     JavaToKotlinTypeConverter.convert(introspectedColumn.getFullyQualifiedJavaType());
 
             KotlinProperty.Builder kpBuilder;
-            if (!introspectedTable.isImmutable() || introspectedColumn.isIdentity()) {
-                kpBuilder = KotlinProperty.newVar(introspectedColumn.getJavaProperty());
+            if (introspectedTable.generateKotlinV1Model()) {
+                if (introspectedTable.isImmutable()) {
+                    kpBuilder = KotlinProperty.newVal(introspectedColumn.getJavaProperty());
+                } else {
+                    kpBuilder = KotlinProperty.newVar(introspectedColumn.getJavaProperty());
+                }
             } else {
-                kpBuilder = KotlinProperty.newVal(introspectedColumn.getJavaProperty());
+                if (introspectedColumn.isIdentity()) {
+                    kpBuilder = KotlinProperty.newVar(introspectedColumn.getJavaProperty());
+                } else {
+                    kpBuilder = KotlinProperty.newVal(introspectedColumn.getJavaProperty());
+                }
             }
 
             if (introspectedTable.generateKotlinV1Model() || introspectedColumn.isNullable()
