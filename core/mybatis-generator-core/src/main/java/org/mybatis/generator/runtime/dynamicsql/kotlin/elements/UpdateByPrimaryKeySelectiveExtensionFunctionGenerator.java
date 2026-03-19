@@ -28,6 +28,7 @@ import org.mybatis.generator.api.dom.kotlin.KotlinArg;
 import org.mybatis.generator.api.dom.kotlin.KotlinFile;
 import org.mybatis.generator.api.dom.kotlin.KotlinFunction;
 import org.mybatis.generator.runtime.KotlinFunctionAndImports;
+import org.mybatis.generator.runtime.dynamicsql.kotlin.KotlinDynamicSqlRuntime;
 
 public class UpdateByPrimaryKeySelectiveExtensionFunctionGenerator extends AbstractKotlinMapperFunctionGenerator {
     private final FullyQualifiedKotlinType recordType;
@@ -58,6 +59,7 @@ public class UpdateByPrimaryKeySelectiveExtensionFunctionGenerator extends Abstr
                 .withArgument(KotlinArg.newArg("row") //$NON-NLS-1$
                         .withDataType(recordType.getShortNameWithTypeArguments())
                         .build())
+                .withAnnotation(KotlinDynamicSqlRuntime.V1_DEPRECATED_ANNOTATION)
                 .withCodeLine("update {") //$NON-NLS-1$
                 .build();
 

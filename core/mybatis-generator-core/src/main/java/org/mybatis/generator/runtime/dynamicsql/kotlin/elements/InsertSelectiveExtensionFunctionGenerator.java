@@ -30,6 +30,7 @@ import org.mybatis.generator.api.dom.kotlin.KotlinFile;
 import org.mybatis.generator.api.dom.kotlin.KotlinFunction;
 import org.mybatis.generator.runtime.KotlinFunctionAndImports;
 import org.mybatis.generator.runtime.KotlinFunctionParts;
+import org.mybatis.generator.runtime.dynamicsql.kotlin.KotlinDynamicSqlRuntime;
 import org.mybatis.generator.runtime.mybatis3.ListUtilities;
 
 public class InsertSelectiveExtensionFunctionGenerator extends AbstractKotlinMapperFunctionGenerator {
@@ -62,6 +63,7 @@ public class InsertSelectiveExtensionFunctionGenerator extends AbstractKotlinMap
                         .withDataType(recordType.getShortNameWithTypeArguments())
                         .build())
                 .withCodeLines(functionBody.getCodeLines())
+                .withAnnotation(KotlinDynamicSqlRuntime.V1_DEPRECATED_ANNOTATION)
                 .build();
 
         commentGenerator.addGeneralFunctionComment(function, introspectedTable, imports);

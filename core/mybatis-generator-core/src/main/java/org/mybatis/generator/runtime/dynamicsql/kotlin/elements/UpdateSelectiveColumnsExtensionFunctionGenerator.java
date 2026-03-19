@@ -28,6 +28,7 @@ import org.mybatis.generator.api.dom.kotlin.KotlinArg;
 import org.mybatis.generator.api.dom.kotlin.KotlinFile;
 import org.mybatis.generator.api.dom.kotlin.KotlinFunction;
 import org.mybatis.generator.runtime.KotlinFunctionAndImports;
+import org.mybatis.generator.runtime.dynamicsql.kotlin.KotlinDynamicSqlRuntime;
 import org.mybatis.generator.runtime.mybatis3.ListUtilities;
 
 public class UpdateSelectiveColumnsExtensionFunctionGenerator extends AbstractKotlinMapperFunctionGenerator {
@@ -54,6 +55,7 @@ public class UpdateSelectiveColumnsExtensionFunctionGenerator extends AbstractKo
                 .withArgument(KotlinArg.newArg("row") //$NON-NLS-1$
                         .withDataType(recordType.getShortNameWithTypeArguments())
                         .build())
+                .withAnnotation(KotlinDynamicSqlRuntime.V1_DEPRECATED_ANNOTATION)
                 .withCodeLine("apply {")
                 .build();
 

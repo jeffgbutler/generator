@@ -26,6 +26,7 @@ import org.mybatis.generator.api.dom.kotlin.KotlinArg;
 import org.mybatis.generator.api.dom.kotlin.KotlinFile;
 import org.mybatis.generator.api.dom.kotlin.KotlinFunction;
 import org.mybatis.generator.runtime.KotlinFunctionAndImports;
+import org.mybatis.generator.runtime.dynamicsql.kotlin.KotlinDynamicSqlRuntime;
 
 public class UpdateAllColumnsExtensionFunctionGenerator extends AbstractKotlinMapperFunctionGenerator {
     private final FullyQualifiedKotlinType recordType;
@@ -52,6 +53,7 @@ public class UpdateAllColumnsExtensionFunctionGenerator extends AbstractKotlinMa
                         .withDataType(recordType.getShortNameWithTypeArguments())
                         .build())
                 .withCodeLine("apply {") //$NON-NLS-1$
+                .withAnnotation(KotlinDynamicSqlRuntime.V1_DEPRECATED_ANNOTATION)
                 .build();
 
         commentGenerator.addGeneralFunctionComment(function, introspectedTable, imports);
