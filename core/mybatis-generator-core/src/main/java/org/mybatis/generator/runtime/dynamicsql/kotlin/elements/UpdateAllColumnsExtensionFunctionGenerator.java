@@ -39,6 +39,10 @@ public class UpdateAllColumnsExtensionFunctionGenerator extends AbstractKotlinMa
 
     @Override
     public Optional<KotlinFunctionAndImports> generateFunctionAndImports() {
+        if (!introspectedTable.generateKotlinV1Model()) {
+            return Optional.empty();
+        }
+
         Set<String> imports = new HashSet<>();
         imports.add("org.mybatis.dynamic.sql.util.kotlin.KotlinUpdateBuilder"); //$NON-NLS-1$
 

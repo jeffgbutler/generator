@@ -131,10 +131,9 @@ class UpdateByExampleTest : AbstractTest() {
             key = Pkonly(7, 8)
             mapper.insert(key)
 
-            val updateKey = Pkonly(22, 3)
-
             val rows = mapper.update {
-                updateAllColumns(updateKey)
+                set(pkonly.id) equalTo 22
+                set(pkonly.seqNum) equalTo 3
                 where { pkonly.id isEqualTo 7 }
             }
             assertEquals(1, rows)
@@ -250,10 +249,10 @@ class UpdateByExampleTest : AbstractTest() {
             record = Pkblobs(6, generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
-            val newRecord = Pkblobs(id = 8)
-
             val rows = mapper.update {
-                updateAllColumns(newRecord)
+                set(pkblobs.id) equalTo 8
+                set(pkblobs.blob1).equalToNull()
+                set(pkblobs.blob2).equalToNull()
                 where { pkblobs.id isGreaterThan 4 }
             }
             assertEquals(1, rows)

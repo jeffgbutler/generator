@@ -49,7 +49,6 @@ public class InsertSelectiveExtensionFunctionGenerator extends AbstractKotlinMap
     @Override
     public Optional<KotlinFunctionAndImports> generateFunctionAndImports() {
         if (!introspectedTable.generateKotlinV1Model()) {
-            // V2 model doesn't have insertSelective
             return Optional.empty();
         }
 

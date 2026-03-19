@@ -100,10 +100,10 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
             record = Fieldsonly(9, 88.99, 100.111)
             mapper.insert(record)
 
-            val updateRecord = Fieldsonly(integerfield = 22)
-
             val rows = mapper.update {
-                updateAllColumns(updateRecord)
+                set(fieldsonly.integerfield) equalTo 22
+                set(fieldsonly.doublefield).equalToNull()
+                set(fieldsonly.floatfield).equalToNull()
                 where { fieldsonly.integerfield isEqualTo 5 }
             }
             assertThat(rows).isEqualTo(1)
@@ -113,7 +113,7 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
             record = answer[0]
             assertThat(record.doublefield).isNull()
             assertThat(record.floatfield).isNull()
-            assertThat(22).isEqualTo(record.integerfield!!)
+            assertThat(record.integerfield).isEqualTo(22)
         }
     }
 
@@ -130,10 +130,9 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
             key = Pkonly(7, 8)
             mapper.insert(key)
 
-            val updateKey = Pkonly(22, 3)
-
             val rows = mapper.update {
-                updateAllColumns(updateKey)
+                set(pkonly.id) equalTo 22
+                set(pkonly.seqNum) equalTo 3
                 where { pkonly.id isEqualTo 7 }
             }
             assertThat(rows).isEqualTo(1)
@@ -187,10 +186,8 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
 
             mapper.insert(record)
 
-            val updateRecord = Pkfields(id1 = 3, id2 = 4, firstname = "Fred")
-
             val rows = mapper.update {
-                updateAllColumns(updateRecord)
+                set(pkfieldstable.firstname) equalTo "Fred"
                 where {
                     pkfieldstable.id1 isEqualTo 3
                     and { pkfieldstable.id2 isEqualTo 4 }
@@ -248,10 +245,10 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
             record = Pkblobs(6, generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
-            val newRecord = Pkblobs(id = 8)
-
             val rows = mapper.update {
-                updateAllColumns(newRecord)
+                set(pkblobs.id) equalTo 8
+                set(pkblobs.blob1).equalToNull()
+                set(pkblobs.blob2).equalToNull()
                 where { pkblobs.id isGreaterThan 4 }
             }
             assertThat(rows).isEqualTo(1)
@@ -306,10 +303,11 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
             record = Pkfieldsblobs(5, 6, "Scott", "Jones", generateRandomBlob())
             mapper.insert(record)
 
-            val newRecord = Pkfieldsblobs(3, 8, "Fred")
-
             val rows = mapper.update {
-                updateAllColumns(newRecord)
+                set(pkfieldsblobs.id2) equalTo 8
+                set(pkfieldsblobs.firstname) equalTo "Fred"
+                set(pkfieldsblobs.lastname).equalToNull()
+                set(pkfieldsblobs.blob1).equalToNull()
                 where { pkfieldsblobs.id1 isEqualTo 3 }
             }
             assertThat(rows).isEqualTo(1)
@@ -319,9 +317,9 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
 
             val returnedRecord = answer[0]
 
-            assertThat(returnedRecord.id1).isEqualTo(newRecord.id1)
-            assertThat(returnedRecord.id2).isEqualTo(newRecord.id2)
-            assertThat(returnedRecord.firstname).isEqualTo(newRecord.firstname)
+            assertThat(returnedRecord.id1).isEqualTo(3)
+            assertThat(returnedRecord.id2).isEqualTo(8)
+            assertThat(returnedRecord.firstname).isEqualTo("Fred")
             assertThat(returnedRecord.lastname).isNull()
             assertThat(returnedRecord.blob1).isNull()
         }
@@ -365,10 +363,10 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
             record = Fieldsblobs("Scott", "Jones", generateRandomBlob(), generateRandomBlob())
             mapper.insert(record)
 
-            val newRecord = Fieldsblobs("Scott", "Doe")
-
             val rows = mapper.update {
-                updateAllColumns(newRecord)
+                set(fieldsblobs.lastname) equalTo "Doe"
+                set(fieldsblobs.blob1).equalToNull()
+                set(fieldsblobs.blob2).equalToNull()
                 where { fieldsblobs.firstname isLike "S%" }
             }
             assertThat(rows).isEqualTo(1)
@@ -378,8 +376,8 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
 
             val returnedRecord = answer[0]
 
-            assertThat(returnedRecord.firstname).isEqualTo(newRecord.firstname)
-            assertThat(returnedRecord.lastname).isEqualTo(newRecord.lastname)
+            assertThat(returnedRecord.firstname).isEqualTo("Scott")
+            assertThat(returnedRecord.lastname).isEqualTo("Doe")
             assertThat(returnedRecord.blob1).isNull()
             assertThat(returnedRecord.blob2).isNull()
         }
@@ -439,11 +437,18 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
                 emailaddress = "alsowilma@wilma.com", from = "from field")
             mapper.insert(record)
 
-            val newRecord = AwfulTable(customerId = 57, firstFirstName = "Alonzo", id1 = 111, id2 = 222, id5 = 555,
-                id6 = 666, id7 = 777)
-
             val rows = mapper.update {
-                updateAllColumns(newRecord)
+                set(awfulTable.firstFirstName) equalTo "Alonzo"
+                set(awfulTable.id1) equalTo 111
+                set(awfulTable.id2) equalTo 222
+                set(awfulTable.id5) equalTo 555
+                set(awfulTable.id6) equalTo 666
+                set(awfulTable.id7) equalTo 777
+                set(awfulTable.emailaddress).equalToNull()
+                set(awfulTable.from).equalToNull()
+                set(awfulTable.secondFirstName).equalToNull()
+                set(awfulTable.thirdFirstName).equalToNull()
+                set(awfulTable.eMail).equalToNull()
                 where { awfulTable.eMail isLike "fred@%" }
             }
             assertThat(rows).isEqualTo(1)
@@ -453,16 +458,16 @@ class UpdateByExampleIdiomaticTest : AbstractIdiomaticTest() {
 
             val returnedRecord = answer[0]
 
-            assertThat(returnedRecord.customerId).isEqualTo(newRecord.customerId!!)
+            assertThat(returnedRecord.customerId).isEqualTo(57)
             assertThat(returnedRecord.eMail).isNull()
             assertThat(returnedRecord.emailaddress).isNull()
-            assertThat(returnedRecord.firstFirstName).isEqualTo(newRecord.firstFirstName)
+            assertThat(returnedRecord.firstFirstName).isEqualTo("Alonzo")
             assertThat(returnedRecord.from).isNull()
-            assertThat(returnedRecord.id1).isEqualTo(newRecord.id1!!)
-            assertThat(returnedRecord.id2).isEqualTo(newRecord.id2!!)
-            assertThat(returnedRecord.id5).isEqualTo(newRecord.id5!!)
-            assertThat(returnedRecord.id6).isEqualTo(newRecord.id6!!)
-            assertThat(returnedRecord.id7).isEqualTo(newRecord.id7!!)
+            assertThat(returnedRecord.id1).isEqualTo(111)
+            assertThat(returnedRecord.id2).isEqualTo(222)
+            assertThat(returnedRecord.id5).isEqualTo(555)
+            assertThat(returnedRecord.id6).isEqualTo(666)
+            assertThat(returnedRecord.id7).isEqualTo(777)
             assertThat(returnedRecord.secondFirstName).isNull()
             assertThat(returnedRecord.thirdFirstName).isNull()
         }
