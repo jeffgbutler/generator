@@ -34,7 +34,7 @@ configuring plugins, see <a href="../configreference/plugin.html">&lt;plugin&gt;
 
 <p>Most of the supplied plugins are in the package
 <code>org.mybatis.generator.plugins</code>.  The supplied plugins demonstrate
-different types of tasks that can be accomplished with MBG plugins.  Source
+different types of tasks that can be achieved with MBG plugins.  Source
 code for the plugins is available with the MBG downloads, or can be viewed
 online
 <a target="_blank" href="https://github.com/mybatis/generator/tree/master/core/mybatis-generator-core/src/main/java/org/mybatis/generator/plugins">
@@ -116,13 +116,37 @@ The plugin will create the additional Methods:
 
 <p>This plugin does not accept any properties.</p>
 
-<p>Using this plugin, you can configure the property values fluently with chained method calls. Example: <code>new MyDomain().withFoo("Test").withBar(4711);</code></p>
+<p>Using this plugin, you can configure the property values fluently with chained method calls.
+  Example: <code>new MyDomain().withFoo("Test").withBar(4711);</code></p>
 
 
 <h2>org.mybatis.generator.plugins.IgnoreViewsPlugin</h2>
 <p>This plugin will filter out any table of type "VIEW" from a code generation run. This can be useful if you use
     a wildcard to select many tables and views, but don't want to generate code for the views.
 </p>
+
+<h2>org.mybatis.generator.plugins.JSpecifyPlugin</h2>
+<p>This plugin adds JSpecify nullability annotations to generated model classes and records based on the declared
+  nullability of the corresponding database columns. If you enable this plugin in a context for MyBatis Dynamic SQL,
+  the plugin will also remove the following methods from a generated mapper as they don't function well when you are
+  strictly observing nullability:</p>
+  <ul>
+    <li>updateAllColumns</li>
+    <li>updateByPrimaryKeySelective</li>
+    <li>updateSelectiveColumns</li>
+  </ul>
+<p>The generated "update" method is more powerful and more declarative than the removed methods in any case. The plugin
+  can be configured with the following property:</p>
+<ul>
+  <li><code>skipJSpecifyPlugin</code> (property of &lt;table&gt;) - boolean value. The plugin will not add
+    JSpecify annotations for any table with this property set to "true".
+  </li>
+</ul>
+
+<p>This plugin is ignored for Kotlin based runtimes. For Kotlin, we use the native language support for null
+  handling to achieve a similar function.</p>
+<p>This plugin also demonstrates how attributes in the IntrospectedTable can be used to share information between
+  different plugins.</p>
 
 <h2>org.mybatis.generator.plugins.MapperAnnotationPlugin</h2>
 <p>This plugin has no impact and is not needed when the target runtime in use is based on MyBatis Dynamic SQL.</p>
@@ -150,6 +174,8 @@ This file can be used to configure MyBatis 3.x environments.</p>
 <h2>org.mybatis.generator.plugins.RecordBuilderPlugin</h2>
 <p>This plugin adds a "Builder" inner class to generated records. If records have a large number of fields,
   using a Builder can be more expressive than calling a constructor with a large number of parameters.
+  If you enable this plugin in a context where the JSpecify plugin is also configured, then
+  the generated builder will ensure that non-nullable properties are set properly.
 </p>
 <p>The plugin is configured with two properties:</p>
 <ul>
@@ -161,6 +187,9 @@ This file can be used to configure MyBatis 3.x environments.</p>
     Builder for any table with this property set to "true".
   </li>
 </ul>
+
+<p>This plugin is ignored for Kotlin based runtimes. For Kotlin, we generate Kotlin native data classes, so this
+  plugin doesn't provide any value.</p>
 
 <h2>org.mybatis.generator.plugins.RecordWithMethodsPlugin</h2>
 <p>This plugin adds "with" methods to generated records. The "with" methods will build a new instance of a record with
@@ -177,6 +206,9 @@ This file can be used to configure MyBatis 3.x environments.</p>
     "with" methods for any table with this property set to "true".
   </li>
 </ul>
+
+<p>This plugin is ignored for Kotlin based runtimes. For Kotlin, we generate Kotlin native data classes, so this
+  plugin doesn't provide any value.</p>
 
 <h2>org.mybatis.generator.plugins.RenameExampleClassPlugin</h2>
 <p>This plugin has no impact and is not needed when the target runtime in use is based on MyBatis Dynamic SQL.</p>

@@ -163,6 +163,16 @@ may impact users. Please read these release notes for details.
           in a future version of the generator.
         </p>
       </li>
+      <li>New plugin <code>org.mybatis.generator.plugins.JSpecifyPlugin</code> that will add JSpecify nullability
+        annotations to generated model classes and records. If you add this plugin to the runtime for MyBatis Dynamic
+        SQL, the plugin will also remove the following methods from a generated mapper:
+        <ul>
+          <li>updateAllColumns</li>
+          <li>updateByPrimaryKeySelective</li>
+          <li>updateSelectiveColumns</li>
+        </ul>
+        <p>As with the Kotlin runtime, these methods don't work well when you are strictly observing nullability.</p>
+      </li>
     </ul>
   </li>
 </ul>

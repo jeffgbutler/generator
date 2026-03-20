@@ -16,6 +16,7 @@
 package org.mybatis.generator.plugins;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
@@ -36,12 +37,21 @@ public class RecordBuilderPlugin extends BaseRecordPlugin {
 
     @Override
     protected void execute(TopLevelRecord topLevelRecord, IntrospectedTable introspectedTable) {
+        boolean jspecifyEnabled = JSpecifyPlugin.isEnabled(introspectedTable);
+        if (jspecifyEnabled) {
+            topLevelRecord.addImportedType(JSpecifyPlugin.NULLABLE_IMPORT);
+
+            if (introspectedTable.getAllColumns().stream().anyMatch(c -> !c.isNullable())) {
+                topLevelRecord.addImportedType("java.util.Objects"); //$NON-NLS-1$
+            }
+        }
+
         List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
         Method newBuilder = generateNewBuilderMethod();
         commentGenerator.addGeneralMethodAnnotation(newBuilder, introspectedTable, topLevelRecord.getImportedTypes());
         topLevelRecord.addMethod(newBuilder);
 
-        InnerClass innerClass = generateBuilderClass(introspectedTable, allColumns);
+        InnerClass innerClass = generateBuilderClass(introspectedTable, allColumns, jspecifyEnabled);
         commentGenerator.addClassAnnotation(innerClass, introspectedTable, topLevelRecord.getImportedTypes());
         topLevelRecord.addInnerClass(innerClass);
     }
@@ -55,23 +65,28 @@ public class RecordBuilderPlugin extends BaseRecordPlugin {
         return method;
     }
 
-    private InnerClass generateBuilderClass(IntrospectedTable table, List<IntrospectedColumn> columns) {
+    private InnerClass generateBuilderClass(IntrospectedTable table, List<IntrospectedColumn> columns,
+                                            boolean jspecifyEnabled) {
         InnerClass innerClass = new InnerClass(BUILDER_TYPE);
         innerClass.setStatic(true);
         innerClass.setVisibility(JavaVisibility.PUBLIC);
 
         for (IntrospectedColumn column : columns) {
-            innerClass.addField(generateBuilderField(column));
+            innerClass.addField(generateBuilderField(table, column, jspecifyEnabled));
             innerClass.addMethod(generateBuilderMethod(column));
         }
 
-        innerClass.addMethod(generateBuildMethod(table, columns));
+        innerClass.addMethod(generateBuildMethod(table, columns, jspecifyEnabled));
 
         return innerClass;
     }
 
-    private Field generateBuilderField(IntrospectedColumn column) {
+    private Field generateBuilderField(IntrospectedTable introspectedTable, IntrospectedColumn column,
+                                       boolean jspecifyEnabled) {
         Field field = new Field(column.getJavaProperty(), column.getFullyQualifiedJavaType());
+        if (jspecifyEnabled) {
+            field.addAnnotation(JSpecifyPlugin.NULLABLE_ANNOTATION);
+        }
         field.setVisibility(JavaVisibility.PRIVATE);
         return field;
     }
@@ -87,12 +102,30 @@ public class RecordBuilderPlugin extends BaseRecordPlugin {
         return method;
     }
 
-    private Method generateBuildMethod(IntrospectedTable table, List<IntrospectedColumn> columns) {
+    private Method generateBuildMethod(IntrospectedTable table, List<IntrospectedColumn> columns,
+                                       boolean jspecifyEnabled) {
         FullyQualifiedJavaType returnType = new FullyQualifiedJavaType(table.getBaseRecordType());
         Method method = new Method("build"); //$NON-NLS-1$
         method.setReturnType(returnType);
         method.setVisibility(JavaVisibility.PUBLIC);
-        method.addBodyLine(calculateReturnNewLine(columns, returnType));
+        method.addBodyLine(calculateReturnNewLine(columns, returnType, jspecifyEnabled));
         return method;
+    }
+
+    private String calculateReturnNewLine(List<IntrospectedColumn> columns, FullyQualifiedJavaType returnType,
+                                          boolean jspecifyEnabled) {
+        String prefix = "return new " + returnType.getShortName() + "("; //$NON-NLS-1$ //$NON-NLS-2$
+        return columns.stream()
+                .map(c -> calculateParameter(c, jspecifyEnabled))
+                .collect(Collectors.joining(", ", prefix, ");")); //$NON-NLS-1$ //$NON-NLS-2$
+
+    }
+
+    private String calculateParameter(IntrospectedColumn column, boolean jspecifyEnabled) {
+        if (column.isNullable() || !jspecifyEnabled) {
+            return column.getJavaProperty();
+        } else {
+            return "Objects.requireNonNull(" + column.getJavaProperty() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+        }
     }
 }

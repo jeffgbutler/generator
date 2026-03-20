@@ -48,6 +48,8 @@ public class Method extends JavaElement {
 
     private boolean isFinal;
 
+    private final List<String> returnTypeAnnotations = new ArrayList<>();
+
     public Method(String name) {
         this.name = name;
     }
@@ -188,5 +190,13 @@ public class Method extends JavaElement {
 
     public void setFinal(boolean isFinal) {
         this.isFinal = isFinal;
+    }
+
+    public List<String> getReturnTypeAnnotations() {
+        return returnTypeAnnotations;
+    }
+
+    public void addReturnTypeAnnotation(String annotation) {
+        returnTypeAnnotations.add(annotation);
     }
 }

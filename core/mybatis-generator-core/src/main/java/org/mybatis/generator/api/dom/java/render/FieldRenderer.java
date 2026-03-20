@@ -1,5 +1,5 @@
 /*
- *    Copyright 2006-2025 the original author or authors.
+ *    Copyright 2006-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.util.List;
 import org.mybatis.generator.api.dom.java.CompilationUnit;
 import org.mybatis.generator.api.dom.java.Field;
 import org.mybatis.generator.api.dom.java.JavaDomUtils;
+import org.mybatis.generator.internal.util.CustomCollectors;
 
 public class FieldRenderer {
 
@@ -54,6 +55,7 @@ public class FieldRenderer {
             sb.append("volatile "); //$NON-NLS-1$
         }
 
+        sb.append(renderTypeAnnotations(field));
         sb.append(JavaDomUtils.calculateTypeName(compilationUnit, field.getType()));
         sb.append(' ');
         sb.append(field.getName());
@@ -67,5 +69,11 @@ public class FieldRenderer {
         return field.getInitializationString()
                 .map(is -> " = " + is) //$NON-NLS-1$
                 .orElse(""); //$NON-NLS-1$
+    }
+
+    // should return empty string if no annotations
+    private String renderTypeAnnotations(Field field) {
+        return field.getTypeAnnotations().stream()
+                .collect(CustomCollectors.joining(" ", "", " ")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 }

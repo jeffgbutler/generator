@@ -15,6 +15,8 @@
  */
 package org.mybatis.generator.api.dom.java;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.jspecify.annotations.Nullable;
@@ -26,6 +28,8 @@ public class Field extends JavaElement {
     private boolean isTransient;
     private boolean isVolatile;
     private boolean isFinal;
+
+    private final List<String> typeAnnotations = new ArrayList<>();
 
     public Field(String name, FullyQualifiedJavaType type) {
         this.name = name;
@@ -88,5 +92,13 @@ public class Field extends JavaElement {
 
     public void setFinal(boolean isFinal) {
         this.isFinal = isFinal;
+    }
+
+    public List<String> getTypeAnnotations() {
+        return typeAnnotations;
+    }
+
+    public void addTypeAnnotation(String annotation) {
+        typeAnnotations.add(annotation);
     }
 }

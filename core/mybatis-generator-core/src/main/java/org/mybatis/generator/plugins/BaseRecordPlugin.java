@@ -16,16 +16,13 @@
 package org.mybatis.generator.plugins;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
-import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.api.dom.java.TopLevelRecord;
 
 public abstract class BaseRecordPlugin extends PluginAdapter {
-    private static final String messageTemplate =
+    private static final String MESSAGE_TEMPLATE =
             "Invalid fieldCountTrigger property value for plugin %s in context %s. " //$NON-NLS-1$
                     + "Using default value of 4."; //$NON-NLS-1$
 
@@ -42,7 +39,7 @@ public abstract class BaseRecordPlugin extends PluginAdapter {
             try {
                 fieldCountTrigger = Integer.parseInt(properties.getProperty("fieldCountTrigger")); //$NON-NLS-1$
             } catch (NumberFormatException e) {
-                warnings.add(String.format(messageTemplate, getClass().getName(), context.getId())); //$NON-NLS-1$
+                warnings.add(String.format(MESSAGE_TEMPLATE, getClass().getName(), context.getId())); //$NON-NLS-1$
             }
         }
 
@@ -51,24 +48,12 @@ public abstract class BaseRecordPlugin extends PluginAdapter {
 
     @Override
     public boolean modelRecordGenerated(TopLevelRecord topLevelRecord, IntrospectedTable introspectedTable) {
-        if (Boolean.parseBoolean(introspectedTable.getTableConfigurationProperty(skipProperty))) {
-            return true;
+        if (!Boolean.parseBoolean(introspectedTable.getTableConfigurationProperty(skipProperty))
+                && introspectedTable.getColumnCount() >= fieldCountTrigger) {
+            execute(topLevelRecord, introspectedTable);
         }
 
-        if (introspectedTable.getColumnCount() < fieldCountTrigger) {
-            return true;
-        }
-
-        execute(topLevelRecord, introspectedTable);
         return true;
-    }
-
-    protected String calculateReturnNewLine(List<IntrospectedColumn> columns, FullyQualifiedJavaType returnType) {
-        String prefix = "return new " + returnType.getShortName() + "("; //$NON-NLS-1$ //$NON-NLS-2$
-        return columns.stream()
-                .map(IntrospectedColumn::getJavaProperty)
-                .collect(Collectors.joining(", ", prefix, ");")); //$NON-NLS-1$ //$NON-NLS-2$
-
     }
 
     protected abstract void execute(TopLevelRecord topLevelRecord, IntrospectedTable introspectedTable);

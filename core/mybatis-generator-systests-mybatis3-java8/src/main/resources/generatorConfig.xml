@@ -83,7 +83,7 @@
   </context>
 
   <context id="dsql-records" defaultModelType="record">
-    <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" /> <!-- should be ignored -->
+    <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" /> <!-- should be ignored for records -->
     <plugin type="org.mybatis.generator.plugins.RecordBuilderPlugin" />
     <plugin type="org.mybatis.generator.plugins.RecordWithMethodsPlugin" />
 
@@ -140,6 +140,66 @@
     <table schema="mbgtest" tableName="Ids" domainObjectName="Id" modelType="flat">
       <property name="dynamicSqlSupportClassName" value="sub.IdDSQLSupport"/>
     </table>
+    <table tableName="Person" />
+    <table tableName="Address" />
+  </context>
+
+  <context id="dsql-jspecify-records" defaultModelType="record">
+    <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" /> <!-- should be ignored for records -->
+    <plugin type="org.mybatis.generator.plugins.RecordBuilderPlugin" />
+    <plugin type="org.mybatis.generator.plugins.RecordWithMethodsPlugin" />
+    <plugin type="org.mybatis.generator.plugins.JSpecifyPlugin" />
+
+    <jdbcConnection driverClass="org.hsqldb.jdbcDriver" connectionURL="jdbc:hsqldb:mem:aname" userId="sa" />
+
+    <javaTypeResolver>
+      <property name="useJSR310Types" value="true"/>
+    </javaTypeResolver>
+
+    <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.jspecify.record.model" targetProject="MAVEN">
+      <property name="enableSubPackages" value="true" />
+      <property name="trimStrings" value="true" />
+    </javaModelGenerator>
+
+    <javaClientGenerator targetPackage="mbg.test.mb3.generated.dsql.jspecify.record.mapper" targetProject="MAVEN">
+      <property name="enableSubPackages" value="true" />
+      <property name="useSnakeCaseIdentifiers" value="true" />
+    </javaClientGenerator>
+
+    <table tableName="FieldsOnly" enableSelectByExample="false"/>
+    <table tableName="PKOnly" />
+    <table tableName="PKFields" alias="B">
+      <property name="selectAllOrderByClause" value="ID1, ID2"/>
+      <property name="dynamicSqlTableObjectName" value="Pkfieldstable"/>
+      <columnOverride column="wierd$Field" delimitedColumnName="true"/>
+      <columnOverride column="stringBoolean" javaType="boolean" typeHandler="mbg.test.mb3.common.StringBooleanTypeHandler"/>
+    </table>
+    <table tableName="PKBlobs" />
+    <table tableName="PKFieldsBlobs" />
+    <table tableName="FieldsBlobs" />
+    <table tableName="awful table" alias="A" modelType="flat">
+      <generatedKey column="CuStOmEr iD" sqlStatement="JDBC" />
+      <columnOverride column="first name" property="firstFirstName" />
+      <columnOverride column="first_name" property="secondFirstName" />
+      <columnOverride column="firstName" property="thirdFirstName" />
+      <columnOverride column="from" delimitedColumnName="true" >
+        <property name="fredswife" value="wilma"/>
+      </columnOverride>
+      <columnOverride column="active" javaType="boolean" />
+      <columnOverride column="_id1" delimitedColumnName="true" />
+      <columnOverride column="$id2" delimitedColumnName="true" />
+      <columnOverride column="id5_" delimitedColumnName="true" />
+      <columnOverride column="id6$" delimitedColumnName="true" />
+      <columnOverride column="id7$$" delimitedColumnName="true" />
+      <columnOverride column="class" property="dbClass" />
+    </table>
+    <table schema="mbgtest" tableName="Translations" domainObjectName="sub.Translation"/>
+    <table schema="mbgtest" tableName="Ids" domainObjectName="Id" modelType="flat">
+      <property name="dynamicSqlSupportClassName" value="sub.IdDSQLSupport" />
+      <property name="skipJSpecifyPlugin" value="true" />
+    </table>
+    <table tableName="Person" />
+    <table tableName="Address" />
   </context>
 
   <context id="dsql-readonly" targetRuntime="MyBatis3DynamicSql">
