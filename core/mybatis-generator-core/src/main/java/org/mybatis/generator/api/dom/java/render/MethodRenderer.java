@@ -1,5 +1,5 @@
 /*
- *    Copyright 2006-2025 the original author or authors.
+ *    Copyright 2006-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -78,7 +78,8 @@ public class MethodRenderer {
 
         if (!method.isConstructor()) {
             sb.append(method.getReturnType()
-                    .map(t -> JavaDomUtils.calculateTypeName(compilationUnit, t))
+                    .map(t ->
+                            renderReturnTypeAnnotations(method) + JavaDomUtils.calculateTypeName(compilationUnit, t))
                     .orElse("void")); //$NON-NLS-1$
 
             sb.append(' ');
@@ -125,5 +126,11 @@ public class MethodRenderer {
         return method.getExceptions().stream()
                 .map(jt -> JavaDomUtils.calculateTypeName(compilationUnit, jt))
                 .collect(CustomCollectors.joining(", ", " throws ", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
+
+    // should return empty string if no annotations
+    private String renderReturnTypeAnnotations(Method method) {
+        return method.getReturnTypeAnnotations().stream()
+                .collect(CustomCollectors.joining(" ", "", " ")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 }

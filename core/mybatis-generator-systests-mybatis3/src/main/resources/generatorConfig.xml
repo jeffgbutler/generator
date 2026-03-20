@@ -314,6 +314,8 @@
   </context>
 
   <context id="miscellaneousTests_immutable" targetRuntime="MyBatis3" defaultModelType="hierarchical">
+    <plugin type="org.mybatis.generator.plugins.JSpecifyPlugin" />
+
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver"
         connectionURL="jdbc:hsqldb:mem:aname"
         userId="sa" />

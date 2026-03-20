@@ -98,7 +98,7 @@ public class MapperConfigPlugin extends PluginAdapter {
         root.addElement(new TextElement(OutputUtilities.xmlIndent(2)
                 + "to this file before it is usable by MyBatis.")); //$NON-NLS-1$
         root.addElement(new TextElement(OutputUtilities.xmlIndent(1)
-                + "This file was generated on " + new Date() + '.')); //$NON-NLS-1$));
+                + "This file was generated on " + new Date() + '.')); //$NON-NLS-1$
 
         root.addElement(new TextElement("-->")); //$NON-NLS-1$
 

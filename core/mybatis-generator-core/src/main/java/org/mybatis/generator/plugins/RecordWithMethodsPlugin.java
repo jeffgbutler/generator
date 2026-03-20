@@ -16,6 +16,7 @@
 package org.mybatis.generator.plugins;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
@@ -54,5 +55,13 @@ public class RecordWithMethodsPlugin extends BaseRecordPlugin {
         method.addParameter(new Parameter(currentColumn.getFullyQualifiedJavaType(), currentColumn.getJavaProperty()));
         method.addBodyLine(calculateReturnNewLine(columns, returnType));
         return method;
+    }
+
+    private String calculateReturnNewLine(List<IntrospectedColumn> columns, FullyQualifiedJavaType returnType) {
+        String prefix = "return new " + returnType.getShortName() + "("; //$NON-NLS-1$ //$NON-NLS-2$
+        return columns.stream()
+                .map(IntrospectedColumn::getJavaProperty)
+                .collect(Collectors.joining(", ", prefix, ");")); //$NON-NLS-1$ //$NON-NLS-2$
+
     }
 }
