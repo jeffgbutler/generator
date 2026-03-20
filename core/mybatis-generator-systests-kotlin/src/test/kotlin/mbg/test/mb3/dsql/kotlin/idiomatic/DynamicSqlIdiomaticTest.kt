@@ -1254,6 +1254,43 @@ class DynamicSqlIdiomaticTest : AbstractIdiomaticTest() {
     }
 
     @Test
+    fun testAwfulTableInsertSelective() {
+        openSession().use { sqlSession ->
+
+            val mapper = sqlSession.getMapper(AwfulTableMapper::class.java)
+            val record = AwfulTable(secondFirstName = "fred2", thirdFirstName = "fred3",
+                eMail = "fred@fred.com", id1 = 1, id2 = 2, id5 = 5, id6 = 6, id7 = 7,
+                emailaddress = "alsofred@fred.com", from = "from field", active = true, active1 = false,
+                active2 = byteArrayOf(-128, 127))
+
+            mapper.insertSelective(record)
+            val generatedCustomerId = record.customerId
+            assertThat(generatedCustomerId!!).isEqualTo(57)
+
+            val returnedRecord = mapper.selectByPrimaryKey(generatedCustomerId)
+
+            assertThat(returnedRecord).isNotNull
+            if (returnedRecord != null) {
+                assertThat(returnedRecord.customerId).isEqualTo(generatedCustomerId)
+                assertThat(returnedRecord.eMail).isEqualTo(record.eMail)
+                assertThat(returnedRecord.emailaddress).isEqualTo(record.emailaddress)
+                assertThat(returnedRecord.firstFirstName).isEqualTo("Mabel")
+                assertThat(returnedRecord.from).isEqualTo(record.from)
+                assertThat(returnedRecord.id1).isEqualTo(record.id1!!)
+                assertThat(returnedRecord.id2).isEqualTo(record.id2!!)
+                assertThat(returnedRecord.id5).isEqualTo(record.id5!!)
+                assertThat(returnedRecord.id6).isEqualTo(record.id6!!)
+                assertThat(returnedRecord.id7).isEqualTo(record.id7!!)
+                assertThat(returnedRecord.secondFirstName).isEqualTo(record.secondFirstName)
+                assertThat(returnedRecord.thirdFirstName).isEqualTo(record.thirdFirstName)
+                assertThat(returnedRecord.active).isTrue
+                assertThat(returnedRecord.active1).isFalse
+                assertThat(record.active2).isNotNull.containsExactly(-128, 127)
+            }
+        }
+    }
+
+    @Test
     fun testAwfulTableUpdateByPrimaryKey() {
         openSession().use { sqlSession ->
 
