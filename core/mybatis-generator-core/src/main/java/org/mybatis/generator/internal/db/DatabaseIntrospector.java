@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
@@ -251,36 +250,33 @@ public class DatabaseIntrospector {
                             JavaBeansUtil.getCamelCaseString(calculatedColumnName, false));
                 }
 
-                FullyQualifiedJavaType fullyQualifiedJavaType = javaTypeResolver.calculateJavaType(introspectedColumn);
-
-                if (fullyQualifiedJavaType != null) {
-                    introspectedColumn.setFullyQualifiedJavaType(fullyQualifiedJavaType);
-                    introspectedColumn.setJdbcTypeName(javaTypeResolver.calculateJdbcTypeName(introspectedColumn));
-                } else {
+                javaTypeResolver.calculateTypeInformation(introspectedColumn).ifPresentOrElse(ti -> {
+                    introspectedColumn.setFullyQualifiedJavaType(ti.fullyQualifiedJavaType());
+                    introspectedColumn.setJdbcTypeName(ti.jdbcTypeName());
+                }, () -> {
                     // type cannot be resolved. Check for ignored or overridden
-                    boolean ok = tc.isColumnIgnored(introspectedColumn.getActualColumnName());
+                    if (tc.isColumnIgnored(introspectedColumn.getActualColumnName())) {
+                        return;
+                    }
 
                     // if overridden, and a java type is configured, then we can ignore
-                    if (!ok) {
-                        ok = tc.getColumnOverride(introspectedColumn.getActualColumnName())
-                                .map(ColumnOverride::getJavaType)
-                                .map(Optional::isPresent)
-                                .orElse(false);
+                    if (tc.getColumnOverride(introspectedColumn.getActualColumnName())
+                            .flatMap(ColumnOverride::getJavaType)
+                            .isPresent()) {
+                        return;
                     }
 
                     // if the type is not supported, then we'll report a warning
-                    if (!ok) {
-                        introspectedColumn.setFullyQualifiedJavaType(FullyQualifiedJavaType.getObjectInstance());
-                        introspectedColumn.setJdbcTypeName("OTHER"); //$NON-NLS-1$
+                    introspectedColumn.setFullyQualifiedJavaType(FullyQualifiedJavaType.getObjectInstance());
+                    introspectedColumn.setJdbcTypeName("OTHER"); //$NON-NLS-1$
 
-                        String warning = getString("Warning.14", //$NON-NLS-1$
-                                Integer.toString(introspectedColumn.getJdbcType()),
-                                entry.getKey().toString(),
-                                introspectedColumn.getActualColumnName());
+                    String warning = getString("Warning.14", //$NON-NLS-1$
+                            Integer.toString(introspectedColumn.getJdbcType()),
+                            entry.getKey().toString(),
+                            introspectedColumn.getActualColumnName());
 
-                        warnings.add(warning);
-                    }
-                }
+                    warnings.add(warning);
+                });
 
                 if (context.autoDelimitKeywords()
                         && SqlReservedWords.containsWord(introspectedColumn.getActualColumnName())) {

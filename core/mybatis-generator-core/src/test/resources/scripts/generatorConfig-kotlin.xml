@@ -27,10 +27,6 @@
 
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver" connectionURL="jdbc:hsqldb:mem:aname" userId="sa" />
 
-    <javaTypeResolver>
-      <property name="useJSR310Types" value="true"/>
-    </javaTypeResolver>
-
     <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.model" targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />
       <property name="trimStrings" value="true" />
@@ -83,10 +79,6 @@
   <context id="idiomatic-kotlin" targetRuntime="MyBatis3Kotlin">
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver" connectionURL="jdbc:hsqldb:mem:aname" userId="sa" />
 
-    <javaTypeResolver>
-      <property name="useJSR310Types" value="true"/>
-    </javaTypeResolver>
-
     <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.idiomatic.model" targetProject="MAVEN" />
 
     <javaClientGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper"  targetProject="MAVEN">
@@ -138,10 +130,6 @@
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver"
         connectionURL="jdbc:hsqldb:mem:aname"
         userId="sa" />
-
-    <javaTypeResolver>
-      <property name="useJSR310Types" value="true"/>
-    </javaTypeResolver>
 
     <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.readonly.model" targetProject="MAVEN">
       <property name="trimStrings" value="true" />
@@ -238,10 +226,6 @@
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver"
         connectionURL="jdbc:hsqldb:mem:aname"
         userId="sa" />
-
-    <javaTypeResolver>
-      <property name="useJSR310Types" value="true"/>
-    </javaTypeResolver>
 
     <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.modelonly" targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />

@@ -15,17 +15,16 @@
  */
 package mbg.test.mb3.miscellaneous;
 
-import static mbg.test.common.util.TestUtilities.datesAreEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -58,7 +57,7 @@ public class MiscellaneousTest extends AbstractMiscellaneousTest {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             MyMapper mapper = sqlSession.getMapper(MyMapper.class);
             MyObject record = new MyObject();
-            record.setStartDate(new Date());
+            record.setStartDate(LocalDate.now());
             record.setDecimal100field(10L);
             record.setDecimal155field(15.12345);
             record.setDecimal60field(6);
@@ -74,7 +73,7 @@ public class MiscellaneousTest extends AbstractMiscellaneousTest {
             myTime.setMinutes(34);
             myTime.setSeconds(5);
             record.setTimefield(myTime);
-            record.setTimestampfield(new Date());
+            record.setTimestampfield(LocalDateTime.now());
 
             mapper.insert(record);
 
@@ -85,21 +84,16 @@ public class MiscellaneousTest extends AbstractMiscellaneousTest {
             MyObject returnedRecord = mapper.selectByPrimaryKey(key);
             assertNotNull(returnedRecord);
 
-            assertTrue(datesAreEqual(record.getStartDate(), returnedRecord
-                    .getStartDate()));
-            assertEquals(record.getDecimal100field(), returnedRecord
-                    .getDecimal100field());
-            assertEquals(record.getDecimal155field(), returnedRecord
-                    .getDecimal155field());
-            assertEquals(record.getDecimal60field(), returnedRecord
-                    .getDecimal60field());
+            assertEquals(record.getStartDate(), returnedRecord.getStartDate());
+            assertEquals(record.getDecimal100field(), returnedRecord.getDecimal100field());
+            assertEquals(record.getDecimal155field(), returnedRecord.getDecimal155field());
+            assertEquals(record.getDecimal60field(), returnedRecord.getDecimal60field());
             assertEquals(record.getFirstname(), returnedRecord.getFirstname());
             assertEquals(record.getId1(), returnedRecord.getId1());
             assertEquals(record.getId2(), returnedRecord.getId2());
             assertEquals(record.getLastname(), returnedRecord.getLastname());
             assertEquals(record.getTimefield(), returnedRecord.getTimefield());
-            assertEquals(record.getTimestampfield(), returnedRecord
-                    .getTimestampfield());
+            assertEquals(record.getTimestampfield(), returnedRecord.getTimestampfield());
         }
     }
 
@@ -161,7 +155,7 @@ public class MiscellaneousTest extends AbstractMiscellaneousTest {
             fn = new FirstName();
             fn.setValue("Scott");
             newRecord.setFirstname(fn);
-            record.setStartDate(new Date());
+            record.setStartDate(LocalDate.now());
 
             int rows = mapper.updateByPrimaryKeySelective(newRecord);
             assertEquals(1, rows);
@@ -172,26 +166,20 @@ public class MiscellaneousTest extends AbstractMiscellaneousTest {
 
             MyObject returnedRecord = mapper.selectByPrimaryKey(key);
 
-            assertTrue(datesAreEqual(newRecord.getStartDate(), returnedRecord
-                    .getStartDate()));
-            assertEquals(record.getDecimal100field(), returnedRecord
-                    .getDecimal100field());
-            assertEquals(record.getDecimal155field(), returnedRecord
-                    .getDecimal155field());
+            assertEquals(newRecord.getStartDate(), returnedRecord.getStartDate());
+            assertEquals(record.getDecimal100field(), returnedRecord.getDecimal100field());
+            assertEquals(record.getDecimal155field(), returnedRecord.getDecimal155field());
 
             // with columns mapped to primitive types, the column is always
             // updated
-            assertEquals(newRecord.getDecimal60field(), returnedRecord
-                    .getDecimal60field());
+            assertEquals(newRecord.getDecimal60field(), returnedRecord.getDecimal60field());
 
-            assertEquals(newRecord.getFirstname(), returnedRecord
-                    .getFirstname());
+            assertEquals(newRecord.getFirstname(), returnedRecord.getFirstname());
             assertEquals(record.getId1(), returnedRecord.getId1());
             assertEquals(record.getId2(), returnedRecord.getId2());
             assertEquals(record.getLastname(), returnedRecord.getLastname());
             assertEquals(record.getTimefield(), returnedRecord.getTimefield());
-            assertEquals(record.getTimestampfield(), returnedRecord
-                    .getTimestampfield());
+            assertEquals(record.getTimestampfield(), returnedRecord.getTimestampfield());
         }
     }
 
@@ -698,7 +686,7 @@ public class MiscellaneousTest extends AbstractMiscellaneousTest {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             MyMapper mapper = sqlSession.getMapper(MyMapper.class);
             MyObject record = new MyObject();
-            record.setStartDate(new Date());
+            record.setStartDate(LocalDate.now());
             record.setDecimal100field(10L);
             record.setDecimal155field(15.12345);
             record.setDecimal60field(6);
@@ -714,7 +702,7 @@ public class MiscellaneousTest extends AbstractMiscellaneousTest {
             myTime.setMinutes(34);
             myTime.setSeconds(5);
             record.setTimefield(myTime);
-            record.setTimestampfield(new Date());
+            record.setTimestampfield(LocalDateTime.now());
 
             mapper.insert(record);
 
@@ -724,21 +712,16 @@ public class MiscellaneousTest extends AbstractMiscellaneousTest {
             assertEquals(1, results.size());
             MyObject returnedRecord = results.get(0);
 
-            assertTrue(datesAreEqual(record.getStartDate(), returnedRecord
-                    .getStartDate()));
-            assertEquals(record.getDecimal100field(), returnedRecord
-                    .getDecimal100field());
-            assertEquals(record.getDecimal155field(), returnedRecord
-                    .getDecimal155field());
-            assertEquals(record.getDecimal60field(), returnedRecord
-                    .getDecimal60field());
+            assertEquals(record.getStartDate(), returnedRecord.getStartDate());
+            assertEquals(record.getDecimal100field(), returnedRecord.getDecimal100field());
+            assertEquals(record.getDecimal155field(), returnedRecord.getDecimal155field());
+            assertEquals(record.getDecimal60field(), returnedRecord.getDecimal60field());
             assertEquals(record.getFirstname(), returnedRecord.getFirstname());
             assertEquals(record.getId1(), returnedRecord.getId1());
             assertEquals(record.getId2(), returnedRecord.getId2());
             assertEquals(record.getLastname(), returnedRecord.getLastname());
             assertEquals(record.getTimefield(), returnedRecord.getTimefield());
-            assertEquals(record.getTimestampfield(), returnedRecord
-                    .getTimestampfield());
+            assertEquals(record.getTimestampfield(), returnedRecord.getTimestampfield());
         }
     }
 
