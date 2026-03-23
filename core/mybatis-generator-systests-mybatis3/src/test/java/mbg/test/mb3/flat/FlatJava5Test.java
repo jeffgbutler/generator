@@ -444,7 +444,7 @@ public class FlatJava5Test extends AbstractFlatTest {
             record.setId2(2);
             record.setLastname("Butler");
             record.setTimefield(LocalTime.now().withNano(0));
-            record.setTimestampfield(LocalDateTime.now());
+            record.setTimestampfield(LocalDateTime.now().withNano(0));
             record.setStringboolean(true);
 
             mapper.insert(record);

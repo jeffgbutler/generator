@@ -405,7 +405,7 @@ public class HierarchicalJava5Test extends AbstractAnnotatedHierarchicalTest {
             record.setId2(2);
             record.setLastname("Butler");
             record.setTimefield(LocalTime.now().withNano(0));
-            record.setTimestampfield(LocalDateTime.now());
+            record.setTimestampfield(LocalDateTime.now().withNano(0));
 
             mapper.insert(record);
 

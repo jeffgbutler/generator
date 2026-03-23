@@ -501,7 +501,7 @@ public class DynamicSqlTest extends AbstractTest {
             record.setId2(2);
             record.setLastname("Butler");
             record.setTimefield(LocalTime.of(13, 2, 4));
-            record.setTimestampfield(LocalDateTime.now());
+            record.setTimestampfield(LocalDateTime.now().withNano(0));
             record.setStringboolean(true);
 
             mapper.insert(record);

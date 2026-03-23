@@ -64,7 +64,7 @@ public class MiscellaneousTest extends AbstractMixedMiscellaneousTest {
             myTime.setMinutes(34);
             myTime.setSeconds(5);
             record.setTimefield(myTime);
-            record.setTimestampfield(LocalDateTime.now());
+            record.setTimestampfield(LocalDateTime.now().withNano(0));
 
             mapper.insert(record);
 
@@ -693,7 +693,7 @@ public class MiscellaneousTest extends AbstractMixedMiscellaneousTest {
             myTime.setMinutes(34);
             myTime.setSeconds(5);
             record.setTimefield(myTime);
-            record.setTimestampfield(LocalDateTime.now());
+            record.setTimestampfield(LocalDateTime.now().withNano(0));
 
             mapper.insert(record);
 

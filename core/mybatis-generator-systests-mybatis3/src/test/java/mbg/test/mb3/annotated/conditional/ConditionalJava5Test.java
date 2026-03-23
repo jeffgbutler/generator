@@ -428,7 +428,7 @@ public class ConditionalJava5Test extends AbstractAnnotatedConditionalTest {
         record.setId2(2);
         record.setLastname("Butler");
         record.setTimefield(LocalTime.now().withNano(0));
-        record.setTimestampfield(LocalDateTime.now());
+        record.setTimestampfield(LocalDateTime.now().withNano(0));
         return record;
     }
 
