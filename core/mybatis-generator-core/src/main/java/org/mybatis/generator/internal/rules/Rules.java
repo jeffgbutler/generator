@@ -28,7 +28,7 @@ import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 public interface Rules {
 
     /**
-     * Implements the rule for generating the insert SQL Map element and DAO
+     * Implements the rule for generating the insert SQL Map element and mapper
      * method. If the insert statement is allowed, then generate the element and
      * method.
      *
@@ -38,7 +38,7 @@ public interface Rules {
 
     /**
      * Implements the rule for generating the insert selective SQL Map element
-     * and DAO method. If the insert statement is allowed, then generate the
+     * and mapper method. If the insert statement is allowed, then generate the
      * element and method.
      *
      * @return true if the element and method should be generated
@@ -57,7 +57,7 @@ public interface Rules {
 
     /**
      * Implements the rule for generating the update by primary key without
-     * BLOBs SQL Map element and DAO method. If the table has a primary key as
+     * BLOBs SQL Map element and mapper method. If the table has a primary key as
      * well as other non-BLOB fields, and the updateByPrimaryKey statement is
      * allowed, then generate the element and method.
      *
@@ -67,7 +67,7 @@ public interface Rules {
 
     /**
      * Implements the rule for generating the update by primary key with BLOBs
-     * SQL Map element and DAO method. If the table has a primary key as well as
+     * SQL Map element and mapper method. If the table has a primary key as well as
      * other BLOB fields, and the updateByPrimaryKey statement is allowed, then
      * generate the element and method.
      *
@@ -77,7 +77,7 @@ public interface Rules {
 
     /**
      * Implements the rule for generating the update by primary key selective
-     * SQL Map element and DAO method. If the table has a primary key as well as
+     * SQL Map element and mapper method. If the table has a primary key as well as
      * other fields, and the updateByPrimaryKey statement is allowed, then
      * generate the element and method.
      *
@@ -87,7 +87,7 @@ public interface Rules {
 
     /**
      * Implements the rule for generating the delete by primary key SQL Map
-     * element and DAO method. If the table has a primary key, and the
+     * element and mapper method. If the table has a primary key, and the
      * deleteByPrimaryKey statement is allowed, then generate the element and
      * method.
      *
@@ -97,7 +97,7 @@ public interface Rules {
 
     /**
      * Implements the rule for generating the delete by example SQL Map element
-     * and DAO method. If the deleteByExample statement is allowed, then
+     * and mapper method. If the deleteByExample statement is allowed, then
      * generate the element and method.
      *
      * @return true if the element and method should be generated
@@ -161,7 +161,7 @@ public interface Rules {
 
     /**
      * Implements the rule for generating the select by primary key SQL Map
-     * element and DAO method. If the table has a primary key as well as other
+     * element and mapper method. If the table has a primary key as well as other
      * fields, and the selectByPrimaryKey statement is allowed, then generate
      * the element and method.
      *
@@ -171,7 +171,7 @@ public interface Rules {
 
     /**
      * Implements the rule for generating the select by example without BLOBs
-     * SQL Map element and DAO method. If the selectByExample statement is
+     * SQL Map element and mapper method. If the selectByExample statement is
      * allowed, then generate the element and method.
      *
      * @return true if the element and method should be generated
@@ -180,7 +180,7 @@ public interface Rules {
 
     /**
      * Implements the rule for generating the select by example with BLOBs SQL
-     * Map element and DAO method. If the table has BLOB fields and the
+     * Map element and mapper method. If the table has BLOB fields and the
      * selectByExample statement is allowed, then generate the element and
      * method.
      *

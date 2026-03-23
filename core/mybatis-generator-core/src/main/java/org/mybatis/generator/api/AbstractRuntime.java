@@ -60,7 +60,7 @@ public abstract class AbstractRuntime extends AbstractGenerator {
     /**
      * This method should return a list of generated Java files related to this
      * table. This list could include various types of model classes, as well as
-     * DAO classes.
+     * client classes.
      *
      * @return the list of generated Java files for this table
      */
