@@ -15,15 +15,15 @@
  */
 package mbg.test.mb3.dsql.miscellaneous;
 
-import static mbg.test.common.util.TestUtilities.datesAreEqual;
 import static mbg.test.mb3.generated.dsql.miscellaneous.support.MyObjectDynamicSqlSupport.myObject;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mybatis.dynamic.sql.SqlBuilder.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,7 +56,7 @@ public class MiscellaneousTest extends AbstractAnnotatedMiscellaneousTest {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             MyObjectMapper mapper = sqlSession.getMapper(MyObjectMapper.class);
             MyObject record = new MyObject();
-            record.setStartDate(new Date());
+            record.setStartDate(LocalDate.now());
             record.setDecimal100field(10L);
             record.setDecimal155field(15.12345);
             record.setDecimal60field(6);
@@ -72,14 +72,14 @@ public class MiscellaneousTest extends AbstractAnnotatedMiscellaneousTest {
             myTime.setMinutes(34);
             myTime.setSeconds(5);
             record.setTimefield(myTime);
-            record.setTimestampfield(new Date());
+            record.setTimestampfield(LocalDateTime.now().withNano(0));
 
             mapper.insert(record);
 
             Optional<MyObject> returnedRecord = mapper.selectByPrimaryKey(2, 1);
 
             assertThat(returnedRecord).hasValueSatisfying(rr -> {
-                assertTrue(datesAreEqual(record.getStartDate(), rr.getStartDate()));
+                assertEquals(record.getStartDate(), rr.getStartDate());
                 assertEquals(record.getDecimal100field(), rr.getDecimal100field());
                 assertEquals(record.getDecimal155field(), rr.getDecimal155field());
                 assertEquals(record.getDecimal60field(), rr.getDecimal60field());
@@ -147,7 +147,7 @@ public class MiscellaneousTest extends AbstractAnnotatedMiscellaneousTest {
             fn = new FirstName();
             fn.setValue("Scott");
             newRecord.setFirstname(fn);
-            record.setStartDate(new Date());
+            record.setStartDate(LocalDate.now());
 
             int rows = mapper.updateByPrimaryKeySelective(newRecord);
             assertEquals(1, rows);
@@ -155,7 +155,7 @@ public class MiscellaneousTest extends AbstractAnnotatedMiscellaneousTest {
             Optional<MyObject> returnedRecord = mapper.selectByPrimaryKey(2, 1);
 
             assertThat(returnedRecord).hasValueSatisfying(rr -> {
-                assertTrue(datesAreEqual(newRecord.getStartDate(), rr.getStartDate()));
+                assertEquals(newRecord.getStartDate(), rr.getStartDate());
                 assertEquals(record.getDecimal100field(), rr.getDecimal100field());
                 assertEquals(record.getDecimal155field(), rr.getDecimal155field());
 
@@ -657,7 +657,7 @@ public class MiscellaneousTest extends AbstractAnnotatedMiscellaneousTest {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             MyObjectMapper mapper = sqlSession.getMapper(MyObjectMapper.class);
             MyObject record = new MyObject();
-            record.setStartDate(new Date());
+            record.setStartDate(LocalDate.now());
             record.setDecimal100field(10L);
             record.setDecimal155field(15.12345);
             record.setDecimal60field(6);
@@ -673,7 +673,7 @@ public class MiscellaneousTest extends AbstractAnnotatedMiscellaneousTest {
             myTime.setMinutes(34);
             myTime.setSeconds(5);
             record.setTimefield(myTime);
-            record.setTimestampfield(new Date());
+            record.setTimestampfield(LocalDateTime.now().withNano(0));
 
             mapper.insert(record);
 
@@ -682,21 +682,16 @@ public class MiscellaneousTest extends AbstractAnnotatedMiscellaneousTest {
             assertEquals(1, results.size());
             MyObject returnedRecord = results.get(0);
 
-            assertTrue(datesAreEqual(record.getStartDate(), returnedRecord
-                    .getStartDate()));
-            assertEquals(record.getDecimal100field(), returnedRecord
-                    .getDecimal100field());
-            assertEquals(record.getDecimal155field(), returnedRecord
-                    .getDecimal155field());
-            assertEquals(record.getDecimal60field(), returnedRecord
-                    .getDecimal60field());
+            assertEquals(record.getStartDate(), returnedRecord.getStartDate());
+            assertEquals(record.getDecimal100field(), returnedRecord.getDecimal100field());
+            assertEquals(record.getDecimal155field(), returnedRecord.getDecimal155field());
+            assertEquals(record.getDecimal60field(), returnedRecord.getDecimal60field());
             assertEquals(record.getFirstname(), returnedRecord.getFirstname());
             assertEquals(record.getId1(), returnedRecord.getId1());
             assertEquals(record.getId2(), returnedRecord.getId2());
             assertEquals(record.getLastname(), returnedRecord.getLastname());
             assertEquals(record.getTimefield(), returnedRecord.getTimefield());
-            assertEquals(record.getTimestampfield(), returnedRecord
-                    .getTimestampfield());
+            assertEquals(record.getTimestampfield(), returnedRecord.getTimestampfield());
         }
     }
 

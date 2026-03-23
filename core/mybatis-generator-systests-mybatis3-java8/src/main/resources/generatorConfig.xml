@@ -31,10 +31,6 @@
         connectionURL="jdbc:hsqldb:mem:aname"
         userId="sa" />
 
-    <javaTypeResolver>
-      <property name="useJSR310Types" value="true"/>
-    </javaTypeResolver>
-
     <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.model" targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />
       <property name="trimStrings" value="true" />
@@ -88,10 +84,6 @@
     <plugin type="org.mybatis.generator.plugins.RecordWithMethodsPlugin" />
 
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver" connectionURL="jdbc:hsqldb:mem:aname" userId="sa" />
-
-    <javaTypeResolver>
-      <property name="useJSR310Types" value="true"/>
-    </javaTypeResolver>
 
     <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.record.model" targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />
@@ -152,10 +144,6 @@
 
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver" connectionURL="jdbc:hsqldb:mem:aname" userId="sa" />
 
-    <javaTypeResolver>
-      <property name="useJSR310Types" value="true"/>
-    </javaTypeResolver>
-
     <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.jspecify.record.model" targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />
       <property name="trimStrings" value="true" />
@@ -206,10 +194,6 @@
     <plugin type="org.mybatis.generator.plugins.dsql.ReadOnlyPlugin" />
 
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver" connectionURL="jdbc:hsqldb:mem:aname" userId="sa" />
-
-    <javaTypeResolver>
-      <property name="useJSR310Types" value="true"/>
-    </javaTypeResolver>
 
     <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.readonly.model" targetProject="MAVEN">
       <property name="trimStrings" value="true" />
@@ -311,10 +295,6 @@
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver"
         connectionURL="jdbc:hsqldb:mem:aname"
         userId="sa" />
-
-    <javaTypeResolver>
-      <property name="useJSR310Types" value="true"/>
-    </javaTypeResolver>
 
     <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.modelonly" targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />

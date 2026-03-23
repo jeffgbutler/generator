@@ -16,14 +16,14 @@
 package mbg.test.mb3.mixed.hierarchical.immutable;
 
 import static mbg.test.common.util.TestUtilities.blobsAreEqual;
-import static mbg.test.common.util.TestUtilities.datesAreEqual;
 import static mbg.test.common.util.TestUtilities.generateRandomBlob;
-import static mbg.test.common.util.TestUtilities.timesAreEqual;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -320,7 +320,7 @@ public class HierarchicalJava5Test extends AbstractMixedHierarchicalImmutableTes
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PkfieldsMapper mapper = sqlSession.getMapper(PkfieldsMapper.class);
             Pkfields record = new Pkfields();
-            record.setDatefield(new Date());
+            record.setDatefield(LocalDate.now());
             record.setDecimal100field(10L);
             record.setDecimal155field(new BigDecimal("15.12345"));
             record.setDecimal30field((short) 3);
@@ -329,8 +329,8 @@ public class HierarchicalJava5Test extends AbstractMixedHierarchicalImmutableTes
             record.setId1(1);
             record.setId2(2);
             record.setLastname("Butler");
-            record.setTimefield(new Date());
-            record.setTimestampfield(new Date());
+            record.setTimefield(LocalTime.now().withNano(0));
+            record.setTimestampfield(LocalDateTime.now().withNano(0));
 
             mapper.insert(record);
 
@@ -341,24 +341,17 @@ public class HierarchicalJava5Test extends AbstractMixedHierarchicalImmutableTes
             Pkfields returnedRecord = mapper.selectByPrimaryKey(key);
             assertNotNull(returnedRecord);
 
-            assertTrue(datesAreEqual(record.getDatefield(), returnedRecord
-                    .getDatefield()));
-            assertEquals(record.getDecimal100field(), returnedRecord
-                    .getDecimal100field());
-            assertEquals(record.getDecimal155field(), returnedRecord
-                    .getDecimal155field());
-            assertEquals(record.getDecimal30field(), returnedRecord
-                    .getDecimal30field());
-            assertEquals(record.getDecimal60field(), returnedRecord
-                    .getDecimal60field());
+            assertEquals(record.getDatefield(), returnedRecord.getDatefield());
+            assertEquals(record.getDecimal100field(), returnedRecord.getDecimal100field());
+            assertEquals(record.getDecimal155field(), returnedRecord.getDecimal155field());
+            assertEquals(record.getDecimal30field(), returnedRecord.getDecimal30field());
+            assertEquals(record.getDecimal60field(), returnedRecord.getDecimal60field());
             assertEquals(record.getFirstname(), returnedRecord.getFirstname());
             assertEquals(record.getId1(), returnedRecord.getId1());
             assertEquals(record.getId2(), returnedRecord.getId2());
             assertEquals(record.getLastname(), returnedRecord.getLastname());
-            assertTrue(timesAreEqual(record.getTimefield(), returnedRecord
-                    .getTimefield()));
-            assertEquals(record.getTimestampfield(), returnedRecord
-                    .getTimestampfield());
+            assertEquals(record.getTimefield(), returnedRecord.getTimefield());
+            assertEquals(record.getTimestampfield(), returnedRecord.getTimestampfield());
         }
     }
 
@@ -423,25 +416,17 @@ public class HierarchicalJava5Test extends AbstractMixedHierarchicalImmutableTes
 
             Pkfields returnedRecord = mapper.selectByPrimaryKey(key);
 
-            assertTrue(datesAreEqual(record.getDatefield(), returnedRecord
-                    .getDatefield()));
-            assertEquals(record.getDecimal100field(), returnedRecord
-                    .getDecimal100field());
-            assertEquals(record.getDecimal155field(), returnedRecord
-                    .getDecimal155field());
-            assertEquals(record.getDecimal30field(), returnedRecord
-                    .getDecimal30field());
-            assertEquals(newRecord.getDecimal60field(), returnedRecord
-                    .getDecimal60field());
-            assertEquals(newRecord.getFirstname(), returnedRecord
-                    .getFirstname());
+            assertEquals(record.getDatefield(), returnedRecord.getDatefield());
+            assertEquals(record.getDecimal100field(), returnedRecord.getDecimal100field());
+            assertEquals(record.getDecimal155field(), returnedRecord.getDecimal155field());
+            assertEquals(record.getDecimal30field(), returnedRecord.getDecimal30field());
+            assertEquals(newRecord.getDecimal60field(), returnedRecord.getDecimal60field());
+            assertEquals(newRecord.getFirstname(), returnedRecord.getFirstname());
             assertEquals(record.getId1(), returnedRecord.getId1());
             assertEquals(record.getId2(), returnedRecord.getId2());
             assertEquals(record.getLastname(), returnedRecord.getLastname());
-            assertTrue(timesAreEqual(record.getTimefield(), returnedRecord
-                    .getTimefield()));
-            assertEquals(record.getTimestampfield(), returnedRecord
-                    .getTimestampfield());
+            assertEquals(record.getTimefield(), returnedRecord.getTimefield());
+            assertEquals(record.getTimestampfield(), returnedRecord.getTimestampfield());
         }
     }
 

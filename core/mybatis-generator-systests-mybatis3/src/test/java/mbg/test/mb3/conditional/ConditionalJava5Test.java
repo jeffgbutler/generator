@@ -1,5 +1,5 @@
 /*
- *    Copyright 2006-2025 the original author or authors.
+ *    Copyright 2006-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,15 +16,14 @@
 package mbg.test.mb3.conditional;
 
 import static mbg.test.common.util.TestUtilities.blobsAreEqual;
-import static mbg.test.common.util.TestUtilities.datesAreEqual;
 import static mbg.test.common.util.TestUtilities.generateRandomBlob;
-import static mbg.test.common.util.TestUtilities.timesAreEqual;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -393,7 +392,7 @@ public class ConditionalJava5Test extends AbstractConditionalTest {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PkfieldsMapper mapper = sqlSession.getMapper(PkfieldsMapper.class);
             Pkfields record = new Pkfields();
-            record.setDatefield(new Date());
+            record.setDatefield(LocalDate.now());
             record.setDecimal100field(10L);
             record.setDecimal155field(new BigDecimal("15.12345"));
             record.setDecimal30field((short) 3);
@@ -402,8 +401,8 @@ public class ConditionalJava5Test extends AbstractConditionalTest {
             record.setId1(1);
             record.setId2(2);
             record.setLastname("Butler");
-            record.setTimefield(new Date());
-            record.setTimestampfield(new Date());
+            record.setTimefield(LocalTime.now().withNano(0));
+            record.setTimestampfield(LocalDateTime.now().withNano(0));
 
             mapper.insert(record);
 
@@ -414,24 +413,17 @@ public class ConditionalJava5Test extends AbstractConditionalTest {
             Pkfields returnedRecord = mapper.selectByPrimaryKey(key);
             assertNotNull(returnedRecord);
 
-            assertTrue(datesAreEqual(record.getDatefield(), returnedRecord
-                    .getDatefield()));
-            assertEquals(record.getDecimal100field(), returnedRecord
-                    .getDecimal100field());
-            assertEquals(record.getDecimal155field(), returnedRecord
-                    .getDecimal155field());
-            assertEquals(record.getDecimal30field(), returnedRecord
-                    .getDecimal30field());
-            assertEquals(record.getDecimal60field(), returnedRecord
-                    .getDecimal60field());
+            assertEquals(record.getDatefield(), returnedRecord.getDatefield());
+            assertEquals(record.getDecimal100field(), returnedRecord.getDecimal100field());
+            assertEquals(record.getDecimal155field(), returnedRecord.getDecimal155field());
+            assertEquals(record.getDecimal30field(), returnedRecord.getDecimal30field());
+            assertEquals(record.getDecimal60field(), returnedRecord.getDecimal60field());
             assertEquals(record.getFirstname(), returnedRecord.getFirstname());
             assertEquals(record.getId1(), returnedRecord.getId1());
             assertEquals(record.getId2(), returnedRecord.getId2());
             assertEquals(record.getLastname(), returnedRecord.getLastname());
-            assertTrue(timesAreEqual(record.getTimefield(), returnedRecord
-                    .getTimefield()));
-            assertEquals(record.getTimestampfield(), returnedRecord
-                    .getTimestampfield());
+            assertEquals(record.getTimefield(), returnedRecord.getTimefield());
+            assertEquals(record.getTimestampfield(), returnedRecord.getTimestampfield());
         }
     }
 
@@ -496,25 +488,17 @@ public class ConditionalJava5Test extends AbstractConditionalTest {
 
             Pkfields returnedRecord = mapper.selectByPrimaryKey(key);
 
-            assertTrue(datesAreEqual(record.getDatefield(), returnedRecord
-                    .getDatefield()));
-            assertEquals(record.getDecimal100field(), returnedRecord
-                    .getDecimal100field());
-            assertEquals(record.getDecimal155field(), returnedRecord
-                    .getDecimal155field());
-            assertEquals(record.getDecimal30field(), returnedRecord
-                    .getDecimal30field());
-            assertEquals(newRecord.getDecimal60field(), returnedRecord
-                    .getDecimal60field());
-            assertEquals(newRecord.getFirstname(), returnedRecord
-                    .getFirstname());
+            assertEquals(record.getDatefield(), returnedRecord.getDatefield());
+            assertEquals(record.getDecimal100field(), returnedRecord.getDecimal100field());
+            assertEquals(record.getDecimal155field(), returnedRecord.getDecimal155field());
+            assertEquals(record.getDecimal30field(), returnedRecord.getDecimal30field());
+            assertEquals(newRecord.getDecimal60field(), returnedRecord.getDecimal60field());
+            assertEquals(newRecord.getFirstname(), returnedRecord.getFirstname());
             assertEquals(record.getId1(), returnedRecord.getId1());
             assertEquals(record.getId2(), returnedRecord.getId2());
             assertEquals(record.getLastname(), returnedRecord.getLastname());
-            assertTrue(timesAreEqual(record.getTimefield(), returnedRecord
-                    .getTimefield()));
-            assertEquals(record.getTimestampfield(), returnedRecord
-                    .getTimestampfield());
+            assertEquals(record.getTimefield(), returnedRecord.getTimefield());
+            assertEquals(record.getTimestampfield(), returnedRecord.getTimestampfield());
         }
     }
 
@@ -1055,93 +1039,72 @@ public class ConditionalJava5Test extends AbstractConditionalTest {
 
     @Test
     public void testPKFieldsSelectByExampleDateTimeFields() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, 2009);
-        calendar.set(Calendar.MONTH, Calendar.JUNE);
-        calendar.set(Calendar.DAY_OF_MONTH, 15);
-        calendar.set(Calendar.HOUR, 10);
-        calendar.set(Calendar.MINUTE, 10);
-        calendar.set(Calendar.SECOND, 10);
 
-        try {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PkfieldsMapper mapper = sqlSession.getMapper(PkfieldsMapper.class);
             Pkfields record = new Pkfields();
             record.setId1(1);
             record.setId2(1);
-            record.setDatefield(calendar.getTime());
-            record.setTimefield(calendar.getTime());
+            record.setDatefield(LocalDate.of(2009, 6, 15));
+            record.setTimefield(LocalTime.of(10, 10, 10));
             mapper.insert(record);
 
             record = new Pkfields();
             record.setId1(1);
             record.setId2(2);
-            calendar.set(Calendar.DAY_OF_MONTH, 16);
-            calendar.set(Calendar.MINUTE, 11);
-            record.setDatefield(calendar.getTime());
-            record.setTimefield(calendar.getTime());
+            record.setDatefield(LocalDate.of(2009, 6, 16));
+            record.setTimefield(LocalTime.of(10, 11, 10));
             mapper.insert(record);
 
             record = new Pkfields();
             record.setId1(1);
             record.setId2(3);
-            calendar.set(Calendar.DAY_OF_MONTH, 17);
-            calendar.set(Calendar.MINUTE, 12);
-            record.setDatefield(calendar.getTime());
-            record.setTimefield(calendar.getTime());
+            record.setDatefield(LocalDate.of(2009, 6, 17));
+            record.setTimefield(LocalTime.of(10, 12, 10));
             mapper.insert(record);
 
             record = new Pkfields();
             record.setId1(2);
             record.setId2(1);
-            calendar.set(Calendar.DAY_OF_MONTH, 18);
-            calendar.set(Calendar.MINUTE, 13);
-            record.setDatefield(calendar.getTime());
-            record.setTimefield(calendar.getTime());
+            record.setDatefield(LocalDate.of(2009, 6, 18));
+            record.setTimefield(LocalTime.of(10, 13, 10));
             mapper.insert(record);
 
             record = new Pkfields();
             record.setId1(2);
             record.setId2(2);
-            calendar.set(Calendar.DAY_OF_MONTH, 19);
-            calendar.set(Calendar.MINUTE, 14);
-            record.setDatefield(calendar.getTime());
-            record.setTimefield(calendar.getTime());
+            record.setDatefield(LocalDate.of(2009, 6, 19));
+            record.setTimefield(LocalTime.of(10, 14, 10));
             mapper.insert(record);
 
             record = new Pkfields();
             record.setId1(2);
             record.setId2(3);
-            calendar.set(Calendar.DAY_OF_MONTH, 20);
-            calendar.set(Calendar.MINUTE, 15);
-            record.setDatefield(calendar.getTime());
-            record.setTimefield(calendar.getTime());
+            record.setDatefield(LocalDate.of(2009, 6, 20));
+            record.setTimefield(LocalTime.of(10, 15, 10));
             mapper.insert(record);
 
             PkfieldsExample example = new PkfieldsExample();
-            example.createCriteria().andDatefieldEqualTo(calendar.getTime());
+            example.createCriteria().andDatefieldEqualTo(LocalDate.of(2009, 6, 20));
 
             example.setOrderByClause("ID1, ID2");
             List<Pkfields> answer = mapper.selectByExample(example);
             assertEquals(1, answer.size());
 
             example.clear();
-            example.createCriteria().andDatefieldLessThan(calendar.getTime());
+            example.createCriteria().andDatefieldLessThan(LocalDate.of(2009, 6, 20));
             answer = mapper.selectByExample(example);
             assertEquals(5, answer.size());
 
-            calendar.set(Calendar.MINUTE, 12);
             example.clear();
-            example.createCriteria().andTimefieldEqualTo(calendar.getTime());
+            example.createCriteria().andTimefieldEqualTo(LocalTime.of(10, 12, 10));
             answer = mapper.selectByExample(example);
             assertEquals(1, answer.size());
 
             example.clear();
-            example.createCriteria().andTimefieldGreaterThan(calendar.getTime());
+            example.createCriteria().andTimefieldGreaterThan(LocalTime.of(10, 12, 10));
             answer = mapper.selectByExample(example);
             assertEquals(3, answer.size());
-        } finally {
-            sqlSession.close();
         }
     }
 

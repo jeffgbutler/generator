@@ -17,7 +17,6 @@ package mbg.test.mb3.dsql.kotlin.miscellaneous
 
 import mbg.test.common.FirstName
 import mbg.test.common.MyTime
-import mbg.test.common.util.TestUtilities.datesAreEqual
 import mbg.test.mb3.common.TestEnum
 import mbg.test.mb3.generated.dsql.kotlin.miscellaneous.mapper.MyObjectMapper
 import mbg.test.mb3.generated.dsql.kotlin.miscellaneous.mapper.*
@@ -32,7 +31,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import org.mybatis.dynamic.sql.insert.render.MultiRowInsertStatementProvider
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
-import java.util.Date
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 /**
  * @author Jeff Butler
@@ -43,8 +43,8 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
     fun testMyObjectInsertMyObject() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(MyObjectMapper::class.java)
-            val record = MyObject(2, 1, FirstName("Jeff"), "Butler", Date(), MyTime(12, 34, 5),
-                Date(), 6, 10L, 15.12345)
+            val record = MyObject(2, 1, FirstName("Jeff"), "Butler", LocalDate.now(), MyTime(12, 34, 5),
+                LocalDateTime.now().withNano(0), 6, 10L, 15.12345)
 
             mapper.insert(record)
 
@@ -52,7 +52,7 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
 
             assertThat(returnedRecord).isNotNull
             if (returnedRecord != null) {
-                assertTrue(datesAreEqual(record.startDate, returnedRecord.startDate))
+                assertEquals(record.startDate, returnedRecord.startDate)
                 assertEquals(record.decimal100field!!, returnedRecord.decimal100field)
                 assertEquals(record.decimal155field!!, returnedRecord.decimal155field)
                 assertEquals(record.decimal60field!!, returnedRecord.decimal60field)
@@ -96,7 +96,7 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
             val record = MyObject(2, 1, FirstName("Jeff"), "Smith", decimal60field = 5)
             mapper.insert(record)
 
-            val newRecord = MyObject(2, 1, FirstName("Scott"), startDate = Date())
+            val newRecord = MyObject(2, 1, FirstName("Scott"), startDate = LocalDate.now())
 
             val rows = mapper.updateByPrimaryKeySelective(newRecord)
             assertEquals(1, rows)
@@ -105,7 +105,7 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
 
             assertThat(returnedRecord).isNotNull
             if (returnedRecord != null) {
-                assertTrue(datesAreEqual(newRecord.startDate, returnedRecord.startDate))
+                assertEquals(newRecord.startDate, returnedRecord.startDate)
                 assertEquals(record.decimal100field, returnedRecord.decimal100field)
                 assertEquals(record.decimal155field, returnedRecord.decimal155field)
                 assertEquals(record.decimal60field!!, returnedRecord.decimal60field)
@@ -387,8 +387,8 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
     fun testMyObjectSelectByExampleTimeEquals() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(MyObjectMapper::class.java)
-            val record = MyObject(2, 1, FirstName("Jeff"), "Butler", Date(),
-                timefield = MyTime(12, 34, 5), timestampfield = Date(), decimal60field = 6,
+            val record = MyObject(2, 1, FirstName("Jeff"), "Butler", LocalDate.now(),
+                timefield = MyTime(12, 34, 5), timestampfield = LocalDateTime.now().withNano(0), decimal60field = 6,
                 decimal100field = 10L, decimal155field = 15.12345)
             mapper.insert(record)
 
@@ -396,7 +396,7 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
             assertEquals(1, results.size)
 
             val returnedRecord = results[0]
-            assertTrue(datesAreEqual(record.startDate, returnedRecord.startDate))
+            assertEquals(record.startDate, returnedRecord.startDate)
             assertEquals(record.decimal100field!!, returnedRecord.decimal100field)
             assertEquals(record.decimal155field!!, returnedRecord.decimal155field)
             assertEquals(record.decimal60field!!, returnedRecord.decimal60field)

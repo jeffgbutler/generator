@@ -16,9 +16,9 @@
 package org.mybatis.generator.api;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 
-import org.jspecify.annotations.Nullable;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.config.Context;
 
@@ -36,8 +36,7 @@ public interface JavaTypeResolver {
      *
      * <p>This method will be called before any of the get methods.
      *
-     * @param properties
-     *            All properties from the configuration
+     * @param properties All properties from the configuration
      */
     void addConfigurationProperties(Properties properties);
 
@@ -46,8 +45,7 @@ public interface JavaTypeResolver {
      *
      * <p>This method will be called before any of the get methods.
      *
-     * @param context
-     *            The current Context
+     * @param context The current Context
      */
     void setContext(Context context);
 
@@ -56,32 +54,24 @@ public interface JavaTypeResolver {
      * be treated as warning messages and displayed to the user. The concept of a warning is that code generation can
      * continue, but that the results may not be what is expected.
      *
-     * @param warnings
-     *            the new warnings
+     * @param warnings warnings
      */
     void setWarnings(List<String> warnings);
 
     /**
-     * Calculates and returns the Java type that should be associated with this
-     * column based on the jdbc type, length, and scale of the column.
-     *
-     * @param introspectedColumn
-     *            the column whose Java type needs to be calculated
-     * @return the calculated type, or null if an unsupported data type. If null
-     *         is returned, we will set the type to Object and issue a
-     *         warning unless the column is ignored or otherwise overridden
-     */
-    @Nullable FullyQualifiedJavaType calculateJavaType(IntrospectedColumn introspectedColumn);
-
-    /**
-     * Calculates and returns the JDBC type name that should be associated with
+     * Calculates and returns the type information that should be associated with
      * this column based on the jdbc type, length, and scale of the column.
      *
-     * @param introspectedColumn
-     *            the column whose Java type needs to be calculated
-     * @return the calculated type name, or null if an unsupported data type. If
-     *         null is returned, we will set the type to OTHER and issue a
-     *         warning unless the column is ignored or otherwise overridden
+     * @param introspectedColumn the column whose type information needs to be calculated
+     * @return the calculated type information, or empty if this is an unsupported type.
+     *     If empty, we will set the JDBC type to OTHER and the Java type to Object and issue a warning
+     *     unless the column is ignored or otherwise overridden
      */
-    @Nullable String calculateJdbcTypeName(IntrospectedColumn introspectedColumn);
+    Optional<JdbcTypeInformation> calculateTypeInformation(IntrospectedColumn introspectedColumn);
+
+    record JdbcTypeInformation(String jdbcTypeName, FullyQualifiedJavaType fullyQualifiedJavaType) {
+        public JdbcTypeInformation withJavaType(FullyQualifiedJavaType fullyQualifiedJavaType) {
+            return new JdbcTypeInformation(jdbcTypeName, fullyQualifiedJavaType);
+        }
+    }
 }

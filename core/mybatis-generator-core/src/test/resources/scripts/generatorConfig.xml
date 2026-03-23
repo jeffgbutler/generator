@@ -90,6 +90,8 @@
         connectionURL="jdbc:hsqldb:mem:aname"
         userId="sa" />
 
+    <javaTypeResolver type="org.mybatis.generator.internal.types.DateForcingJavaTypeResolver" />
+
     <javaModelGenerator targetPackage="mbg.test.mb3.generated.hierarchical.model" targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />
       <property name="trimStrings" value="true" />

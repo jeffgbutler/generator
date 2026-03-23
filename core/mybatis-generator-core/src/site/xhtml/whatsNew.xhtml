@@ -175,6 +175,22 @@ may impact users. Please read these release notes for details.
       </li>
     </ul>
   </li>
+  <li>The Java type resolver has changed in the following ways:
+    <ul>
+      <li>The property "useJSR310Types" has been removed and will be ignored if you specify it. The default
+        implementation now uses JSR-310 types (LocalDate, LocalDateTime, and LocalTime) in all cases.</li>
+      <li>The default implementation will now properly handle columns of type SQLXML using the type handler
+        built in to MyBatis.
+      </li>
+      <li>If you prefer to use <code>java.util.Date</code> to represent DATE, TIME, and TIMESTAMP
+        fields, you can specify "org.mybatis.generator.internal.types.DateForcingJavaTypeResolver" for "type"
+        in a &lt;JavaTypeResolver&gt; configuration.
+      </li>
+      <li>The interface has changed and has been simplified. If you have created an implementation of
+        <code>org.mybatis.generator.api.JavaTypeResolver</code>, you will need to update your implementation.
+      </li>
+    </ul>
+  </li>
 </ul>
 
 <h3>Potentially Breaking Changes</h3>
