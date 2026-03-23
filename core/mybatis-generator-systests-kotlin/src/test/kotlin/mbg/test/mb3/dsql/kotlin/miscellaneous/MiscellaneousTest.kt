@@ -44,7 +44,7 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(MyObjectMapper::class.java)
             val record = MyObject(2, 1, FirstName("Jeff"), "Butler", LocalDate.now(), MyTime(12, 34, 5),
-                LocalDateTime.now(), 6, 10L, 15.12345)
+                LocalDateTime.now().withNano(0), 6, 10L, 15.12345)
 
             mapper.insert(record)
 
@@ -388,7 +388,7 @@ class MiscellaneousTest : AbstractAnnotatedMiscellaneousTest() {
         openSession().use { sqlSession ->
             val mapper = sqlSession.getMapper(MyObjectMapper::class.java)
             val record = MyObject(2, 1, FirstName("Jeff"), "Butler", LocalDate.now(),
-                timefield = MyTime(12, 34, 5), timestampfield = LocalDateTime.now(), decimal60field = 6,
+                timefield = MyTime(12, 34, 5), timestampfield = LocalDateTime.now().withNano(0), decimal60field = 6,
                 decimal100field = 10L, decimal155field = 15.12345)
             mapper.insert(record)
 
