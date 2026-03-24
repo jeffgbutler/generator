@@ -54,21 +54,11 @@ public class SimpleSelectByPrimaryKeyElementGenerator extends AbstractXmlMapperE
 
         commentGenerator.addComment(answer);
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("select "); //$NON-NLS-1$
+        buildSelectList("select ", introspectedTable.getAllColumns()).forEach(answer::addElement); //$NON-NLS-1$
 
-        introspectedTable.getSelectByPrimaryKeyQueryId().ifPresent(s -> {
-            sb.append('\'');
-            sb.append(s);
-            sb.append("' as QUERYID,"); //$NON-NLS-1$
-        });
-
-        buildSelectList(sb.toString(), introspectedTable.getAllColumns()).forEach(answer::addElement);
-
-        sb.setLength(0);
-        sb.append("from "); //$NON-NLS-1$
-        sb.append(introspectedTable.getAliasedFullyQualifiedRuntimeTableName());
-        answer.addElement(new TextElement(sb.toString()));
+        String fromLine = "from " + //$NON-NLS-1$
+                introspectedTable.getAliasedFullyQualifiedRuntimeTableName();
+        answer.addElement(new TextElement(fromLine));
 
         buildPrimaryKeyWhereClause().forEach(answer::addElement);
 

@@ -43,7 +43,6 @@ public class PropertyRegistry {
     public static final String ANY_INJECT_MODEL_INTO_ROOT_INTERFACE = "injectModelIntoRootInterface"; //$NON-NLS-1$
     public static final String ANY_USE_SNAKE_CASE_IDENTIFIERS = "useSnakeCaseIdentifiers"; //$NON-NLS-1$
 
-    public static final String TABLE_USE_COLUMN_INDEXES = "useColumnIndexes"; //$NON-NLS-1$
     public static final String TABLE_USE_ACTUAL_COLUMN_NAMES = "useActualColumnNames"; //$NON-NLS-1$
     public static final String TABLE_USE_COMPOUND_PROPERTY_NAMES = "useCompoundPropertyNames"; //$NON-NLS-1$
     public static final String TABLE_IGNORE_QUALIFIERS_AT_RUNTIME = "ignoreQualifiersAtRuntime"; //$NON-NLS-1$
@@ -67,7 +66,6 @@ public class PropertyRegistry {
     public static final String CLIENT_DYNAMIC_SQL_SUPPORT_PACKAGE = "dynamicSqlSupportPackage"; //$NON-NLS-1$
 
     public static final String TYPE_RESOLVER_FORCE_BIG_DECIMALS = "forceBigDecimals"; //$NON-NLS-1$
-    public static final String TYPE_RESOLVER_USE_JSR310_TYPES = "useJSR310Types"; //$NON-NLS-1$
 
     public static final String MODEL_GENERATOR_TRIM_STRINGS = "trimStrings"; //$NON-NLS-1$
     public static final String MODEL_GENERATOR_EXAMPLE_PACKAGE = "exampleTargetPackage"; //$NON-NLS-1$

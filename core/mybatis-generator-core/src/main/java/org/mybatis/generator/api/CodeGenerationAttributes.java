@@ -155,14 +155,6 @@ public abstract class CodeGenerationAttributes {
         return fullyQualifiedTable;
     }
 
-    public Optional<String> getSelectByExampleQueryId() {
-        return getTableConfiguration().getSelectByExampleQueryId();
-    }
-
-    public Optional<String> getSelectByPrimaryKeyQueryId() {
-        return getTableConfiguration().getSelectByPrimaryKeyQueryId();
-    }
-
     public Optional<GeneratedKey> getGeneratedKey() {
         return getTableConfiguration().getGeneratedKey();
     }

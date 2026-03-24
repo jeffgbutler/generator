@@ -62,26 +62,16 @@ public class SelectByPrimaryKeyElementGenerator extends AbstractXmlMapperElement
 
         commentGenerator.addComment(answer);
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("select "); //$NON-NLS-1$
-
-        introspectedTable.getSelectByPrimaryKeyQueryId().ifPresent(s -> {
-            sb.append('\'');
-            sb.append(s);
-            sb.append("' as QUERYID,"); //$NON-NLS-1$
-        });
-
-        answer.addElement(new TextElement(sb.toString()));
+        answer.addElement(new TextElement("select ")); //$NON-NLS-1$
         answer.addElement(getBaseColumnListElement());
         if (introspectedTable.hasBLOBColumns()) {
             answer.addElement(new TextElement(",")); //$NON-NLS-1$
             answer.addElement(getBlobColumnListElement());
         }
 
-        sb.setLength(0);
-        sb.append("from "); //$NON-NLS-1$
-        sb.append(introspectedTable.getAliasedFullyQualifiedRuntimeTableName());
-        answer.addElement(new TextElement(sb.toString()));
+        String fromLine = "from " + //$NON-NLS-1$
+                introspectedTable.getAliasedFullyQualifiedRuntimeTableName();
+        answer.addElement(new TextElement(fromLine));
 
         buildPrimaryKeyWhereClause().forEach(answer::addElement);
 

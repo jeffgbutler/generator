@@ -214,8 +214,6 @@ public class MyBatisGeneratorConfigurationParser {
         String tableName = attributes.getProperty("tableName"); //$NON-NLS-1$
         String domainObjectName = attributes.getProperty("domainObjectName"); //$NON-NLS-1$
         String alias = attributes.getProperty("alias"); //$NON-NLS-1$
-        String selectByPrimaryKeyQueryId = attributes.getProperty("selectByPrimaryKeyQueryId"); //$NON-NLS-1$
-        String selectByExampleQueryId = attributes.getProperty("selectByExampleQueryId"); //$NON-NLS-1$
         String modelType = attributes.getProperty("modelType"); //$NON-NLS-1$
         String mapperName = attributes.getProperty("mapperName"); //$NON-NLS-1$
         String sqlProviderName = attributes.getProperty("sqlProviderName"); //$NON-NLS-1$
@@ -227,8 +225,6 @@ public class MyBatisGeneratorConfigurationParser {
                 .withTableName(tableName)
                 .withDomainObjectName(domainObjectName)
                 .withAlias(alias)
-                .withSelectByExampleQueryId(selectByExampleQueryId)
-                .withSelectByPrimaryKeyQueryId(selectByPrimaryKeyQueryId)
                 .withMapperName(mapperName)
                 .withSqlProviderName(sqlProviderName);
 
