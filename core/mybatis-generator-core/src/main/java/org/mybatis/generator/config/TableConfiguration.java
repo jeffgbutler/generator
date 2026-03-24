@@ -46,8 +46,6 @@ public class TableConfiguration extends PropertyHolder {
     // be made TRUE. This allows us to generate warning for columns configured to be ignored but not found.
     private final Map<IgnoredColumn, Boolean> ignoredColumns;
     private final @Nullable GeneratedKey generatedKey;
-    private final @Nullable String selectByPrimaryKeyQueryId;
-    private final @Nullable String selectByExampleQueryId;
     private final @Nullable String catalog;
     private final @Nullable String schema;
     private final String tableName;
@@ -83,8 +81,6 @@ public class TableConfiguration extends PropertyHolder {
         wildcardEscapingEnabled = builder.wildcardEscapingEnabled;
         delimitIdentifiers = builder.delimitIdentifiers;
         isAllColumnDelimitingEnabled = builder.isAllColumnDelimitingEnabled;
-        selectByPrimaryKeyQueryId = builder.selectByPrimaryKeyQueryId;
-        selectByExampleQueryId = builder.selectByExampleQueryId;
         mapperName = builder.mapperName;
         sqlProviderName = builder.sqlProviderName;
         columnOverrides = Collections.unmodifiableList(builder.columnOverrides);
@@ -177,14 +173,6 @@ public class TableConfiguration extends PropertyHolder {
 
     public Optional<GeneratedKey> getGeneratedKey() {
         return Optional.ofNullable(generatedKey);
-    }
-
-    public Optional<String> getSelectByExampleQueryId() {
-        return Optional.ofNullable(selectByExampleQueryId);
-    }
-
-    public Optional<String> getSelectByPrimaryKeyQueryId() {
-        return Optional.ofNullable(selectByPrimaryKeyQueryId);
     }
 
     public boolean isDeleteByExampleStatementEnabled() {
@@ -296,20 +284,6 @@ public class TableConfiguration extends PropertyHolder {
             generatedKey.validate(errors, fqTableName, context.getId());
         }
 
-        // when using column indexes, either both or neither query ids
-        // should be set
-        if (isTrue(getProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES))
-                && selectByExampleStatementEnabled
-                && selectByPrimaryKeyStatementEnabled) {
-            boolean queryId1Set = stringHasValue(selectByExampleQueryId);
-            boolean queryId2Set = stringHasValue(selectByPrimaryKeyQueryId);
-
-            if (queryId1Set != queryId2Set) {
-                errors.add(Messages.getString("ValidationError.13", //$NON-NLS-1$
-                        fqTableName));
-            }
-        }
-
         if (domainObjectRenamingRule != null) {
             domainObjectRenamingRule.validate(errors, fqTableName);
         }
@@ -401,8 +375,6 @@ public class TableConfiguration extends PropertyHolder {
         private boolean wildcardEscapingEnabled;
         private boolean delimitIdentifiers;
         private boolean isAllColumnDelimitingEnabled;
-        private @Nullable String selectByPrimaryKeyQueryId;
-        private @Nullable String selectByExampleQueryId;
         private @Nullable String mapperName;
         private @Nullable String sqlProviderName;
         private @Nullable GeneratedKey generatedKey;
@@ -514,16 +486,6 @@ public class TableConfiguration extends PropertyHolder {
         @SuppressWarnings("UnusedReturnValue")
         public Builder withAllColumnDelimitingEnabled(boolean isAllColumnDelimitingEnabled) {
             this.isAllColumnDelimitingEnabled = isAllColumnDelimitingEnabled;
-            return this;
-        }
-
-        public Builder withSelectByPrimaryKeyQueryId(@Nullable String selectByPrimaryKeyQueryId) {
-            this.selectByPrimaryKeyQueryId = selectByPrimaryKeyQueryId;
-            return this;
-        }
-
-        public Builder withSelectByExampleQueryId(@Nullable String selectByExampleQueryId) {
-            this.selectByExampleQueryId = selectByExampleQueryId;
             return this;
         }
 
