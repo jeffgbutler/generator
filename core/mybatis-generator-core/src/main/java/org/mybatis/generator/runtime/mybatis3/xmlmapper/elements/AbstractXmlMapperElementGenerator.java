@@ -372,24 +372,15 @@ public abstract class AbstractXmlMapperElementGenerator extends AbstractXmlEleme
         ifElement.addElement(new TextElement("distinct")); //$NON-NLS-1$
         answer.addElement(ifElement);
 
-        StringBuilder sb = new StringBuilder();
-        introspectedTable.getSelectByExampleQueryId().ifPresent(s -> {
-            sb.append('\'');
-            sb.append(s);
-            sb.append("' as QUERYID,"); //$NON-NLS-1$
-            answer.addElement(new TextElement(sb.toString()));
-        });
-
         answer.addElement(getBaseColumnListElement());
         if (forBlobs) {
             answer.addElement(new TextElement(",")); //$NON-NLS-1$
             answer.addElement(getBlobColumnListElement());
         }
 
-        sb.setLength(0);
-        sb.append("from "); //$NON-NLS-1$
-        sb.append(introspectedTable.getAliasedFullyQualifiedRuntimeTableName());
-        answer.addElement(new TextElement(sb.toString()));
+        String fromLine = "from " + //$NON-NLS-1$
+                introspectedTable.getAliasedFullyQualifiedRuntimeTableName();
+        answer.addElement(new TextElement(fromLine));
         answer.addElement(getExampleIncludeElement());
 
         ifElement = new XmlElement("if"); //$NON-NLS-1$
