@@ -28,9 +28,67 @@
 <p>The &lt;table&gt; element is used to select a table in the database for
 introspection.  Selected tables will cause the following objects to be generated
 for each table:</p>
+
+<table border="1" cellspacing="0" cellpadding="5">
+  <tr>
+    <th>Runtime</th>
+    <th>Generated Objects</th>
+  </tr>
+  <tr>
+    <td>MyBatis3DynamicSQL</td>
+    <td>
+      <ul>
+        <li>A Java "model" class, or record, including all columns from the table</li>
+        <li>A Java interface usable by MyBatis3 including CRUD operations. The methods in the interface
+          are generated to make use of the MyBatis Dynamic SQL library which provides a means to create very
+          flexible SQL
+        </li>
+        <li>A Java "dynamic SQL support" class that is a metamodel representing the columns in the database table.
+          This class provides support for generating SQL with the MyBatis Dynamic SQL library.
+        </li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>MyBatis3Kotlin</td>
+    <td>
+      <ul>
+        <li>A Kotlin data class including all columns from the table</li>
+        <li>A Kotin interface usable by MyBatis3 including CRUD operations. The methods and extension functions in the
+          interface are generated to make use of the MyBatis Dynamic SQL library which provides a means to create very
+          flexible SQL
+        </li>
+        <li>A Kotlin "dynamic SQL support" class that is a metamodel representing the columns in the database table.
+          This class provides support for generating SQL with the MyBatis Dynamic SQL library.
+        </li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>MyBatis3</td>
+    <td>
+
+    </td>
+  </tr>
+  <tr>
+    <td>MyBatis3Simple</td>
+    <td>
+      <ul>
+        <li>A Java "model" class, or record, including all columns from the table</li>
+        <li>A Java interface usable by MyBatis3 including CRUD operations. The simple runtime
+          does not include any advanced "by example" methods.
+        </li>
+        <li>Optionally, an XML mapper file formatted for MyBatis. The simple runtime can be configured to only use
+          annotations, so the XML may or may not be generated depending on how the runtime is configured.
+        </li>
+      </ul>
+    </td>
+  </tr>
+</table>
+
 <ul>
-  <li>A MyBatis formatted SQL Map file</li>
-  <li>A set of classes that form the "model" of the table including:
+  <li>A MyBatis formatted XML Map file (if the target runtime generates XML)</li>
+  <li>A set of classes that form the "model" of the table potentially including:
     <ul>
       <li>A class to match the primary key of the table (if the table
           has a primary key).</li>
@@ -40,11 +98,11 @@ for each table:</p>
       <li>A class to hold any BLOB fields in the table, if there are any.
           This class will extend one of the two previous classes depending on the
           configuration of the table.</li>
-      <li>A class that is used to generate dynamic where clauses in the
+      <li>For the MyBatis3 runtime, a class that is used to generate dynamic where clauses in the
           different "by example" methods (selectByExample, deleteByExample).</li>
     </ul>
   </li>
-  <li>(Optionally) A MyBatis mapper interface</li>
+  <li>(Optionally) A MyBatis mapper interface written in Java or Kotlin</li>
 </ul>
 <p>At least one &lt;table&gt; element must be specified as a required child element
 of the <a href="context.html">&lt;context&gt;</a> element.
