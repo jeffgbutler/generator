@@ -185,7 +185,7 @@ public interface CommentGenerator {
     /**
      * This method is called to add a file level comment to a generated java file. This method
      * could be used to add a general file comment (such as a copyright notice). However, note
-     * that the Java file merge function in Eclipse does not deal with this comment. If you run
+     * that the Java file merge function may not preserve this comment. If you run
      * the generator repeatedly, you will only retain the comment from the initial run.
      *
      * <p>The default implementation does nothing.

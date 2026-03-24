@@ -58,7 +58,11 @@ public class InsertMethodGenerator extends AbstractJavaMapperMethodGenerator {
         importedTypes.add(parameterType);
         method.addParameter(new Parameter(parameterType, "row")); //$NON-NLS-1$
 
-        commentGenerator.addGeneralMethodComment(method, introspectedTable);
+        if (isSimple) {
+            commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, importedTypes);
+        } else {
+            commentGenerator.addGeneralMethodComment(method, introspectedTable);
+        }
 
         return JavaMethodAndImports.withMethod(method)
                 .withImports(importedTypes)

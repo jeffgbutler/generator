@@ -48,7 +48,11 @@ public class DeleteByPrimaryKeyMethodGenerator extends AbstractJavaMapperMethodG
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<>();
         addPrimaryKeyMethodParameters(isSimple, method, importedTypes);
 
-        commentGenerator.addGeneralMethodComment(method, introspectedTable);
+        if (isSimple) {
+            commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, importedTypes);
+        } else {
+            commentGenerator.addGeneralMethodComment(method, introspectedTable);
+        }
 
         return JavaMethodAndImports.withMethod(method)
                 .withImports(importedTypes)

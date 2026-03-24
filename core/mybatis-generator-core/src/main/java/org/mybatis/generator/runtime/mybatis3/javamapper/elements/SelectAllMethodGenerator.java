@@ -53,7 +53,7 @@ public class SelectAllMethodGenerator extends AbstractJavaMapperMethodGenerator 
         returnType.addTypeArgument(listType);
         method.setReturnType(returnType);
 
-        commentGenerator.addGeneralMethodComment(method, introspectedTable);
+        commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, importedTypes);
 
         return JavaMethodAndImports.withMethod(method)
                 .withImports(importedTypes)

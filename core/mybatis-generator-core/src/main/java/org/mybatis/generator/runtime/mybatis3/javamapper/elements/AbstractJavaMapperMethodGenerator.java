@@ -280,8 +280,6 @@ public abstract class AbstractJavaMapperMethodGenerator extends AbstractJavaInte
         method.setAbstract(true);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.addParameter(new Parameter(parameterType, "row")); //$NON-NLS-1$
-
-        commentGenerator.addGeneralMethodComment(method, introspectedTable);
         return method;
     }
 
