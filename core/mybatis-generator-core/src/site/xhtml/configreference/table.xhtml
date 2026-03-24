@@ -513,17 +513,6 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
         <p><i>The default value is false.</i></p></td>
   </tr>
   <tr>
-    <td valign="top">useColumnIndexes</td>
-    <td><i>This property is ignored is the target runtime is "MyBatis3DynamicSql" or "MyBatis3Kotlin"</i><br/>
-        If true, then MBG will generate resultMaps that use column index rather than
-        column name in the result mappings.  This is useful when a table has column names
-        differentiated only by the case of the name (e.g. "first name" and "First Name").
-        There is a slight performance benefit with this support also.<p/>
-        <p><i>The default value is false.</i></p>
-        <p><b>Important Note:</b> This property is not supported if the target runtime is
-            for MyBatis version 3.</p></td>
-  </tr>
-  <tr>
     <td valign="top">useCompoundPropertyNames</td>
     <td>If true, then
         MBG will generate property names by contatenating the column name with the

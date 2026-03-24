@@ -208,6 +208,9 @@
     "selectByPrimaryKeyQueryId" and "selectByExampleQueryId" attributes. I originally added these for a personal
     project years ago, but they were never very useful anyway.
   </li>
+  <li>Removed "useColumnIndexes" as a documented property on the <code>Table</code> configuration XML element.
+    That property was only used for iBatis2 runtimes which are no longer supported by the library.
+  </li>
   <li>If you have created your own implementation of a Java client generator, then the API has changed. These
       classes are now built with Builders rather than directly. If you have created such a class, you must now provide
       an extension of <code>org.mybatis.generator.runtime.AbstractJavaClientGenerator.AbstractJavaClientGeneratorBuilder</code>
