@@ -56,7 +56,7 @@ public class AnnotatedSelectByPrimaryKeyMethodGenerator extends SelectByPrimaryK
         if (useResultMapAnnotation()) {
             builder.withAnnotation(getResultMapAnnotation());
         } else {
-            builder.withAnnotations(getAnnotatedResultAnnotations(introspectedTable.getNonPrimaryKeyColumns()));
+            builder.withAnnotations(getAnnotatedResultAnnotations(true));
         }
     }
 

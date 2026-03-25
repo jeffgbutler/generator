@@ -44,7 +44,7 @@ public class AnnotatedSelectByExampleWithBLOBsMethodGenerator extends SelectByEx
                 + "\")";//$NON-NLS-1$
         builder.withAnnotation(s);
 
-        builder.withAnnotations(getAnnotatedResultAnnotations(introspectedTable.getNonPrimaryKeyColumns()));
+        builder.withAnnotations(getAnnotatedResultAnnotations(true));
     }
 
     private void addImports(JavaMethodParts.Builder builder) {
