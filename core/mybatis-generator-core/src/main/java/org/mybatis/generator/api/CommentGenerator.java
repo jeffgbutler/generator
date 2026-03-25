@@ -56,7 +56,7 @@ public interface CommentGenerator {
      * specified table and is used to hold the value of the specified column.
      *
      * <p><b>Important:</b> This method should add the nonstandard JavaDoc tag "@mbg.generated" to
-     * the comment. Without this tag, the Eclipse based Java merge feature will fail.
+     * the comment. Without this tag, the Java merge feature will fail.
      *
      * @param field
      *            the field
