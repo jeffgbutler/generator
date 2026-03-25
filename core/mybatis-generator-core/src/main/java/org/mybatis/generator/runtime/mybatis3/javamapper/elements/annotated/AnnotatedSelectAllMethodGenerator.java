@@ -67,7 +67,7 @@ public class AnnotatedSelectAllMethodGenerator extends SelectAllMethodGenerator 
 
         builder.withAnnotation("})"); //$NON-NLS-1$
 
-        builder.withAnnotations(getAnnotatedResultAnnotations(introspectedTable.getNonPrimaryKeyColumns()));
+        builder.withAnnotations(getAnnotatedResultAnnotations(true));
     }
 
     private void addImports(JavaMethodParts.Builder builder) {

@@ -56,7 +56,7 @@ public interface CommentGenerator {
      * specified table and is used to hold the value of the specified column.
      *
      * <p><b>Important:</b> This method should add the nonstandard JavaDoc tag "@mbg.generated" to
-     * the comment. Without this tag, the Eclipse based Java merge feature will fail.
+     * the comment. Without this tag, the Java merge feature will fail.
      *
      * @param field
      *            the field
@@ -185,7 +185,7 @@ public interface CommentGenerator {
     /**
      * This method is called to add a file level comment to a generated java file. This method
      * could be used to add a general file comment (such as a copyright notice). However, note
-     * that the Java file merge function in Eclipse does not deal with this comment. If you run
+     * that the Java file merge function may not preserve this comment. If you run
      * the generator repeatedly, you will only retain the comment from the initial run.
      *
      * <p>The default implementation does nothing.
