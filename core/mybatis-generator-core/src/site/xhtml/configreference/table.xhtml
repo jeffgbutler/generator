@@ -67,7 +67,19 @@ for each table:</p>
   <tr>
     <td>MyBatis3</td>
     <td>
-
+      <ul>
+        <li>Java "model" classes matching the table which may or may not include a separate primary key class and a
+          separate class holding the BLOB columns, or a Java record that contains all columns from the table</li>
+        <li>An "example" class that can be used to create custom where clauses</li>
+        <li>A Java interface usable by MyBatis3 including CRUD operations. This runtime includes a "by example"
+          functionality that provides some level of support for custom where clauses. Note that this functionality
+          is very brittle and generates a large amount of code. For this reason, we recommend all users change to the
+          MyBatis3DynamicSQL runtime which produces smaller and more flexible code.
+        </li>
+        <li>Optionally, an XML mapper file formatted for MyBatis. This runtime can be configured to only use
+          annotations, so the XML may or may not be generated depending on how the runtime is configured.
+        </li>
+      </ul>
     </td>
   </tr>
   <tr>
@@ -86,27 +98,9 @@ for each table:</p>
   </tr>
 </table>
 
-<ul>
-  <li>A MyBatis formatted XML Map file (if the target runtime generates XML)</li>
-  <li>A set of classes that form the "model" of the table potentially including:
-    <ul>
-      <li>A class to match the primary key of the table (if the table
-          has a primary key).</li>
-      <li>A class to match the fields in the table that are not in the
-          primary key, and non BLOB fields.  This class will extend the
-          primary key if there is one.</li>
-      <li>A class to hold any BLOB fields in the table, if there are any.
-          This class will extend one of the two previous classes depending on the
-          configuration of the table.</li>
-      <li>For the MyBatis3 runtime, a class that is used to generate dynamic where clauses in the
-          different "by example" methods (selectByExample, deleteByExample).</li>
-    </ul>
-  </li>
-  <li>(Optionally) A MyBatis mapper interface written in Java or Kotlin</li>
-</ul>
-<p>At least one &lt;table&gt; element must be specified as a required child element
-of the <a href="context.html">&lt;context&gt;</a> element.
-You can specify unlimited table elements.</p>
+<p>At least one &lt;table&gt; element must be specified as a required child element of the
+  <a href="context.html">&lt;context&gt;</a> element. You can specify unlimited table elements.
+</p>
 
 <h2>Database Identifiers</h2>
 <p>MyBatis Generator (MBG) tries to deal with the case sensitivity of database identifiers automatically.
