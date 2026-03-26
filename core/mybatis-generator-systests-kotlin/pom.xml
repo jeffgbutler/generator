@@ -84,41 +84,13 @@
       <plugin>
         <groupId>org.jetbrains.kotlin</groupId>
         <artifactId>kotlin-maven-plugin</artifactId>
+        <extensions>true</extensions>
         <configuration>
           <args>
             <arg>-Xjsr305=strict</arg>
           </args>
-          <jvmTarget>1.8</jvmTarget>
+          <jvmTarget>17</jvmTarget>
         </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-maven-allopen</artifactId>
-            <version>${kotlin.version}</version>
-          </dependency>
-        </dependencies>
-        <executions>
-          <execution>
-            <id>compile</id>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-            <phase>compile</phase>
-            <configuration>
-              <sourceDirs>
-                <source>src/main/kotlin</source>
-                <source>target/generated-sources/mybatis-generator</source>
-              </sourceDirs>
-            </configuration>
-          </execution>
-          <execution>
-            <id>test-compile</id>
-            <goals>
-              <goal>test-compile</goal>
-            </goals>
-            <phase>test-compile</phase>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.mybatis.generator</groupId>
@@ -174,9 +146,6 @@
         </configuration>
       </plugin>
     </plugins>
-
-    <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
-    <testSourceDirectory>src/test/kotlin</testSourceDirectory>
   </build>
 
   <profiles>
