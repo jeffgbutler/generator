@@ -27,15 +27,15 @@
 
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver" connectionURL="jdbc:hsqldb:mem:aname" userId="sa" />
 
-    <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.model" targetProject="MAVEN">
+    <modelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.model" targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />
       <property name="trimStrings" value="true" />
       <property name="generateKotlinV1Model" value="true"/>
-    </javaModelGenerator>
+    </modelGenerator>
 
-    <javaClientGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.mapper"  targetProject="MAVEN">
+    <clientGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.mapper"  targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />
-    </javaClientGenerator>
+    </clientGenerator>
 
     <table tableName="FieldsOnly" />
     <table tableName="PKOnly">
@@ -79,11 +79,11 @@
   <context id="idiomatic-kotlin" targetRuntime="MyBatis3Kotlin">
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver" connectionURL="jdbc:hsqldb:mem:aname" userId="sa" />
 
-    <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.idiomatic.model" targetProject="MAVEN" />
+    <modelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.idiomatic.model" targetProject="MAVEN" />
 
-    <javaClientGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper"  targetProject="MAVEN">
+    <clientGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.idiomatic.mapper"  targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />
-    </javaClientGenerator>
+    </clientGenerator>
 
     <table tableName="FieldsOnly" />
     <table tableName="PKOnly" />
@@ -131,11 +131,11 @@
         connectionURL="jdbc:hsqldb:mem:aname"
         userId="sa" />
 
-    <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.readonly.model" targetProject="MAVEN">
+    <modelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.readonly.model" targetProject="MAVEN">
       <property name="trimStrings" value="true" />
-    </javaModelGenerator>
+    </modelGenerator>
 
-    <javaClientGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.readonly.mapper"
+    <clientGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.readonly.mapper"
       targetProject="MAVEN"/>
 
     <table tableName="PKFields" alias="B" >
@@ -173,15 +173,15 @@
         connectionURL="jdbc:hsqldb:mem:aname"
         userId="sa" />
 
-    <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.miscellaneous.model" targetProject="MAVEN">
+    <modelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.miscellaneous.model" targetProject="MAVEN">
       <property name="trimStrings" value="true" />
       <property name="rootClass" value="mbg.test.common.BaseClass" />
       <property name="generateKotlinV1Model" value="true"/>
-    </javaModelGenerator>
+    </modelGenerator>
 
-    <javaClientGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.miscellaneous.mapper"  targetProject="MAVEN">
+    <clientGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.miscellaneous.mapper"  targetProject="MAVEN">
       <property name="useSnakeCaseIdentifiers" value="true"/>
-    </javaClientGenerator>
+    </clientGenerator>
 
     <table tableName="PKFields" domainObjectName="MyObject" alias="A" >
       <ignoreColumn column="fred" />
@@ -227,11 +227,11 @@
         connectionURL="jdbc:hsqldb:mem:aname"
         userId="sa" />
 
-    <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.modelonly" targetProject="MAVEN">
+    <modelGenerator targetPackage="mbg.test.mb3.generated.dsql.kotlin.modelonly" targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />
       <property name="trimStrings" value="true" />
       <property name="generateKotlinV1Model" value="true"/>
-    </javaModelGenerator>
+    </modelGenerator>
 
     <table tableName="FieldsOnly" />
     <table tableName="PKOnly">

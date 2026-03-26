@@ -159,7 +159,7 @@ public class ConfigurationParser {
     }
 
     private Configuration parseMyBatisGeneratorConfiguration(Element rootNode) throws XMLParserException {
-        MyBatisGeneratorConfigurationParser parser = new MyBatisGeneratorConfigurationParser(extraProperties);
+        MyBatisGeneratorConfigurationParser parser = new MyBatisGeneratorConfigurationParser(extraProperties, warnings);
         return parser.parseConfiguration(rootNode);
     }
 }

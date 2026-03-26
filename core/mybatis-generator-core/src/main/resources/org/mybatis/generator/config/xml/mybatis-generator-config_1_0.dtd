@@ -51,7 +51,7 @@
   tables.
 -->
 <!ELEMENT context (property*, plugin*, commentGenerator?, (connectionFactory | jdbcConnection), javaTypeResolver?,
-                         javaModelGenerator, sqlMapGenerator?, javaClientGenerator?, table+)>
+    (modelGenerator | javaModelGenerator), sqlMapGenerator?, (clientGenerator | javaClientGenerator)?, table+)>
 <!ATTLIST context id ID #REQUIRED
   defaultModelType CDATA #IMPLIED
   targetRuntime CDATA #IMPLIED
@@ -107,6 +107,7 @@
   The javaModelGenerator element is used to define properties of the Java Model Generator.
   The Java Model Generator builds primary key classes, record classes, and Query by Example 
   indicator classes.
+  This element is deprecated - please use "modelGenerator" instead.
 -->
 <!ELEMENT javaModelGenerator (property*)>
 <!ATTLIST javaModelGenerator
@@ -114,11 +115,20 @@
   targetProject CDATA #REQUIRED>
 
 <!--
-  The javaTypeResolver element is used to define properties of the Java Type Resolver.
-  The Java Type Resolver is used to calculate Java types from database column information.
-  The default Java Type Resolver attempts to make JDBC DECIMAL and NUMERIC types easier
-  to use by substituting Integral types if possible (Long, Integer, Short, etc.)
+  The modelGenerator element is used to define properties of the Model Generator (either Java or Kotlin
+  can be produced). The Model Generator builds Java model classes, Java records, or Kotlin data classes.
 -->
+<!ELEMENT modelGenerator (property*)>
+<!ATTLIST modelGenerator
+  targetPackage CDATA #REQUIRED
+  targetProject CDATA #REQUIRED>
+
+    <!--
+      The javaTypeResolver element is used to define properties of the Java Type Resolver.
+      The Java Type Resolver is used to calculate Java types from database column information.
+      The default Java Type Resolver attempts to make JDBC DECIMAL and NUMERIC types easier
+      to use by substituting Integral types if possible (Long, Integer, Short, etc.)
+    -->
 <!ELEMENT javaTypeResolver (property*)>
 <!ATTLIST javaTypeResolver
   type CDATA #IMPLIED>
@@ -138,6 +148,7 @@
   The Java Client Generator builds Java interface and implementation classes
   (as required) for each table.
   If this element is missing, then the generator will not build Java Client classes.
+  This element is deprecated. Please use "clientGenerator" instead.
 -->
 <!ELEMENT javaClientGenerator (property*)>
 <!ATTLIST javaClientGenerator
@@ -146,9 +157,22 @@
   targetProject CDATA #REQUIRED>
 
 <!--
-  The table element is used to specify a database table that will be the source information
-  for a set of generated objects.
+  The clientGenerator element is used to define properties of the client Generator.
+  The Client Generator builds Java or Kotlin interface and implementation classes
+  (as required) for each table.
+  If this element is missing, then the generator will not build Client classes.
 -->
+<!ELEMENT clientGenerator (property*)>
+<!ATTLIST clientGenerator
+  type CDATA #IMPLIED
+  targetPackage CDATA #REQUIRED
+  targetProject CDATA #REQUIRED>
+
+
+    <!--
+      The table element is used to specify a database table that will be the source information
+      for a set of generated objects.
+    -->
 <!ELEMENT table (property*, generatedKey?, domainObjectRenamingRule?, columnRenamingRule?, (columnOverride | ignoreColumn | ignoreColumnsByRegex)*) >
 <!ATTLIST table
   catalog CDATA #IMPLIED

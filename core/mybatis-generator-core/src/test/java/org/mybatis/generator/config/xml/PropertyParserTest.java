@@ -1,5 +1,5 @@
 /*
- *    Copyright 2006-2025 the original author or authors.
+ *    Copyright 2006-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@ package org.mybatis.generator.config.xml;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.stream.Stream;
 
@@ -32,7 +34,8 @@ class PropertyParserTest {
     @ParameterizedTest(name = "{index} => properties:''{0}'', token:''{1}'', expected:''{2}''")
     @MethodSource("parsePropertyTokensTestSource")
     void parsePropertyTokensTest(Properties prop, String token, String expected) {
-        MyBatisGeneratorConfigurationParser parser = new MyBatisGeneratorConfigurationParser(prop);
+        List<String> warnings = new ArrayList<>();
+        MyBatisGeneratorConfigurationParser parser = new MyBatisGeneratorConfigurationParser(prop, warnings);
         String result = parser.parsePropertyTokens(token);
         assertThat(result).isEqualTo(expected);
     }

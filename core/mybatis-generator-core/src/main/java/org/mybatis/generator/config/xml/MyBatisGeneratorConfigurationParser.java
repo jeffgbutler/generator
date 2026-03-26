@@ -53,6 +53,7 @@ import org.mybatis.generator.config.SqlMapGeneratorConfiguration;
 import org.mybatis.generator.config.TableConfiguration;
 import org.mybatis.generator.exception.XMLParserException;
 import org.mybatis.generator.internal.ObjectFactory;
+import org.mybatis.generator.internal.util.messages.Messages;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -66,10 +67,12 @@ import org.w3c.dom.NodeList;
 public class MyBatisGeneratorConfigurationParser {
     private final Properties extraProperties;
     private final Properties configurationProperties;
+    private final List<String> warnings;
 
-    public MyBatisGeneratorConfigurationParser(@Nullable Properties extraProperties) {
+    public MyBatisGeneratorConfigurationParser(@Nullable Properties extraProperties, List<String> warnings) {
         this.extraProperties = Objects.requireNonNullElseGet(extraProperties, Properties::new);
         configurationProperties = new Properties();
+        this.warnings = warnings;
     }
 
     public Configuration parseConfiguration(Element rootNode) throws XMLParserException {
@@ -176,14 +179,22 @@ public class MyBatisGeneratorConfigurationParser {
                     builder.withJdbcConnectionConfiguration(parseJdbcConnection(childNode));
             case "connectionFactory" ->  //$NON-NLS-1$
                     builder.withConnectionFactoryConfiguration(parseConnectionFactory(childNode));
-            case "javaModelGenerator" ->  //$NON-NLS-1$
+            case "modelGenerator" ->  //$NON-NLS-1$
                     builder.withJavaModelGeneratorConfiguration(parseJavaModelGenerator(childNode));
+            case "javaModelGenerator" -> { //$NON-NLS-1$
+                warnings.add(Messages.getString("Warning.33")); //$NON-NLS-1$
+                builder.withJavaModelGeneratorConfiguration(parseJavaModelGenerator(childNode));
+            }
             case "javaTypeResolver" ->  //$NON-NLS-1$
                     builder.withJavaTypeResolverConfiguration(parseJavaTypeResolver(childNode));
             case "sqlMapGenerator" ->  //$NON-NLS-1$
                     builder.withSqlMapGeneratorConfiguration(parseSqlMapGenerator(childNode));
-            case "javaClientGenerator" ->  //$NON-NLS-1$
+            case "clientGenerator" ->  //$NON-NLS-1$
                     builder.withJavaClientGeneratorConfiguration(parseJavaClientGenerator(childNode));
+            case "javaClientGenerator" -> { //$NON-NLS-1$
+                warnings.add(Messages.getString("Warning.34")); //$NON-NLS-1$
+                builder.withJavaClientGeneratorConfiguration(parseJavaClientGenerator(childNode));
+            }
             case "table" ->  //$NON-NLS-1$
                     builder.withTableConfiguration(parseTable(childNode));
             default -> {
