@@ -28,27 +28,79 @@
 <p>The &lt;table&gt; element is used to select a table in the database for
 introspection.  Selected tables will cause the following objects to be generated
 for each table:</p>
-<ul>
-  <li>A MyBatis formatted SQL Map file</li>
-  <li>A set of classes that form the "model" of the table including:
-    <ul>
-      <li>A class to match the primary key of the table (if the table
-          has a primary key).</li>
-      <li>A class to match the fields in the table that are not in the
-          primary key, and non BLOB fields.  This class will extend the
-          primary key if there is one.</li>
-      <li>A class to hold any BLOB fields in the table, if there are any.
-          This class will extend one of the two previous classes depending on the
-          configuration of the table.</li>
-      <li>A class that is used to generate dynamic where clauses in the
-          different "by example" methods (selectByExample, deleteByExample).</li>
-    </ul>
-  </li>
-  <li>(Optionally) A MyBatis mapper interface</li>
-</ul>
-<p>At least one &lt;table&gt; element must be specified as a required child element
-of the <a href="context.html">&lt;context&gt;</a> element.
-You can specify unlimited table elements.</p>
+
+<table border="1" cellspacing="0" cellpadding="5">
+  <tr>
+    <th>Runtime</th>
+    <th>Generated Objects</th>
+  </tr>
+  <tr>
+    <td>MyBatis3DynamicSQL</td>
+    <td>
+      <ul>
+        <li>A Java "model" class, or record, including all columns from the table</li>
+        <li>A Java interface usable by MyBatis3 including CRUD operations. The methods in the interface
+          are generated to make use of the MyBatis Dynamic SQL library which provides a means to create very
+          flexible SQL
+        </li>
+        <li>A Java "dynamic SQL support" class that is a metamodel representing the columns in the database table.
+          This class provides support for generating SQL with the MyBatis Dynamic SQL library.
+        </li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>MyBatis3Kotlin</td>
+    <td>
+      <ul>
+        <li>A Kotlin data class including all columns from the table</li>
+        <li>A Kotin interface usable by MyBatis3 including CRUD operations. The methods and extension functions in the
+          interface are generated to make use of the MyBatis Dynamic SQL library which provides a means to create very
+          flexible SQL
+        </li>
+        <li>A Kotlin "dynamic SQL support" class that is a metamodel representing the columns in the database table.
+          This class provides support for generating SQL with the MyBatis Dynamic SQL library.
+        </li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>MyBatis3</td>
+    <td>
+      <ul>
+        <li>Java "model" classes matching the table which may or may not include a separate primary key class and a
+          separate class holding the BLOB columns, or a Java record that contains all columns from the table</li>
+        <li>An "example" class that can be used to create custom where clauses</li>
+        <li>A Java interface usable by MyBatis3 including CRUD operations. This runtime includes a "by example"
+          functionality that provides some level of support for custom where clauses. Note that this functionality
+          is very brittle and generates a large amount of code. For this reason, we recommend all users change to the
+          MyBatis3DynamicSQL runtime which produces smaller and more flexible code.
+        </li>
+        <li>Optionally, an XML mapper file formatted for MyBatis. This runtime can be configured to only use
+          annotations, so the XML may or may not be generated depending on how the runtime is configured.
+        </li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>MyBatis3Simple</td>
+    <td>
+      <ul>
+        <li>A Java "model" class, or record, including all columns from the table</li>
+        <li>A Java interface usable by MyBatis3 including CRUD operations. The simple runtime
+          does not include any advanced "by example" methods.
+        </li>
+        <li>Optionally, an XML mapper file formatted for MyBatis. The simple runtime can be configured to only use
+          annotations, so the XML may or may not be generated depending on how the runtime is configured.
+        </li>
+      </ul>
+    </td>
+  </tr>
+</table>
+
+<p>At least one &lt;table&gt; element must be specified as a required child element of the
+  <a href="context.html">&lt;context&gt;</a> element. You can specify unlimited table elements.
+</p>
 
 <h2>Database Identifiers</h2>
 <p>MyBatis Generator (MBG) tries to deal with the case sensitivity of database identifiers automatically.
@@ -124,7 +176,7 @@ identifiers in upper case.  In this instance, you should specify the attribute
         If not specified, MBG will generate a name automatically based on
         the tableName.  The name (either specified here, or generated
         automatically) will be used to compute generated domain class names
-        and DAO class names.
+        and cleint class names.
         <p>You can specify a package fragment in the domain object name.  For example,
            if you specify <code>foo.Bar</code> then the domain object will be
            <code>Bar</code> and package <code>foo</code> will be appended

@@ -66,7 +66,7 @@ attributes.</p>
       &lt;property name="enableSubPackages" value="true" /&gt;
     &lt;/sqlMapGenerator&gt;
 
-    &lt;javaClientGenerator type="XMLMAPPER" targetPackage="test.dao" targetProject="\MBGTestProject\src"&gt;
+    &lt;javaClientGenerator type="XMLMAPPER" targetPackage="test.mapper" targetProject="\MBGTestProject\src"&gt;
       &lt;property name="enableSubPackages" value="true" /&gt;
     &lt;/javaClientGenerator&gt;
 
@@ -106,12 +106,12 @@ attributes.</p>
       is in the DB2ADMIN schema).  If the <code>enableSubPackages</code> attribute was set
       to <code>false</code>,
       then the package would be <code>test.xml</code>.</li>
-  <li>The DAO generator should use sub-packages.  This means that the generated DAO classes
-      will be placed in a package called <code>test.dao.db2admin</code> in this case
+  <li>The client generator should use sub-packages.  This means that the generated client classes
+      will be placed in a package called <code>test.mapper.db2admin</code> in this case
       (because the table
       is in the DB2ADMIN schema).  If the <code>enableSubPackages</code> attribute was set
       to <code>false</code>,
-      then the package would be <code>test.dao</code>.  The DAO generator should generate
+      then the package would be <code>test.mapper</code>.  The client generator should generate
       mapper interfaces that reference an XML configuration for MyBatis.
   </li>
   <li>The file specifies only one table will be introspected, but many more could be specified.

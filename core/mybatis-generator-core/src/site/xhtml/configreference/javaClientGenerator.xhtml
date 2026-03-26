@@ -154,7 +154,7 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
         introspected table.
         <p>For example, suppose a table MYTABLE in schema MYSCHMA.
         Also suppose that the targetPackage attribute is set to "com.mycompany".
-        If this property is true, the generated DAO interface and class for the table
+        If this property is true, the generated client code for the table
         will be placed in
         the package "com.mycompany.myschema".  If the property is false, the generated
         SQL Map will be placed in the "com.mycompany" schema.</p>
@@ -203,11 +203,11 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
 <h2>Example</h2>
 <p>This element specifies that we always want to place generated interfaces and
 objects
-in the "test.model" package and that we want to use subpackages based on the
+in the "test.mapper" package and that we want to use subpackages based on the
 table schema and catalog.  It also specifies that we want to generate
 mapper interfaces that reference an XML configuration file for MyBatis3.</p>
 <pre>
-&lt;javaClientGenerator targetPackage="test.model"
+&lt;javaClientGenerator targetPackage="test.mapper"
      targetProject="\MyProject\src" type="XMLMAPPER"&gt;
   &lt;property name="enableSubPackages" value="true" /&gt;
 &lt;/javaClientGenerator&gt;
