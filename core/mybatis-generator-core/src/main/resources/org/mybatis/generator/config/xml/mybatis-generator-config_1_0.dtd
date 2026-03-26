@@ -123,12 +123,12 @@
   targetPackage CDATA #REQUIRED
   targetProject CDATA #REQUIRED>
 
-    <!--
-      The javaTypeResolver element is used to define properties of the Java Type Resolver.
-      The Java Type Resolver is used to calculate Java types from database column information.
-      The default Java Type Resolver attempts to make JDBC DECIMAL and NUMERIC types easier
-      to use by substituting Integral types if possible (Long, Integer, Short, etc.)
-    -->
+<!--
+  The javaTypeResolver element is used to define properties of the Java Type Resolver.
+  The Java Type Resolver is used to calculate Java types from database column information.
+  The default Java Type Resolver attempts to make JDBC DECIMAL and NUMERIC types easier
+  to use by substituting Integral types if possible (Long, Integer, Short, etc.)
+-->
 <!ELEMENT javaTypeResolver (property*)>
 <!ATTLIST javaTypeResolver
   type CDATA #IMPLIED>
@@ -168,11 +168,10 @@
   targetPackage CDATA #REQUIRED
   targetProject CDATA #REQUIRED>
 
-
-    <!--
-      The table element is used to specify a database table that will be the source information
-      for a set of generated objects.
-    -->
+<!--
+  The table element is used to specify a database table that will be the source information
+  for a set of generated objects.
+-->
 <!ELEMENT table (property*, generatedKey?, domainObjectRenamingRule?, columnRenamingRule?, (columnOverride | ignoreColumn | ignoreColumnsByRegex)*) >
 <!ATTLIST table
   catalog CDATA #IMPLIED
