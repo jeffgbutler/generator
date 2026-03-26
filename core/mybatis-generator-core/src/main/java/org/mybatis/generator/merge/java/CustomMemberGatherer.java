@@ -120,7 +120,7 @@ public class CustomMemberGatherer {
                 .filter(this::isOurGeneratedAnnotation)
                 .findFirst()
                 .map(a -> {
-                    if (isDoNotDeleteAnnotation(a)) {
+                    if (hasDoNotDeleteComment(a)) {
                         return GeneratedType.GENERATED_KEEP;
                     } else {
                         return GeneratedType.GENERATED_REMOVE;
@@ -153,7 +153,7 @@ public class CustomMemberGatherer {
         return false;
     }
 
-    private boolean isDoNotDeleteAnnotation(AnnotationExpr annotationExpr) {
+    private boolean hasDoNotDeleteComment(AnnotationExpr annotationExpr) {
         // check the comments value for the do_not_delete marker string
         if (annotationExpr.isSingleMemberAnnotationExpr()) {
             // no comments in a single member annotation - only the single "value" member"

@@ -43,6 +43,7 @@
 <p>In the runtimes that generate Java code, the comment generator will add a <code>jakarta.annotation.Generated</code>
   annotation to generated Java elements.
 </p>
+<p>Generated XML mappers will contain XML comments with the string "@mbg.generated".</p>
 <p>In the Kotlin runtime, a simple comment is added to all generated Kotlin files.</p>
 
 <p>The default implementation is <code>org.mybatis.generator.internal.DefaultCommentGenerator</code>.
@@ -108,9 +109,8 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
   <tr>
     <td valign="top">minimizeComments</td>
     <td>
-      This property is used to specify that MBG should only add the minimum comments and annotations to support Java
-      and XML merging.
-      The property supports these values:
+      This property is used to specify that MBG should only add the minimum comments and annotations required to
+      support Java and XML merging. The property supports these values:
       <table>
         <tr>
           <th valign="top">false</th>

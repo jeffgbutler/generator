@@ -378,8 +378,7 @@ public abstract class AbstractXmlMapperElementGenerator extends AbstractXmlEleme
             answer.addElement(getBlobColumnListElement());
         }
 
-        String fromLine = "from " + //$NON-NLS-1$
-                introspectedTable.getAliasedFullyQualifiedRuntimeTableName();
+        String fromLine = "from " + introspectedTable.getAliasedFullyQualifiedRuntimeTableName(); //$NON-NLS-1$
         answer.addElement(new TextElement(fromLine));
         answer.addElement(getExampleIncludeElement());
 

@@ -257,7 +257,8 @@ public class DefaultCommentGenerator implements CommentGenerator {
     }
 
     @Override
-    public void addEnumAnnotation(InnerEnum innerEnum, IntrospectedTable introspectedTable, Set<FullyQualifiedJavaType> imports) {
+    public void addEnumAnnotation(InnerEnum innerEnum, IntrospectedTable introspectedTable,
+                                  Set<FullyQualifiedJavaType> imports) {
         if (suppressAllComments) {
             return;
         }

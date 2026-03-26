@@ -63,7 +63,8 @@ public class PrimaryKeyGenerator extends AbstractJavaGenerator {
 
             if (!introspectedTable.isImmutable()) {
                 Method method = topLevelClass.generateBasicConstructor();
-                commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, topLevelClass.getImportedTypes());
+                commentGenerator.addGeneralMethodAnnotation(method, introspectedTable,
+                        topLevelClass.getImportedTypes());
                 topLevelClass.addMethod(method);
             }
         }
