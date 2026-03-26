@@ -158,13 +158,18 @@
     The runtimes that build code for MyBatis Dynamic SQL (MyBatis3DynamicSql and MyBatis3Kotlin) have been updated to
     use version 2.0.0 of that library, and the generated code will require that version or later.
   </li>
+  <li>The XML configuration element &lt;javaModelGenerator&gt; has been renamed to &lt;modelGenerator&gt;. Since the
+    library is generating Kotlin code in many cases, it makes sense to have the configuration element be more generic.
+    The old element name continues to work. There should be no impact to users except for a warning message that
+    encourages you to use the new name.
+  </li>
   <li>The Kotlin runtime has the following enhancements:
     <ul>
       <li>Generated result maps now use constructor argument mappings rather than results mapping. This is more
         consistent with how data classes are actually built and lessens the reliance on reflection tricks.
       </li>
       <li>The generator will now respect the "immutable" property on a &lt;table&gt; or
-        &lt;javaModelGenerator&gt; configuration.
+        &lt;modelGenerator&gt; configuration.
       </li>
       <li>The default model type for Kotlin is now immutable (using "val" instead of "var" in most cases).
         In addition, the model classes respect the "nullable" setting on database columns. So if a
@@ -689,7 +694,7 @@ has changed in this release.
   </li>
   <li>Added support for immutable objects and constructor based result maps in
       MyBatis3.  See <a href="configreference/table.html">&lt;table&gt;</a>
-      and/or <a href="configreference/javaModelGenerator.html">&lt;javaModelGenerator&gt;</a>
+      and/or <a href="configreference/modelGenerator.html">&lt;modelGenerator&gt;</a>
       for details.
   </li>
   <li>Added support for initialization blocks in the Java DOM</li>
@@ -958,7 +963,7 @@ details the changes, and has methods of resolving the differences.</p>
 <ul>
   <li>Fixed bug for corner case where a criteria class is created, but no criteria
       are set.</li>
-  <li>Fixed a bug that caused the JavaModelGenerator's "trimStrings" property to fail</li>
+  <li>Fixed a bug that caused the ModelGenerator's "trimStrings" property to fail</li>
   <li>Fixed the XML file merger so that internal entities are preserved</li>
   <li>Fixed the XML configuration parser so that external entities are handled properly</li>
   <li>Fixed bug - incorrect datatype mapping for JDBC BIT datatype</li>
@@ -1034,9 +1039,9 @@ details the changes, and has methods of resolving the differences.</p>
       reference page for more information.</li>
   <li>If a <code>rootClass</code> is specified for any table, Abator will now check in the
       rootClass to see if a generated property already exists in the root class.  If it does,
-      Abator will not generate the property.  The &lt;javaModelGenerator&gt; element now
+      Abator will not generate the property.  The &lt;modelGenerator&gt; element now
       accepts a property to specify the classpath of the <code>rootClass</code>.  See the
-      <a href="configreference/javaModelGenerator.html">&lt;javaModelGenerator&gt;</a>
+      <a href="configreference/modelGenerator.html">&lt;modelGenerator&gt;</a>
       reference page for more information.  Thanks to Ashok Madhavan for the beginnings
       of this code.</li>
   <li>Allowed specifying a type (pre or post) for the generated key element.  See the

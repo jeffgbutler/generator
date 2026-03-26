@@ -44,7 +44,7 @@ public abstract class AbstractRuntime extends AbstractGenerator {
     }
 
     protected String getModelProject() {
-        return context.getJavaModelGeneratorConfiguration().getTargetProject();
+        return context.getModelGeneratorConfiguration().getTargetProject();
     }
 
     /**

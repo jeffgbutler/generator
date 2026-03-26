@@ -145,7 +145,7 @@ public class LegacyJavaRuntime extends AbstractRuntime {
     }
 
     protected String getExampleProject() {
-        String project = context.getJavaModelGeneratorConfiguration()
+        String project = context.getModelGeneratorConfiguration()
                 .getProperty(PropertyRegistry.MODEL_GENERATOR_EXAMPLE_PROJECT);
 
         if (StringUtility.stringHasValue(project)) {

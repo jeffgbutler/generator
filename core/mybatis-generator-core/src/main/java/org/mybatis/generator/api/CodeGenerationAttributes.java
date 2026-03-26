@@ -29,7 +29,7 @@ import org.jspecify.annotations.Nullable;
 import org.mybatis.generator.config.Context;
 import org.mybatis.generator.config.GeneratedKey;
 import org.mybatis.generator.config.JavaClientGeneratorConfiguration;
-import org.mybatis.generator.config.JavaModelGeneratorConfiguration;
+import org.mybatis.generator.config.ModelGeneratorConfiguration;
 import org.mybatis.generator.config.ModelType;
 import org.mybatis.generator.config.PropertyHolder;
 import org.mybatis.generator.config.PropertyRegistry;
@@ -105,27 +105,27 @@ public abstract class CodeGenerationAttributes {
         this.fullyQualifiedTable = Objects.requireNonNull(builder.fullyQualifiedTable);
         this.context = Objects.requireNonNull(builder.context);
 
-        String javaModelPackage = calculateJavaModelPackage();
+        String modelPackage = calculateModelPackage();
 
         aliasedFullyQualifiedRuntimeTableName = fullyQualifiedTable.getAliasedFullyQualifiedTableNameAtRuntime();
         baseColumnListId = "Base_Column_List"; //$NON-NLS-1$
-        baseRecordType = calculateBaseRecordType(javaModelPackage);
+        baseRecordType = calculateBaseRecordType(modelPackage);
         baseResultMapId = "BaseResultMap"; //$NON-NLS-1$
         blobColumnListId = "Blob_Column_List"; //$NON-NLS-1$
         countByExampleStatementId = "countByExample"; //$NON-NLS-1$
         deleteByExampleStatementId = "deleteByExample"; //$NON-NLS-1$
         deleteByPrimaryKeyStatementId = "deleteByPrimaryKey"; //$NON-NLS-1$
-        exampleType = calculateExampleType(javaModelPackage);
+        exampleType = calculateExampleType(modelPackage);
         exampleWhereClauseId = "Example_Where_Clause"; //$NON-NLS-1$
         fullyQualifiedTableNameAtRuntime = fullyQualifiedTable.getFullyQualifiedTableNameAtRuntime();
         insertSelectiveStatementId = "insertSelective"; //$NON-NLS-1$
         insertStatementId = "insert"; //$NON-NLS-1$
-        kotlinRecordType = calculateKotlinRecordType(javaModelPackage);
+        kotlinRecordType = calculateKotlinRecordType(modelPackage);
         myBatis3UpdateByExampleWhereClauseId = "Update_By_Example_Where_Clause"; //$NON-NLS-1$
         myBatis3XmlMapperFileName = calculateMyBatis3XmlMapperFileName();
         myBatisDynamicSQLTableObjectName = calculateMyBatisDynamicSQLTableObjectName();
-        primaryKeyType = calculatePrimaryKeyType(javaModelPackage);
-        recordWithBLOBsType = calculateRecordWithBLOBsType(javaModelPackage);
+        primaryKeyType = calculatePrimaryKeyType(modelPackage);
+        recordWithBLOBsType = calculateRecordWithBLOBsType(modelPackage);
         resultMapWithBLOBsId = "ResultMapWithBLOBs"; //$NON-NLS-1$
         rules = calculateRules();
         selectAllStatementId = "selectAll"; //$NON-NLS-1$
@@ -551,30 +551,30 @@ public abstract class CodeGenerationAttributes {
         return sb.toString();
     }
 
-    private String calculateJavaModelPackage() {
-        JavaModelGeneratorConfiguration config = context.getJavaModelGeneratorConfiguration();
+    private String calculateModelPackage() {
+        ModelGeneratorConfiguration config = context.getModelGeneratorConfiguration();
 
         return config.getTargetPackage() + getFullyQualifiedTable().getSubPackageForModel(isSubPackagesEnabled(config));
     }
 
-    private String calculatePrimaryKeyType(String javaModelPackage) {
-        return javaModelPackage + '.' + getFullyQualifiedTable().getDomainObjectName() + "Key"; //$NON-NLS-1$
+    private String calculatePrimaryKeyType(String modelPackage) {
+        return modelPackage + '.' + getFullyQualifiedTable().getDomainObjectName() + "Key"; //$NON-NLS-1$
     }
 
-    private String calculateBaseRecordType(String javaModelPackage) {
-        return javaModelPackage + '.' + getFullyQualifiedTable().getDomainObjectName();
+    private String calculateBaseRecordType(String modelPackage) {
+        return modelPackage + '.' + getFullyQualifiedTable().getDomainObjectName();
     }
 
-    private String calculateKotlinRecordType(String javaModelPackage) {
-        return javaModelPackage + '.' + getFullyQualifiedTable().getDomainObjectName();
+    private String calculateKotlinRecordType(String modelPackage) {
+        return modelPackage + '.' + getFullyQualifiedTable().getDomainObjectName();
     }
 
-    private String calculateRecordWithBLOBsType(String javaModelPackage) {
-        return javaModelPackage + '.' + getFullyQualifiedTable().getDomainObjectName() + "WithBLOBs"; //$NON-NLS-1$
+    private String calculateRecordWithBLOBsType(String modelPackage) {
+        return modelPackage + '.' + getFullyQualifiedTable().getDomainObjectName() + "WithBLOBs"; //$NON-NLS-1$
     }
 
-    private String calculateExampleType(String javaModelPackage) {
-        return calculateJavaModelExamplePackage(javaModelPackage) + '.'
+    private String calculateExampleType(String modelPackage) {
+        return calculateModelExamplePackage(modelPackage) + '.'
                 + getFullyQualifiedTable().getDomainObjectName() + "Example"; //$NON-NLS-1$
     }
 
@@ -584,11 +584,11 @@ public abstract class CodeGenerationAttributes {
      *
      * @return the calculated package
      */
-    protected String calculateJavaModelExamplePackage(String javaModelPackage) {
-        JavaModelGeneratorConfiguration config = context.getJavaModelGeneratorConfiguration();
+    protected String calculateModelExamplePackage(String modelPackage) {
+        ModelGeneratorConfiguration config = context.getModelGeneratorConfiguration();
         String exampleTargetPackage = config.getProperty(PropertyRegistry.MODEL_GENERATOR_EXAMPLE_PACKAGE);
         if (!stringHasValue(exampleTargetPackage)) {
-            return javaModelPackage;
+            return modelPackage;
         }
 
         return exampleTargetPackage + getFullyQualifiedTable().getSubPackageForModel(isSubPackagesEnabled(config));
@@ -681,7 +681,7 @@ public abstract class CodeGenerationAttributes {
         if (getTableConfiguration().getProperties().containsKey(PropertyRegistry.ANY_CONSTRUCTOR_BASED)) {
             properties = getTableConfiguration().getProperties();
         } else {
-            properties = context.getJavaModelGeneratorConfiguration().getProperties();
+            properties = context.getModelGeneratorConfiguration().getProperties();
         }
 
         return isTrue(properties.getProperty(PropertyRegistry.ANY_CONSTRUCTOR_BASED));
@@ -710,7 +710,7 @@ public abstract class CodeGenerationAttributes {
     public Optional<String> findTableOrModelGeneratorProperty(String property) {
         String value = getTableConfigurationProperty(property);
         if (!stringHasValue(value)) {
-            value = context.getJavaModelGeneratorConfiguration().getProperty(property);
+            value = context.getModelGeneratorConfiguration().getProperty(property);
         }
 
         return Optional.ofNullable(value);

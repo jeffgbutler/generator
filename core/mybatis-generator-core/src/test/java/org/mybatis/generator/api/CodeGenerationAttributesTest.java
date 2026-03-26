@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import org.junit.jupiter.api.Test;
 import org.mybatis.generator.config.Context;
 import org.mybatis.generator.config.JavaClientGeneratorConfiguration;
-import org.mybatis.generator.config.JavaModelGeneratorConfiguration;
+import org.mybatis.generator.config.ModelGeneratorConfiguration;
 import org.mybatis.generator.config.SqlMapGeneratorConfiguration;
 import org.mybatis.generator.config.TableConfiguration;
 import org.mybatis.generator.exception.InternalException;
@@ -415,14 +415,14 @@ class CodeGenerationAttributesTest {
 
     private IntrospectedTable generateMinimalTestObject() {
         // build a minimal IntrospectedTable so we can check for the optional attributes
-        JavaModelGeneratorConfiguration javaModelGeneratorConfiguration = new JavaModelGeneratorConfiguration.Builder()
+        ModelGeneratorConfiguration modelGeneratorConfiguration = new ModelGeneratorConfiguration.Builder()
                 .withTargetPackage("foo.bar")
                 .withTargetProject("TestProject")
                 .build();
 
         Context context = new Context.Builder()
                 .withId("test")
-                .withJavaModelGeneratorConfiguration(javaModelGeneratorConfiguration)
+                .withModelGeneratorConfiguration(modelGeneratorConfiguration)
                 .build();
 
         FullyQualifiedTable fullyQualifiedTable = new FullyQualifiedTable.Builder()
@@ -444,7 +444,7 @@ class CodeGenerationAttributesTest {
     }
 
     private IntrospectedTable generateNoClientTestObject() {
-        JavaModelGeneratorConfiguration javaModelGeneratorConfiguration = new JavaModelGeneratorConfiguration.Builder()
+        ModelGeneratorConfiguration modelGeneratorConfiguration = new ModelGeneratorConfiguration.Builder()
                 .withTargetPackage("foo.bar")
                 .withTargetProject("TestProject")
                 .build();
@@ -456,7 +456,7 @@ class CodeGenerationAttributesTest {
 
         Context context = new Context.Builder()
                 .withId("test")
-                .withJavaModelGeneratorConfiguration(javaModelGeneratorConfiguration)
+                .withModelGeneratorConfiguration(modelGeneratorConfiguration)
                 .withSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration)
                 .build();
 
@@ -479,7 +479,7 @@ class CodeGenerationAttributesTest {
     }
 
     private IntrospectedTable generateCompleteTestObject() {
-        JavaModelGeneratorConfiguration javaModelGeneratorConfiguration = new JavaModelGeneratorConfiguration.Builder()
+        ModelGeneratorConfiguration modelGeneratorConfiguration = new ModelGeneratorConfiguration.Builder()
                 .withTargetPackage("foo.bar")
                 .withTargetProject("TestProject")
                 .build();
@@ -496,7 +496,7 @@ class CodeGenerationAttributesTest {
 
         Context context = new Context.Builder()
                 .withId("test")
-                .withJavaModelGeneratorConfiguration(javaModelGeneratorConfiguration)
+                .withModelGeneratorConfiguration(modelGeneratorConfiguration)
                 .withSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration)
                 .withJavaClientGeneratorConfiguration(javaClientGeneratorConfiguration)
                 .build();

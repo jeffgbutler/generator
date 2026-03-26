@@ -43,7 +43,7 @@ import org.mybatis.generator.config.IgnoredColumnException;
 import org.mybatis.generator.config.IgnoredColumnPattern;
 import org.mybatis.generator.config.JDBCConnectionConfiguration;
 import org.mybatis.generator.config.JavaClientGeneratorConfiguration;
-import org.mybatis.generator.config.JavaModelGeneratorConfiguration;
+import org.mybatis.generator.config.ModelGeneratorConfiguration;
 import org.mybatis.generator.config.JavaTypeResolverConfiguration;
 import org.mybatis.generator.config.ModelType;
 import org.mybatis.generator.config.NullableProperties;
@@ -180,10 +180,10 @@ public class MyBatisGeneratorConfigurationParser {
             case "connectionFactory" ->  //$NON-NLS-1$
                     builder.withConnectionFactoryConfiguration(parseConnectionFactory(childNode));
             case "modelGenerator" ->  //$NON-NLS-1$
-                    builder.withJavaModelGeneratorConfiguration(parseJavaModelGenerator(childNode));
+                    builder.withModelGeneratorConfiguration(parseModelGenerator(childNode));
             case "javaModelGenerator" -> { //$NON-NLS-1$
                 warnings.add(Messages.getString("Warning.33")); //$NON-NLS-1$
-                builder.withJavaModelGeneratorConfiguration(parseJavaModelGenerator(childNode));
+                builder.withModelGeneratorConfiguration(parseModelGenerator(childNode));
             }
             case "javaTypeResolver" ->  //$NON-NLS-1$
                     builder.withJavaTypeResolverConfiguration(parseJavaTypeResolver(childNode));
@@ -427,12 +427,12 @@ public class MyBatisGeneratorConfigurationParser {
                 .build();
     }
 
-    protected JavaModelGeneratorConfiguration parseJavaModelGenerator(Node node) {
+    protected ModelGeneratorConfiguration parseModelGenerator(Node node) {
         NullableProperties attributes = parseAttributes(node);
         String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
         String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
         Properties properties = parseProperties(node.getChildNodes());
-        return new JavaModelGeneratorConfiguration.Builder()
+        return new ModelGeneratorConfiguration.Builder()
                 .withTargetPackage(targetPackage)
                 .withTargetProject(targetProject)
                 .withProperties(properties)

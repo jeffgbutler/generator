@@ -20,16 +20,17 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>The &lt;javaModelGenerator&gt; Element</title>
+  <title>The &lt;modelGenerator&gt; Element</title>
   <link rel="stylesheet" type="text/css" href="../mbgstyle.css" />
 </head>
 <body>
-<h1>The &lt;javaModelGenerator&gt; Element</h1>
-<p>The &lt;javaModelGenerator&gt; element is used to define properties of the Java model
-generator.  The Java Model Generator builds primary key classes, record classes, and
-Query by Example classes that match the introspected table. This element is a required
-child element
-of the <a href="context.html">&lt;context&gt;</a> element.</p>
+<h1>The &lt;modelGenerator&gt; Element</h1>
+<p>The &lt;modelGenerator&gt; element is used to define properties of the model
+  generator.  A model generator builds Java or Kotlin classes that match the introspected table. The format of
+  generated classes is highly dependent on the table structure and the target runtime. This element is a
+  required child element of the <a href="context.html">&lt;context&gt;</a> element.
+</p>
+
 <h2>Required Attributes</h2>
 <table border="1" cellspacing="0" cellpadding="5">
   <tr>
@@ -69,7 +70,7 @@ of the <a href="context.html">&lt;context&gt;</a> element.</p>
 </ul>
 
 <h2>Supported Properties</h2>
-<p>This table lists the properties of the default Java model generators that can be
+<p>This table lists the properties of the default model generators that can be
 specified with the <a href="property.html">&lt;property&gt;</a> child element:</p>
 <table border="1" cellspacing="0" cellpadding="5">
   <tr>
@@ -92,7 +93,7 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
   <tr>
     <td valign="top">enableSubPackages</td>
     <td>This property is used to select whether MyBatis Generator will generate different
-        Java packages for the objects based on the catalog and schema of the
+        packages for the objects based on the catalog and schema of the
         introspected table.
         <p>For example, suppose a table MYTABLE in schema MYSCHMA.
         Also suppose that the targetPackage attribute is set to "com.mycompany".
@@ -134,7 +135,7 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
   <tr>
     <td valign="top">rootClass</td>
     <td>This property can be used to specify a root class for all generated
-      Java model objects.  MyBatis Generator will specify this value as the super class
+      model objects.  MyBatis Generator will specify this value as the super class
       of the primary key object, if the table has a primary key, or the
       record object otherwise.  This value may be overridden by specifying
       the <code>rootClass</code> property on a Table configuration.
@@ -185,11 +186,11 @@ specified with the <a href="property.html">&lt;property&gt;</a> child element:</
 in the "test.model" package and that we want to use subpackages based on the
 table schema and catalog.  We also want String columns trimmed.</p>
 <pre>
-&lt;javaModelGenerator targetPackage="test.model"
+&lt;modelGenerator targetPackage="test.model"
      targetProject="\MyProject\src"&gt;
   &lt;property name="enableSubPackages" value="true" /&gt;
   &lt;property name="trimStrings" value="true" /&gt;
-&lt;/javaModelGenerator&gt;
+&lt;/modelGenerator&gt;
 </pre>
 
 </body>

@@ -23,12 +23,12 @@ import java.util.Objects;
 
 import org.jspecify.annotations.Nullable;
 
-public class JavaModelGeneratorConfiguration extends PropertyHolder {
+public class ModelGeneratorConfiguration extends PropertyHolder {
 
     private final String targetPackage;
     private final String targetProject;
 
-    protected JavaModelGeneratorConfiguration(Builder builder) {
+    protected ModelGeneratorConfiguration(Builder builder) {
         super(builder);
         this.targetPackage = Objects.requireNonNull(builder.targetPackage);
         this.targetProject = Objects.requireNonNull(builder.targetProject);
@@ -49,7 +49,7 @@ public class JavaModelGeneratorConfiguration extends PropertyHolder {
 
         if (!stringHasValue(targetPackage)) {
             errors.add(getString("ValidationError.12", //$NON-NLS-1$
-                    "JavaModelGenerator", contextId)); //$NON-NLS-1$
+                    "ModelGenerator", contextId)); //$NON-NLS-1$
         }
     }
 
@@ -67,8 +67,8 @@ public class JavaModelGeneratorConfiguration extends PropertyHolder {
             return this;
         }
 
-        public JavaModelGeneratorConfiguration build() {
-            return new JavaModelGeneratorConfiguration(this);
+        public ModelGeneratorConfiguration build() {
+            return new ModelGeneratorConfiguration(this);
         }
 
         @Override

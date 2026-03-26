@@ -50,9 +50,9 @@
         <item href="configreference/ignoreColumn.html" name="&lt;ignoreColumn&gt;" />
         <item href="configreference/ignoreColumnsByRegex.html" name="&lt;ignoreColumnsByRegex&gt;" />
         <item href="configreference/javaClientGenerator.html" name="&lt;javaClientGenerator&gt;" />
-        <item href="configreference/javaModelGenerator.html" name="&lt;javaModelGenerator&gt;" />
         <item href="configreference/javaTypeResolver.html" name="&lt;javaTypeResolver&gt;" />
         <item href="configreference/jdbcConnection.html" name="&lt;jdbcConnection&gt;" />
+        <item href="configreference/modelGenerator.html" name="&lt;modelGenerator&gt;" />
         <item href="configreference/plugin.html" name="&lt;plugin&gt;" />
         <item href="configreference/properties.html" name="&lt;properties&gt;" />
         <item href="configreference/property.html" name="&lt;property&gt;" />

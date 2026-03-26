@@ -30,7 +30,7 @@ import org.mybatis.generator.config.ConnectionFactoryConfiguration;
 import org.mybatis.generator.config.Context;
 import org.mybatis.generator.config.GeneratedKey;
 import org.mybatis.generator.config.JDBCConnectionConfiguration;
-import org.mybatis.generator.config.JavaModelGeneratorConfiguration;
+import org.mybatis.generator.config.ModelGeneratorConfiguration;
 import org.mybatis.generator.config.ModelType;
 import org.mybatis.generator.config.Property;
 import org.mybatis.generator.config.TableConfiguration;
@@ -66,7 +66,7 @@ class MyBatisGeneratorTest {
                 .withId("MyContext")
                 .withDefaultModelType(ModelType.FLAT)
                 .withTargetRuntime("MyBatis3Simple")
-                .withJavaModelGeneratorConfiguration(new JavaModelGeneratorConfiguration.Builder()
+                .withModelGeneratorConfiguration(new ModelGeneratorConfiguration.Builder()
                         .withTargetPackage("foo.bar")
                         .withTargetProject("MyProject")
                         .build())
@@ -93,7 +93,7 @@ class MyBatisGeneratorTest {
                 .withTargetRuntime("MyBatis3Simple")
                 .withConnectionFactoryConfiguration(new ConnectionFactoryConfiguration.Builder().build())
                 .withJdbcConnectionConfiguration(new JDBCConnectionConfiguration.Builder().withDriverClass("a").withConnectionURL("b").build())
-                .withJavaModelGeneratorConfiguration(new JavaModelGeneratorConfiguration.Builder()
+                .withModelGeneratorConfiguration(new ModelGeneratorConfiguration.Builder()
                         .withTargetPackage("foo.bar")
                         .withTargetProject("MyProject")
                         .build())
@@ -120,7 +120,7 @@ class MyBatisGeneratorTest {
                         .withDriverClass("a")
                         .withConnectionURL("b")
                         .build())
-                .withJavaModelGeneratorConfiguration(new JavaModelGeneratorConfiguration.Builder()
+                .withModelGeneratorConfiguration(new ModelGeneratorConfiguration.Builder()
                         .withTargetPackage("foo.bar")
                         .withTargetProject("MyProject")
                         .build())
@@ -144,7 +144,7 @@ class MyBatisGeneratorTest {
                         .withDriverClass("a")
                         .withConnectionURL("b")
                         .build())
-                .withJavaModelGeneratorConfiguration(new JavaModelGeneratorConfiguration.Builder()
+                .withModelGeneratorConfiguration(new ModelGeneratorConfiguration.Builder()
                         .withTargetPackage("foo.bar")
                         .withTargetProject("MyProject")
                         .build())
@@ -169,7 +169,7 @@ class MyBatisGeneratorTest {
                         .withDriverClass("a")
                         .withConnectionURL("b")
                         .build())
-                .withJavaModelGeneratorConfiguration(new JavaModelGeneratorConfiguration.Builder()
+                .withModelGeneratorConfiguration(new ModelGeneratorConfiguration.Builder()
                         .withTargetPackage("foo.bar")
                         .withTargetProject("MyProject")
                         .build())
@@ -194,7 +194,7 @@ class MyBatisGeneratorTest {
                         .withDriverClass("a")
                         .withConnectionURL("b")
                         .build())
-                .withJavaModelGeneratorConfiguration(new JavaModelGeneratorConfiguration.Builder()
+                .withModelGeneratorConfiguration(new ModelGeneratorConfiguration.Builder()
                         .withTargetPackage("foo.bar")
                         .withTargetProject("MyProject")
                         .build())

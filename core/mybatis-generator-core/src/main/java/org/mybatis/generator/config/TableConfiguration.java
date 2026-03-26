@@ -311,7 +311,7 @@ public class TableConfiguration extends PropertyHolder {
         if (getProperties().containsKey(PropertyRegistry.ANY_IMMUTABLE)) {
             properties = getProperties();
         } else {
-            properties = context.getJavaModelGeneratorConfiguration().getProperties();
+            properties = context.getModelGeneratorConfiguration().getProperties();
         }
 
         return isTrue(properties.getProperty(PropertyRegistry.ANY_IMMUTABLE));
@@ -323,7 +323,7 @@ public class TableConfiguration extends PropertyHolder {
         if (getProperties().containsKey(PropertyRegistry.GENERATE_KOTLIN_V1_MODEL)) {
             properties = getProperties();
         } else {
-            properties = context.getJavaModelGeneratorConfiguration().getProperties();
+            properties = context.getModelGeneratorConfiguration().getProperties();
         }
 
         return isTrue(properties.getProperty(PropertyRegistry.GENERATE_KOTLIN_V1_MODEL));
