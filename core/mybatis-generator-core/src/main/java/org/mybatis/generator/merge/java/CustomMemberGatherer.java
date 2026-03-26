@@ -79,11 +79,20 @@ public class CustomMemberGatherer {
     }
 
     private void gatherCustomBodyMemberIfNeeded(BodyDeclaration<?> member) {
-        if (hasGeneratedAnnotation(member)) {
+        // Generated annotation:
+        //  - Generated Keep - add to do not delete list
+        //  - Generated remove - return
+        //  - Not Generated - check for old Javadoc comments
+
+        GeneratedType generatedType = checkForGeneratedAnnotation(member);
+        if (generatedType == GeneratedType.GENERATED_KEEP) {
+            doNotDeleteBodyMembers.add(member);
+            return;
+        } else if (generatedType == GeneratedType.GENERATED_REMOVE) {
             return;
         }
 
-        GeneratedType generatedType = checkForGeneratedJavadocTag(member);
+        generatedType = checkForGeneratedJavadocTag(member);
         if (generatedType == GeneratedType.NOT_GENERATED) {
             customBodyMembers.add(member);
         } else if (generatedType == GeneratedType.GENERATED_KEEP) {
@@ -92,19 +101,32 @@ public class CustomMemberGatherer {
     }
 
     private void gatherCustomEnumConstantIfNeeded(EnumConstantDeclaration member) {
-        if (hasGeneratedAnnotation(member)) {
+        GeneratedType generatedType = checkForGeneratedAnnotation(member);
+        if (generatedType == GeneratedType.GENERATED_KEEP) {
+            customEnumConstants.add(member);
+            return;
+        } else if (generatedType == GeneratedType.GENERATED_REMOVE) {
             return;
         }
 
-        GeneratedType generatedType = checkForGeneratedJavadocTag(member);
+        generatedType = checkForGeneratedJavadocTag(member);
         if (generatedType == GeneratedType.NOT_GENERATED || generatedType == GeneratedType.GENERATED_KEEP) {
             customEnumConstants.add(member);
         }
     }
 
-    private boolean hasGeneratedAnnotation(BodyDeclaration<?> member) {
+    private GeneratedType checkForGeneratedAnnotation(BodyDeclaration<?> member) {
         return member.getAnnotations().stream()
-                .anyMatch(this::isOurGeneratedAnnotation);
+                .filter(this::isOurGeneratedAnnotation)
+                .findFirst()
+                .map(a -> {
+                    if (hasDoNotDeleteComment(a)) {
+                        return GeneratedType.GENERATED_KEEP;
+                    } else {
+                        return GeneratedType.GENERATED_REMOVE;
+                    }
+                })
+                .orElse(GeneratedType.NOT_GENERATED);
     }
 
     private boolean isOurGeneratedAnnotation(AnnotationExpr annotationExpr) {
@@ -131,6 +153,26 @@ public class CustomMemberGatherer {
         return false;
     }
 
+    private boolean hasDoNotDeleteComment(AnnotationExpr annotationExpr) {
+        // check the comments value for the do_not_delete marker string
+        if (annotationExpr.isSingleMemberAnnotationExpr()) {
+            // no comments in a single member annotation - only the single "value" member"
+            return false;
+        } else if (annotationExpr.isNormalAnnotationExpr()) {
+            return annotationExpr.asNormalAnnotationExpr().getPairs().stream()
+                    .filter(this::isCommentsPair)
+                    .map(MemberValuePair::getValue)
+                    .filter(Expression::isStringLiteralExpr)
+                    .map(Expression::asStringLiteralExpr)
+                    .findFirst()
+                    .map(StringLiteralExpr::asString)
+                    .map(s -> s.contains(MergeConstants.DO_NOT_DELETE_DURING_MERGE))
+                    .orElse(false);
+        }
+
+        return false;
+    }
+
     private boolean isGeneratedAnnotation(AnnotationExpr annotationExpr) {
         String annotationName = annotationExpr.getNameAsString();
         // Check for @Generated annotation (both javax and jakarta packages)
@@ -141,6 +183,10 @@ public class CustomMemberGatherer {
 
     private boolean isValuePair(MemberValuePair pair) {
         return pair.getName().asString().equals("value"); //$NON-NLS-1$
+    }
+
+    private boolean isCommentsPair(MemberValuePair pair) {
+        return pair.getName().asString().equals("comments"); //$NON-NLS-1$
     }
 
     private boolean annotationValueMatchesMyBatisGenerator(StringLiteralExpr expr) {

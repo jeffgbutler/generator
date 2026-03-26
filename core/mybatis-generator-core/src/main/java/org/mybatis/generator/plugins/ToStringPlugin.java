@@ -22,7 +22,6 @@ import java.util.Properties;
 
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
-import org.mybatis.generator.api.PluginUtilities;
 import org.mybatis.generator.api.dom.java.Field;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.api.dom.java.JavaVisibility;
@@ -72,11 +71,7 @@ public class ToStringPlugin extends PluginAdapter {
         method.setReturnType(FullyQualifiedJavaType.getStringInstance());
         method.addAnnotation("@Override"); //$NON-NLS-1$
 
-        if (PluginUtilities.isDynamicSql(introspectedTable)) {
-            commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, topLevelClass.getImportedTypes());
-        } else {
-            commentGenerator.addGeneralMethodComment(method, introspectedTable);
-        }
+        commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, topLevelClass.getImportedTypes());
 
         method.addBodyLine("StringBuilder sb = new StringBuilder();"); //$NON-NLS-1$
         method.addBodyLine("sb.append(getClass().getSimpleName());"); //$NON-NLS-1$

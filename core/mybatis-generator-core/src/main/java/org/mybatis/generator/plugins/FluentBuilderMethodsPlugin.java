@@ -20,7 +20,6 @@ import java.util.List;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
-import org.mybatis.generator.api.PluginUtilities;
 import org.mybatis.generator.api.dom.java.JavaVisibility;
 import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
@@ -55,12 +54,7 @@ public class FluentBuilderMethodsPlugin extends PluginAdapter {
         fluentMethod.setReturnType(topLevelClass.getType());
         fluentMethod.getParameters().addAll(method.getParameters());
 
-        if (PluginUtilities.isDynamicSql(introspectedTable)) {
-            commentGenerator.addGeneralMethodAnnotation(fluentMethod, introspectedTable,
-                    topLevelClass.getImportedTypes());
-        } else {
-            commentGenerator.addGeneralMethodComment(fluentMethod, introspectedTable);
-        }
+        commentGenerator.addGeneralMethodAnnotation(fluentMethod, introspectedTable, topLevelClass.getImportedTypes());
 
         String s = "this." //$NON-NLS-1$
                 + method.getName()

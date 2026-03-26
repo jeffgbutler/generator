@@ -52,34 +52,6 @@ public interface CommentGenerator {
     void addConfigurationProperties(Properties properties);
 
     /**
-     * This method should add a Javadoc comment to the specified field. The field is related to the
-     * specified table and is used to hold the value of the specified column.
-     *
-     * <p><b>Important:</b> This method should add the nonstandard JavaDoc tag "@mbg.generated" to
-     * the comment. Without this tag, the Eclipse based Java merge feature will fail.
-     *
-     * @param field
-     *            the field
-     * @param introspectedTable
-     *            the introspected table
-     * @param introspectedColumn
-     *            the introspected column
-     */
-    default void addFieldComment(Field field,
-            IntrospectedTable introspectedTable,
-            IntrospectedColumn introspectedColumn) {}
-
-    /**
-     * Adds the field comment.
-     *
-     * @param field
-     *            the field
-     * @param introspectedTable
-     *            the introspected table
-     */
-    default void addFieldComment(Field field, IntrospectedTable introspectedTable) {}
-
-    /**
      * Adds a comment for a model class.  The Java code merger should
      * be notified not to delete the entire class in case any manual
      * changes have been made.  So this method will always use the
@@ -94,8 +66,7 @@ public interface CommentGenerator {
      * @param introspectedTable
      *            the introspected table
      */
-    default void addModelClassComment(TopLevelClass topLevelClass,
-            IntrospectedTable introspectedTable) {}
+    default void addModelClassComment(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {}
 
     /**
      * Adds a comment for a model class.
@@ -105,87 +76,12 @@ public interface CommentGenerator {
      * @param introspectedTable
      *            the introspected table
      */
-    default void addModelClassComment(KotlinType modelClass,
-            IntrospectedTable introspectedTable) {}
-
-    /**
-     * Adds the inner class comment.
-     *
-     * @param innerClass
-     *            the inner class
-     * @param introspectedTable
-     *            the introspected table
-     */
-    default void addClassComment(InnerClass innerClass,
-            IntrospectedTable introspectedTable) {}
-
-    /**
-     * Adds the inner class comment.
-     *
-     * @param innerClass
-     *            the inner class
-     * @param introspectedTable
-     *            the introspected table
-     * @param markAsDoNotDelete
-     *            the mark as do not delete
-     */
-    default void addClassComment(InnerClass innerClass,
-            IntrospectedTable introspectedTable, boolean markAsDoNotDelete) {}
-
-    /**
-     * Adds the enum comment.
-     *
-     * @param innerEnum
-     *            the inner enum
-     * @param introspectedTable
-     *            the introspected table
-     */
-    default void addEnumComment(InnerEnum innerEnum,
-            IntrospectedTable introspectedTable) {}
-
-    /**
-     * Adds the getter comment.
-     *
-     * @param method
-     *            the method
-     * @param introspectedTable
-     *            the introspected table
-     * @param introspectedColumn
-     *            the introspected column
-     */
-    default void addGetterComment(Method method,
-            IntrospectedTable introspectedTable,
-            IntrospectedColumn introspectedColumn) {}
-
-    /**
-     * Adds the setter comment.
-     *
-     * @param method
-     *            the method
-     * @param introspectedTable
-     *            the introspected table
-     * @param introspectedColumn
-     *            the introspected column
-     */
-    default void addSetterComment(Method method,
-            IntrospectedTable introspectedTable,
-            IntrospectedColumn introspectedColumn) {}
-
-    /**
-     * Adds the general method comment.
-     *
-     * @param method
-     *            the method
-     * @param introspectedTable
-     *            the introspected table
-     */
-    default void addGeneralMethodComment(Method method,
-            IntrospectedTable introspectedTable) {}
+    default void addModelClassComment(KotlinType modelClass, IntrospectedTable introspectedTable) {}
 
     /**
      * This method is called to add a file level comment to a generated java file. This method
      * could be used to add a general file comment (such as a copyright notice). However, note
-     * that the Java file merge function in Eclipse does not deal with this comment. If you run
+     * that the Java file merge function may not preserve this comment. If you run
      * the generator repeatedly, you will only retain the comment from the initial run.
      *
      * <p>The default implementation does nothing.
@@ -240,7 +136,7 @@ public interface CommentGenerator {
      * @param introspectedTable
      *            the introspected table
      * @param introspectedColumn
-     *     thr introspected column
+     *     the introspected column
      * @param imports
      *     the comment generator may add a required imported type to this list
      *
@@ -297,6 +193,18 @@ public interface CommentGenerator {
             Set<FullyQualifiedJavaType> imports) {}
 
     /**
+     * Adds a @Generated annotation to a class and marks it as do not delete. This means that the class should survive
+     * a Java merge operation even if a newly generated method matches it (the new method will be discarded).
+     *
+     * @param innerClass the class
+     * @param introspectedTable the introspected table
+     * @param imports
+     *     the comment generator may add a required imported type to this list
+     */
+    default void addClassAnnotationAndMarkAsDoNotDelete(InnerClass innerClass, IntrospectedTable introspectedTable,
+                                                        Set<FullyQualifiedJavaType> imports) { }
+
+    /**
      * Adds a @Generated annotation to a record.
      *
      * @param innerRecord
@@ -310,6 +218,19 @@ public interface CommentGenerator {
      */
     default void addRecordAnnotation(InnerRecord innerRecord, IntrospectedTable introspectedTable,
                                      Set<FullyQualifiedJavaType> imports) {}
+
+    /**
+     * Adds a @Generated annotation to an enum.
+     *
+     * @param innerEnum the enum
+     * @param introspectedTable the introspected table
+     * @param imports
+     *     the comment generator may add a required imported type to this list
+     *
+     * @since 2.0.0
+     */
+    default void addEnumAnnotation(InnerEnum innerEnum, IntrospectedTable introspectedTable,
+                                   Set<FullyQualifiedJavaType> imports) {}
 
     /**
      * This method is called to add a file level comment to a generated Kotlin file. This method

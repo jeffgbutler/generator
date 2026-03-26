@@ -66,7 +66,7 @@ public class SelectByExampleWithoutBLOBsMethodGenerator extends AbstractJavaMapp
 
         method.addParameter(new Parameter(type, "example")); //$NON-NLS-1$
 
-        commentGenerator.addGeneralMethodComment(method, introspectedTable);
+        commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, importedTypes);
 
         return JavaMethodAndImports.withMethod(method)
                 .withImports(importedTypes)

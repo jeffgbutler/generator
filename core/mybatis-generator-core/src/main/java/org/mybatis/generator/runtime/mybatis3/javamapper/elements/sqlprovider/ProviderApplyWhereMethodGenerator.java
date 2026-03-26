@@ -63,7 +63,7 @@ public class ProviderApplyWhereMethodGenerator extends AbstractJavaClassMethodGe
         method.addParameter(new Parameter(FullyQualifiedJavaType.getBooleanPrimitiveInstance(),
                 "includeExamplePhrase")); //$NON-NLS-1$
 
-        commentGenerator.addGeneralMethodComment(method, introspectedTable);
+        commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, importedTypes);
 
         METHOD_LINES.forEach(method::addBodyLine);
 

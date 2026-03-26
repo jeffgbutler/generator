@@ -56,16 +56,16 @@ about how the library works. In particular, see the
     of corresponding database columns. The only exception to this is if a column is an identity column and a
     &lt;generatedKey&gt; configuration element is specified. In that case the field will be generated as mutable
     ("var") and nullable. This will allow MyBatis to retrieve the generated key and set the value in the model class.
-    It will also allow you to create a new instance without specifying a dummy valu for the generated key.
+    It will also allow you to create a new instance without specifying a dummy value for the generated key.
   </li>
 </ul>
 
 <h2>Format of the "Support" classes</h2>
 <p>A "support" class is created for each table.  The support class includes a definition of the table and all the columns
-in the table.  These items are used as input to the code generated in the mappers - most often for the where clauses you
+in the table.  These items are used as input to the code generated in the mappers – most often for the where clauses you
 will write.</p>
 
-<p>For example, suppose there is a table "TABLE_CODE" in schema "MYSCHEMA".  Further suppose that table has "ID" and
+<p>For example, suppose there is a table "TABLE_CODE" in schema "MYSCHEMA."  Further, suppose that the table has "ID" and
 "DESCRIPTION" columns.  The generated support class will look like this: </p>
 
 <pre>
@@ -87,9 +87,10 @@ object TableCodeDynamicSqlSupport {
 }
 </pre>
 
-<p>In your code you can import that table object and/or each generated column (Kotlin does not support a star "*" import in this case).
-With these imports you can refer to the fields
-in either a direct or qualified manner - "id" or "tableCode.id".</p>
+<p>In your code you can import that table object and/or each generated column (Kotlin does not support a star "*"
+  import in this case). With these imports you can refer to the fields in either a direct or qualified manner – "id"
+  or "tableCode.id".
+</p>
 
 <h2>Usage of the Mapper Classes</h2>
 <p>The following methods work the same as the other runtimes, and we won't cover them here:</p>
@@ -97,6 +98,7 @@ in either a direct or qualified manner - "id" or "tableCode.id".</p>
   <li>deleteByPrimaryKey</li>
   <li>insert - insert a single row (will insert nulls)</li>
   <li>insertMultiple - insert multiple rows (will insert nulls)</li>
+  <li>insertSelective - insert a single row and ignore null properties</li>
   <li>selectByPrimaryKey</li>
   <li>updateByPrimaryKey - will set null values</li>
 </ul>
@@ -113,7 +115,7 @@ where clause with a lambda.  The generator will create the following general met
 </ul>
 
 <p>Each of these methods includes support for a very flexible WHERE clause that can be specified with a lambda. If you
-don't need a where clauses, there are utility functions that mean "all rows".</p>
+don't need a where clause, there are utility functions that mean "all rows".</p>
 
 <p>For example, you can retrieve the total number of rows in a table by calling the count method without a WHERE clause.
 That code looks like this:</p>

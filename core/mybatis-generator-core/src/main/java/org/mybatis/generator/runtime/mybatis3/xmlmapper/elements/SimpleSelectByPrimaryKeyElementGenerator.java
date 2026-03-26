@@ -56,8 +56,7 @@ public class SimpleSelectByPrimaryKeyElementGenerator extends AbstractXmlMapperE
 
         buildSelectList("select ", introspectedTable.getAllColumns()).forEach(answer::addElement); //$NON-NLS-1$
 
-        String fromLine = "from " + //$NON-NLS-1$
-                introspectedTable.getAliasedFullyQualifiedRuntimeTableName();
+        String fromLine = "from " + introspectedTable.getAliasedFullyQualifiedRuntimeTableName(); //$NON-NLS-1$
         answer.addElement(new TextElement(fromLine));
 
         buildPrimaryKeyWhereClause().forEach(answer::addElement);

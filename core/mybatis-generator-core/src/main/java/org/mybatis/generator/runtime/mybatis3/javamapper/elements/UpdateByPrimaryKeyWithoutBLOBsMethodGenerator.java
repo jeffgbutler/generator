@@ -44,6 +44,7 @@ public class UpdateByPrimaryKeyWithoutBLOBsMethodGenerator extends AbstractJavaM
         importedTypes.add(parameterType);
 
         Method method = buildBasicUpdateByPrimaryKeyMethod(statementId, parameterType);
+        commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, importedTypes);
 
         return JavaMethodAndImports.withMethod(method)
                 .withImports(importedTypes)

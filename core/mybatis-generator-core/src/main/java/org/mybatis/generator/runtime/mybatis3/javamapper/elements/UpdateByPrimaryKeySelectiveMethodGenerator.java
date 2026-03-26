@@ -47,6 +47,7 @@ public class UpdateByPrimaryKeySelectiveMethodGenerator extends AbstractJavaMapp
         importedTypes.add(parameterType);
 
         Method method = buildBasicUpdateByPrimaryKeyMethod(statementId, parameterType);
+        commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, importedTypes);
 
         return JavaMethodAndImports.withMethod(method)
                 .withImports(importedTypes)

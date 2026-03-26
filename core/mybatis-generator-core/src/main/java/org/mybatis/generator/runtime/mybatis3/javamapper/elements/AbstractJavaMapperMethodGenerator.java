@@ -25,8 +25,11 @@ import static org.mybatis.generator.runtime.mybatis3.MyBatis3FormattingUtilities
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
@@ -53,23 +56,29 @@ public abstract class AbstractJavaMapperMethodGenerator extends AbstractJavaInte
         return answer;
     }
 
-    protected static String getResultAnnotation(IntrospectedColumn introspectedColumn, boolean idColumn,
-                                                boolean constructorBased) {
+    protected static String getResultAnnotation(IntrospectedColumn introspectedColumn, boolean idColumn) {
         StringBuilder sb = new StringBuilder();
-        if (constructorBased) {
-            sb.append("@Arg(column=\""); //$NON-NLS-1$
-            sb.append(getRenamedColumnNameForResultMap(introspectedColumn));
-            sb.append("\", javaType="); //$NON-NLS-1$
-            sb.append(introspectedColumn.getFullyQualifiedJavaType().getShortName());
-            sb.append(".class"); //$NON-NLS-1$
-        } else {
-            sb.append("@Result(column=\""); //$NON-NLS-1$
-            sb.append(getRenamedColumnNameForResultMap(introspectedColumn));
-            sb.append("\", property=\""); //$NON-NLS-1$
-            sb.append(introspectedColumn.getJavaProperty());
-            sb.append('\"');
-        }
+        sb.append("@Result(column=\""); //$NON-NLS-1$
+        sb.append(getRenamedColumnNameForResultMap(introspectedColumn));
+        sb.append("\", property=\""); //$NON-NLS-1$
+        sb.append(introspectedColumn.getJavaProperty());
+        sb.append('\"');
 
+        return finishAnnotation(sb, introspectedColumn, idColumn);
+    }
+
+    protected static String getArgAnnotation(IntrospectedColumn introspectedColumn, boolean idColumn) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("@Arg(column=\""); //$NON-NLS-1$
+        sb.append(getRenamedColumnNameForResultMap(introspectedColumn));
+        sb.append("\", javaType="); //$NON-NLS-1$
+        sb.append(introspectedColumn.getFullyQualifiedJavaType().getShortName());
+        sb.append(".class"); //$NON-NLS-1$
+
+        return finishAnnotation(sb, introspectedColumn, idColumn);
+    }
+
+    private static String finishAnnotation(StringBuilder sb, IntrospectedColumn introspectedColumn, boolean idColumn) {
         introspectedColumn.getTypeHandler().map(FullyQualifiedJavaType::new).ifPresent(th -> {
             sb.append(", typeHandler="); //$NON-NLS-1$
             sb.append(th.getShortName());
@@ -92,7 +101,6 @@ public abstract class AbstractJavaMapperMethodGenerator extends AbstractJavaInte
 
         if (introspectedTable.isConstructorBased() || introspectedTable.isRecordBased()) {
             answer.add(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Arg")); //$NON-NLS-1$
-            answer.add(new FullyQualifiedJavaType("org.apache.ibatis.annotations.ConstructorArgs")); //$NON-NLS-1$
         } else {
             answer.add(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Result")); //$NON-NLS-1$
             answer.add(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Results")); //$NON-NLS-1$
@@ -224,54 +232,58 @@ public abstract class AbstractJavaMapperMethodGenerator extends AbstractJavaInte
 
         importedTypes.add(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Param")); //$NON-NLS-1$
 
-        commentGenerator.addGeneralMethodComment(method, introspectedTable);
+        commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, importedTypes);
 
         return method;
     }
 
-    protected List<String> getAnnotatedResultAnnotations(List<IntrospectedColumn> nonPrimaryKeyColumns) {
-        List<String> annotations = new ArrayList<>();
-
+    protected List<String> getAnnotatedResultAnnotations(boolean includeBlobColumns) {
         boolean useConstructorArgs = introspectedTable.isConstructorBased() || introspectedTable.isRecordBased();
         if (useConstructorArgs) {
-            annotations.add("@ConstructorArgs({"); //$NON-NLS-1$
+            return buildArgAnnotations(includeBlobColumns);
         } else {
-            annotations.add("@Results({"); //$NON-NLS-1$
+            return buildResultsAnnotation(includeBlobColumns);
         }
+    }
 
-        StringBuilder sb = new StringBuilder();
+    private List<String> buildResultsAnnotation(boolean includeBlobColumns) {
+        LinkedList<String> annotations = new LinkedList<>();
+        annotations.add("@Results({"); //$NON-NLS-1$
 
-        Iterator<IntrospectedColumn> iterPk = introspectedTable.getPrimaryKeyColumns().iterator();
-        Iterator<IntrospectedColumn> iterNonPk = nonPrimaryKeyColumns.iterator();
-        while (iterPk.hasNext()) {
-            IntrospectedColumn introspectedColumn = iterPk.next();
-            sb.setLength(0);
-            javaIndent(sb, 1);
-            sb.append(getResultAnnotation(introspectedColumn, true, useConstructorArgs));
+        annotations.addAll(introspectedTable.getPrimaryKeyColumns()
+                .stream()
+                .map(c -> getResultAnnotation(c, true))
+                .map(s -> javaIndent(1) + s + ",") //$NON-NLS-1$
+                .toList());
+        annotations.addAll(
+                (includeBlobColumns ? introspectedTable.getNonPrimaryKeyColumns() : introspectedTable.getBaseColumns())
+                .stream()
+                .map(c -> getResultAnnotation(c, false))
+                .map(s -> javaIndent(1) + s + ",") //$NON-NLS-1$
+                .toList());
 
-            if (iterPk.hasNext() || iterNonPk.hasNext()) {
-                sb.append(',');
-            }
-
-            annotations.add(sb.toString());
-        }
-
-        while (iterNonPk.hasNext()) {
-            IntrospectedColumn introspectedColumn = iterNonPk.next();
-            sb.setLength(0);
-            javaIndent(sb, 1);
-            sb.append(getResultAnnotation(introspectedColumn, false, useConstructorArgs));
-
-            if (iterNonPk.hasNext()) {
-                sb.append(',');
-            }
-
-            annotations.add(sb.toString());
-        }
+        // remove comma from last element...
+        String lastAnnotation = annotations.removeLast();
+        lastAnnotation = lastAnnotation.substring(0, lastAnnotation.length() - 1);
+        annotations.add(lastAnnotation);
 
         annotations.add("})"); //$NON-NLS-1$
 
         return annotations;
+    }
+
+    private List<String> buildArgAnnotations(boolean includeBlobColumns) {
+        Stream<String> pk = introspectedTable.getPrimaryKeyColumns()
+                .stream()
+                .map(c -> getArgAnnotation(c, true));
+        Stream<String> nonPk =
+                (includeBlobColumns ? introspectedTable.getNonPrimaryKeyColumns() : introspectedTable.getBaseColumns())
+                .stream()
+                .map(c -> getArgAnnotation(c, false));
+
+        return Stream.of(pk, nonPk)
+                .flatMap(Function.identity())
+                .toList();
     }
 
     protected Method buildBasicUpdateByPrimaryKeyMethod(String statementId, FullyQualifiedJavaType parameterType) {
@@ -280,8 +292,6 @@ public abstract class AbstractJavaMapperMethodGenerator extends AbstractJavaInte
         method.setAbstract(true);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.addParameter(new Parameter(parameterType, "row")); //$NON-NLS-1$
-
-        commentGenerator.addGeneralMethodComment(method, introspectedTable);
         return method;
     }
 
