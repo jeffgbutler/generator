@@ -67,7 +67,7 @@ public class ProviderUpdateByExampleSelectiveMethodGenerator extends AbstractJav
         method.addBodyLine(String.format("%s example = (%s) parameter.get(\"example\");", //$NON-NLS-1$
                 example.getShortName(), example.getShortName()));
 
-        commentGenerator.addGeneralMethodComment(method, introspectedTable);
+        commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, importedTypes);
 
         method.addBodyLine(""); //$NON-NLS-1$
 

@@ -20,28 +20,23 @@ package org.mybatis.generator.merge.java;
  * "do_not_delete_during_merge" survive the merge. This is something
  * supported in the legacy example classes.
  */
-public class ShouldPreserveItemsMarkedAsDoNotDelete extends JavaMergeTestCase {
+public class ShouldPreserveItemsMarkedAsDoNotDeleteAnnotation extends JavaMergeTestCase {
     @Override
     public String existingContent(String parameter) {
         return """
               package mbg.test.mb3.generated.flat.model;
 
+              import jakarta.annotation.Generated;
               import java.util.List;
 
               public class PkfieldsExample {
-                  /**
-                   * @mbg.generated do_not_delete_during_merge (existing)
-                   */
+                  @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="do_not_delete_during_merge (existing)")
                   protected int id;
 
-                  /**
-                   * @mbg.generated
-                   */
+                  @Generated("org.mybatis.generator.api.MyBatisGenerator")
                   protected List<Criteria> oredCriteria;
 
-                  /**
-                   * @mbg.generated
-                   */
+                  @Generated("org.mybatis.generator.api.MyBatisGenerator")
                   public PkfieldsExample() {
                       oredCriteria = new ArrayList<>();
                   }
@@ -49,38 +44,28 @@ public class ShouldPreserveItemsMarkedAsDoNotDelete extends JavaMergeTestCase {
                   public void customMethod() {
                   }
 
-                  /**
-                   * @mbg.generated do_not_delete_during_merge
-                   */
+                  @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="do_not_delete_during_merge")
                   public int getId() {
                       // existing
                       return id;
                   }
 
-                  /**
-                   * @mbg.generated
-                   */
+                  @Generated("org.mybatis.generator.api.MyBatisGenerator")
                   public List<Criteria> getOredCriteria() {
                       return oredCriteria;
                   }
 
-                  /**
-                   * @mbg.generated
-                   */
+                  @Generated("org.mybatis.generator.api.MyBatisGenerator")
                   public void clear() {
                       oredCriteria.clear();
                   }
 
-                  /**
-                   * @mbg.generated
-                   */
+                  @Generated("org.mybatis.generator.api.MyBatisGenerator")
                   protected abstract static class GeneratedCriteria {
                       protected List<Criterion> allCriteria;
                   }
 
-                  /**
-                   * @mbg.generated do_not_delete_during_merge
-                   */
+                  @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="do_not_delete_during_merge")
                   public static class Criteria extends GeneratedCriteria {
                       protected Criteria() {
                           super();
@@ -91,9 +76,7 @@ public class ShouldPreserveItemsMarkedAsDoNotDelete extends JavaMergeTestCase {
                       }
                   }
 
-                  /**
-                   * @mbg.generated
-                   */
+                  @Generated("org.mybatis.generator.api.MyBatisGenerator")
                   public static class Criterion {
                       private String condition;
                   }
@@ -106,36 +89,27 @@ public class ShouldPreserveItemsMarkedAsDoNotDelete extends JavaMergeTestCase {
         return """
               package mbg.test.mb3.generated.flat.model;
 
+              import jakarta.annotation.Generated;
               import java.util.List;
 
               public class PkfieldsExample {
-                  /**
-                   * @mbg.generated do_not_delete_during_merge
-                   */
+                  @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="do_not_delete_during_merge")
                   protected int id;
 
-                  /**
-                   * @mbg.generated
-                   */
+                  @Generated("org.mybatis.generator.api.MyBatisGenerator")
                   public void reset() {
                   }
 
-                  /**
-                   * @mbg.generated
-                   */
+                  @Generated("org.mybatis.generator.api.MyBatisGenerator")
                   protected abstract static class GeneratedCriteria {
                   }
 
-                  /**
-                   * @mbg.generated do_not_delete_during_merge
-                   */
+                  @Generated("org.mybatis.generator.api.MyBatisGenerator")
                   public int getId() {
                       return id;
                   }
 
-                  /**
-                   * @mbg.generated do_not_delete_during_merge
-                   */
+                  @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="do_not_delete_during_merge")
                   public static class Criteria extends GeneratedCriteria {
                       protected Criteria() {
                           super();
@@ -152,39 +126,31 @@ public class ShouldPreserveItemsMarkedAsDoNotDelete extends JavaMergeTestCase {
 
               import java.util.List;
 
+              import jakarta.annotation.Generated;
+
               public class PkfieldsExample {
 
-                  /**
-                   * @mbg.generated
-                   */
+                  @Generated("org.mybatis.generator.api.MyBatisGenerator")
                   public void reset() {
                   }
 
-                  /**
-                   * @mbg.generated
-                   */
+                  @Generated("org.mybatis.generator.api.MyBatisGenerator")
                   protected abstract static class GeneratedCriteria {
                   }
 
                   public void customMethod() {
                   }
 
-                  /**
-                   * @mbg.generated do_not_delete_during_merge (existing)
-                   */
+                  @Generated(value = "org.mybatis.generator.api.MyBatisGenerator", comments = "do_not_delete_during_merge (existing)")
                   protected int id;
 
-                  /**
-                   * @mbg.generated do_not_delete_during_merge
-                   */
+                  @Generated(value = "org.mybatis.generator.api.MyBatisGenerator", comments = "do_not_delete_during_merge")
                   public int getId() {
                       // existing
                       return id;
                   }
 
-                  /**
-                   * @mbg.generated do_not_delete_during_merge
-                   */
+                  @Generated(value = "org.mybatis.generator.api.MyBatisGenerator", comments = "do_not_delete_during_merge")
                   public static class Criteria extends GeneratedCriteria {
 
                       protected Criteria() {

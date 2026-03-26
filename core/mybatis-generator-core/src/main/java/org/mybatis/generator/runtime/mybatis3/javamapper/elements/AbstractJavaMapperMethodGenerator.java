@@ -232,7 +232,7 @@ public abstract class AbstractJavaMapperMethodGenerator extends AbstractJavaInte
 
         importedTypes.add(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Param")); //$NON-NLS-1$
 
-        commentGenerator.addGeneralMethodComment(method, introspectedTable);
+        commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, importedTypes);
 
         return method;
     }
@@ -255,8 +255,8 @@ public abstract class AbstractJavaMapperMethodGenerator extends AbstractJavaInte
                 .map(c -> getResultAnnotation(c, true))
                 .map(s -> javaIndent(1) + s + ",") //$NON-NLS-1$
                 .toList());
-        annotations.addAll((includeBlobColumns ?
-                introspectedTable.getNonPrimaryKeyColumns() : introspectedTable.getBaseColumns())
+        annotations.addAll(
+                (includeBlobColumns ? introspectedTable.getNonPrimaryKeyColumns() : introspectedTable.getBaseColumns())
                 .stream()
                 .map(c -> getResultAnnotation(c, false))
                 .map(s -> javaIndent(1) + s + ",") //$NON-NLS-1$
@@ -276,8 +276,8 @@ public abstract class AbstractJavaMapperMethodGenerator extends AbstractJavaInte
         Stream<String> pk = introspectedTable.getPrimaryKeyColumns()
                 .stream()
                 .map(c -> getArgAnnotation(c, true));
-        Stream<String> nonPk = (includeBlobColumns ?
-                introspectedTable.getNonPrimaryKeyColumns() : introspectedTable.getBaseColumns())
+        Stream<String> nonPk =
+                (includeBlobColumns ? introspectedTable.getNonPrimaryKeyColumns() : introspectedTable.getBaseColumns())
                 .stream()
                 .map(c -> getArgAnnotation(c, false));
 
