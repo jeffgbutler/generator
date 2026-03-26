@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2006-2025 the original author or authors.
+       Copyright 2006-2026 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -31,18 +31,17 @@ For each table in the configuration, MBG generates a MyBatis mapper interface.
 Generating Java client objects is optional, and is controlled by the
 <code>&lt;javaClientGenerator&gt;</code> configuration element.</p>
 
-<p>Every field and method generated includes the non-standard JavaDoc tag
-<code>@mbg.generated</code>.  When run from the Eclipse plugin,
-on subsequent runs every field and method that
-includes this JavaDoc tag will be deleted and replaced.  Any other field or method in the
-class will be untouched.
+<p>Every field and method generated includes the <code>jakarta.annotation.Generated</code> annotation.
+In addition to providing good documentation, this enables the Java merger to understand what can be deleted
+on later generation runs.  Any field or method in the
+class that does not include this annotation will be untouched.
 With this in mind, you can add other fields and methods to the classes without fear of losing them in
-subsequent runs - simply DO NOT include the <code>@mbg.generated</code>
-JavaDoc tag on anything that you add to the class.</p>
+later runs - simply DO NOT include the <code>@Generated</code>
+annotation on anything that you add to the class.</p>
 
-<p>Outside of the Eclipse plugin, Java files need to be merged by hand, but you can use the
-<code>@mbg.generated</code> JavaDoc tag to know what is safe to delete from a prior
-version of a file.</p>
+<p>Note that the <code>@Generated</code> annotation includes the full name of the generator as a parameter and the
+  Java merger will only interact with annotations from MBG.
+</p>
 
 <p>Note: in the following descriptions, the term "BLOB" is used to refer to any column
 with a data type of BLOB, CLOB, LONGVARCHAR, or LONGVARBINARY.</p>
