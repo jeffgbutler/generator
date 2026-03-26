@@ -232,7 +232,7 @@ public abstract class AbstractJavaMapperMethodGenerator extends AbstractJavaInte
 
         importedTypes.add(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Param")); //$NON-NLS-1$
 
-        commentGenerator.addGeneralMethodComment(method, introspectedTable);
+        commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, importedTypes);
 
         return method;
     }

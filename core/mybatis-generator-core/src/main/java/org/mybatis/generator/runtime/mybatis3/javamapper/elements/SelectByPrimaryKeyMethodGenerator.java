@@ -55,7 +55,7 @@ public class SelectByPrimaryKeyMethodGenerator extends AbstractJavaMapperMethodG
         if (isSimple) {
             commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, importedTypes);
         } else {
-            commentGenerator.addGeneralMethodComment(method, introspectedTable);
+            commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, importedTypes);
         }
 
         return JavaMethodAndImports.withMethod(method)

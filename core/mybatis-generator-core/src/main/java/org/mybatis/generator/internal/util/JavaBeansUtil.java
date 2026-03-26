@@ -16,6 +16,7 @@
 package org.mybatis.generator.internal.util;
 
 import java.util.Locale;
+import java.util.Set;
 
 import org.mybatis.generator.api.CommentGenerator;
 import org.mybatis.generator.api.IntrospectedColumn;
@@ -179,9 +180,10 @@ public class JavaBeansUtil {
     }
 
     public static Method getJavaBeansGetter(IntrospectedColumn introspectedColumn, CommentGenerator commentGenerator,
-                                            IntrospectedTable introspectedTable) {
+                                            IntrospectedTable introspectedTable,
+                                            Set<FullyQualifiedJavaType> importedTypes) {
         Method method = getBasicJavaBeansGetter(introspectedColumn);
-        commentGenerator.addGetterComment(method, introspectedTable, introspectedColumn);
+        commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, introspectedColumn, importedTypes);
         return method;
     }
 
@@ -211,9 +213,10 @@ public class JavaBeansUtil {
     }
 
     public static Field getJavaBeansField(IntrospectedColumn introspectedColumn, CommentGenerator commentGenerator,
-                                          IntrospectedTable introspectedTable) {
+                                          IntrospectedTable introspectedTable,
+                                          Set<FullyQualifiedJavaType> importedTypes) {
         Field field = getBasicJavaBeansField(introspectedColumn);
-        commentGenerator.addFieldComment(field, introspectedTable, introspectedColumn);
+        commentGenerator.addFieldAnnotation(field, introspectedTable, introspectedColumn, importedTypes);
         return field;
     }
 
@@ -239,9 +242,10 @@ public class JavaBeansUtil {
     }
 
     public static Method getJavaBeansSetter(IntrospectedColumn introspectedColumn,
-                                            CommentGenerator commentGenerator, IntrospectedTable introspectedTable) {
+                                            CommentGenerator commentGenerator, IntrospectedTable introspectedTable,
+                                            Set<FullyQualifiedJavaType> importedTypes) {
         Method method = getBasicJavaBeansSetter(introspectedColumn);
-        commentGenerator.addSetterComment(method, introspectedTable, introspectedColumn);
+        commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, introspectedColumn, importedTypes);
         return method;
     }
 

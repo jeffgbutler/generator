@@ -56,7 +56,7 @@ public class ProviderInsertSelectiveMethodGenerator extends AbstractJavaClassMet
         method.setReturnType(FullyQualifiedJavaType.getStringInstance());
         method.addParameter(new Parameter(fqjt, "row")); //$NON-NLS-1$
 
-        commentGenerator.addGeneralMethodComment(method, introspectedTable);
+        commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, importedTypes);
 
         method.addBodyLine("SQL sql = new SQL();"); //$NON-NLS-1$
 

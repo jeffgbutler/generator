@@ -54,7 +54,8 @@ public class ProviderUpdateByExampleWithoutBLOBsMethodGenerator extends Abstract
                 new FullyQualifiedJavaType("java.util.Map<java.lang.String, java.lang.Object>"), //$NON-NLS-1$
                 "parameter")); //$NON-NLS-1$
 
-        commentGenerator.addGeneralMethodComment(method, introspectedTable);
+        Set<FullyQualifiedJavaType> importedTypes = new HashSet<>();
+        commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, importedTypes);
 
         method.addBodyLine("SQL sql = new SQL();"); //$NON-NLS-1$
 
@@ -73,7 +74,6 @@ public class ProviderUpdateByExampleWithoutBLOBsMethodGenerator extends Abstract
 
         method.addBodyLine(""); //$NON-NLS-1$
 
-        Set<FullyQualifiedJavaType> importedTypes = new HashSet<>();
         importedTypes.add(MyBatis3FormattingUtilities.BUILDER_IMPORT);
         importedTypes.add(new FullyQualifiedJavaType("java.util.Map")); //$NON-NLS-1$
 

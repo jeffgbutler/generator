@@ -198,10 +198,19 @@
   </li>
   <li>The comment generator has changed in the following ways:
     <ul>
+      <li>The comment generator no longer produces JavaDoc with a non-standard JavaDoc tag. We now exclusively
+        use the "jakarta.annotation.Generated" annotation.
+      </li>
       <li>Support for the property "dateFormat" has been removed. All timestamps are now formatted in ISO 8601 format.
       </li>
       <li>Support for the property "useLegacyGeneratedAnnotation" has been removed. All generated annotations are now
         "jakarta.annotation.Generated".
+      </li>
+      <li>The "suppressAllComments" property has changed – if true, then nothing will be added to a generated file.
+        This will effectively disable the Java and XML merge functionality.
+      </li>
+      <li>A property "minimizeComments" can be specified that will cause the comment generator to add the
+        minimum to support Java and XML merging (no timestamps or other comments will be added)
       </li>
     </ul>
   </li>

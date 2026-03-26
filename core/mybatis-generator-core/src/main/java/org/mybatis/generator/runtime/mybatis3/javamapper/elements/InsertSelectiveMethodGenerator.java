@@ -50,7 +50,7 @@ public class InsertSelectiveMethodGenerator extends AbstractJavaMapperMethodGene
         importedTypes.add(parameterType);
         method.addParameter(new Parameter(parameterType, "row")); //$NON-NLS-1$
 
-        commentGenerator.addGeneralMethodComment(method, introspectedTable);
+        commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, importedTypes);
 
         return JavaMethodAndImports.withMethod(method)
                 .withImports(importedTypes)

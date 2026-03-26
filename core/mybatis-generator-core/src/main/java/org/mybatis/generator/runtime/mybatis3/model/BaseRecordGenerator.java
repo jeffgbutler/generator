@@ -70,7 +70,7 @@ public class BaseRecordGenerator extends AbstractJavaGenerator {
 
             if (!introspectedTable.isImmutable()) {
                 Method method = topLevelClass.generateBasicConstructor();
-                commentGenerator.addGeneralMethodComment(method, introspectedTable);
+                commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, topLevelClass.getImportedTypes());
                 topLevelClass.addMethod(method);
             }
         }
@@ -82,21 +82,24 @@ public class BaseRecordGenerator extends AbstractJavaGenerator {
                 continue;
             }
 
-            Field field = getJavaBeansField(introspectedColumn, commentGenerator, introspectedTable);
+            Field field = getJavaBeansField(introspectedColumn, commentGenerator, introspectedTable,
+                    topLevelClass.getImportedTypes());
             if (pluginAggregator.modelFieldGenerated(field, topLevelClass, introspectedColumn, introspectedTable,
                     Plugin.ModelClassType.BASE_RECORD)) {
                 topLevelClass.addField(field);
                 topLevelClass.addImportedType(field.getType());
             }
 
-            Method method = getJavaBeansGetter(introspectedColumn, commentGenerator, introspectedTable);
+            Method method = getJavaBeansGetter(introspectedColumn, commentGenerator, introspectedTable,
+                    topLevelClass.getImportedTypes());
             if (pluginAggregator.modelGetterMethodGenerated(method, topLevelClass, introspectedColumn,
                     introspectedTable, Plugin.ModelClassType.BASE_RECORD)) {
                 topLevelClass.addMethod(method);
             }
 
             if (!introspectedTable.isImmutable()) {
-                method = getJavaBeansSetter(introspectedColumn, commentGenerator, introspectedTable);
+                method = getJavaBeansSetter(introspectedColumn, commentGenerator, introspectedTable,
+                        topLevelClass.getImportedTypes());
                 if (pluginAggregator.modelSetterMethodGenerated(method, topLevelClass, introspectedColumn,
                         introspectedTable, Plugin.ModelClassType.BASE_RECORD)) {
                     topLevelClass.addMethod(method);
@@ -134,7 +137,7 @@ public class BaseRecordGenerator extends AbstractJavaGenerator {
         Method method = new Method(topLevelClass.getType().getShortName());
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setConstructor(true);
-        commentGenerator.addGeneralMethodComment(method, introspectedTable);
+        commentGenerator.addGeneralMethodAnnotation(method, introspectedTable, topLevelClass.getImportedTypes());
 
         for (IntrospectedColumn introspectedColumn : constructorColumns) {
             method.addParameter(new Parameter(introspectedColumn.getFullyQualifiedJavaType(),

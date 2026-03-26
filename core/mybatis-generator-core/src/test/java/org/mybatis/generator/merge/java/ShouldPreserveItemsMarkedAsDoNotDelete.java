@@ -17,8 +17,8 @@ package org.mybatis.generator.merge.java;
 
 /**
  * This test case verifies that generated items with the special text
- * "do_not_delete_during_merge" survive the merge. This is something that is
- * supported in the legacy model classes.
+ * "do_not_delete_during_merge" survive the merge. This is something
+ * supported in the legacy example classes.
  */
 public class ShouldPreserveItemsMarkedAsDoNotDelete extends JavaMergeTestCase {
     @Override
