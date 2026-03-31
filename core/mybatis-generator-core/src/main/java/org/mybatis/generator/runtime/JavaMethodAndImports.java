@@ -88,7 +88,7 @@ public class JavaMethodAndImports {
 
         public Builder withExtraMethodParts(JavaMethodParts javaMethodParts) {
             if (method == null) {
-                throw new InternalException(getString("RuntimeError.31")); //$NON-NLS-1$
+                throw new InternalException(getString("RuntimeError.30")); //$NON-NLS-1$
             }
 
             for (Parameter parameter : javaMethodParts.getParameters()) {

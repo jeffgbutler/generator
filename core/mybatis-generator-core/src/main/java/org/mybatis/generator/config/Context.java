@@ -36,7 +36,7 @@ public class Context extends PropertyHolder {
     private final @Nullable SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration;
     private final @Nullable JavaTypeResolverConfiguration javaTypeResolverConfiguration;
     private final ModelGeneratorConfiguration modelGeneratorConfiguration;
-    private final @Nullable JavaClientGeneratorConfiguration javaClientGeneratorConfiguration;
+    private final @Nullable ClientGeneratorConfiguration clientGeneratorConfiguration;
     private final List<TableConfiguration> tableConfigurations;
     private final ModelType defaultModelType;
     private final String beginningDelimiter;
@@ -62,7 +62,7 @@ public class Context extends PropertyHolder {
         introspectedColumnImpl = builder.introspectedColumnImpl;
         modelGeneratorConfiguration = Objects.requireNonNull(builder.modelGeneratorConfiguration,
                 getString("ValidationError.8", id)); //$NON-NLS-1$
-        javaClientGeneratorConfiguration = builder.javaClientGeneratorConfiguration;
+        clientGeneratorConfiguration = builder.clientGeneratorConfiguration;
         targetRuntime = builder.targetRuntime;
 
         String property = getProperty(PropertyRegistry.CONTEXT_BEGINNING_DELIMITER);
@@ -88,8 +88,8 @@ public class Context extends PropertyHolder {
         }
     }
 
-    public Optional<JavaClientGeneratorConfiguration> getJavaClientGeneratorConfiguration() {
-        return Optional.ofNullable(javaClientGeneratorConfiguration);
+    public Optional<ClientGeneratorConfiguration> getClientGeneratorConfiguration() {
+        return Optional.ofNullable(clientGeneratorConfiguration);
     }
 
     public ModelGeneratorConfiguration getModelGeneratorConfiguration() {
@@ -130,14 +130,14 @@ public class Context extends PropertyHolder {
 
         modelGeneratorConfiguration.validate(errors, id);
 
-        if (javaClientGeneratorConfiguration != null) {
-            javaClientGeneratorConfiguration.validate(errors, id);
+        KnownRuntime knownRuntime = KnownRuntime.getByAlias(targetRuntime);
+        if (clientGeneratorConfiguration != null) {
+            clientGeneratorConfiguration.validate(errors, id, knownRuntime);
         }
 
-        KnownRuntime knownRuntime = KnownRuntime.getByAlias(targetRuntime);
         if (knownRuntime.isLegacyMyBatis3Based()
-                && javaClientGeneratorConfiguration != null
-                && javaClientGeneratorConfiguration.requiresXmlMapper()
+                && clientGeneratorConfiguration != null
+                && clientGeneratorConfiguration.requiresXmlMapper()
                 && sqlMapGeneratorConfiguration == null) {
             errors.add(getString("ValidationError.9", id)); //$NON-NLS-1$
         }
@@ -243,7 +243,7 @@ public class Context extends PropertyHolder {
         private @Nullable SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration;
         private @Nullable JavaTypeResolverConfiguration javaTypeResolverConfiguration;
         private @Nullable ModelGeneratorConfiguration modelGeneratorConfiguration;
-        private @Nullable JavaClientGeneratorConfiguration javaClientGeneratorConfiguration;
+        private @Nullable ClientGeneratorConfiguration clientGeneratorConfiguration;
 
         @Override
         protected Builder getThis() {
@@ -254,7 +254,7 @@ public class Context extends PropertyHolder {
             return new Context(this);
         }
 
-        public Builder withId(@Nullable String id) {
+        public Builder withId(String id) {
             this.id = id;
             return this;
         }
@@ -323,9 +323,8 @@ public class Context extends PropertyHolder {
         }
 
         @SuppressWarnings("UnusedReturnValue")
-        public Builder withJavaClientGeneratorConfiguration(
-                JavaClientGeneratorConfiguration javaClientGeneratorConfiguration) {
-            this.javaClientGeneratorConfiguration = javaClientGeneratorConfiguration;
+        public Builder withClientGeneratorConfiguration(ClientGeneratorConfiguration clientGeneratorConfiguration) {
+            this.clientGeneratorConfiguration = clientGeneratorConfiguration;
             return this;
         }
     }

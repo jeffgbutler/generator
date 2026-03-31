@@ -30,6 +30,7 @@ import java.util.Optional;
 import java.util.Properties;
 
 import org.jspecify.annotations.Nullable;
+import org.mybatis.generator.config.ClientGeneratorConfiguration;
 import org.mybatis.generator.config.ColumnOverride;
 import org.mybatis.generator.config.ColumnRenamingRule;
 import org.mybatis.generator.config.CommentGeneratorConfiguration;
@@ -42,9 +43,8 @@ import org.mybatis.generator.config.IgnoredColumn;
 import org.mybatis.generator.config.IgnoredColumnException;
 import org.mybatis.generator.config.IgnoredColumnPattern;
 import org.mybatis.generator.config.JDBCConnectionConfiguration;
-import org.mybatis.generator.config.JavaClientGeneratorConfiguration;
-import org.mybatis.generator.config.ModelGeneratorConfiguration;
 import org.mybatis.generator.config.JavaTypeResolverConfiguration;
+import org.mybatis.generator.config.ModelGeneratorConfiguration;
 import org.mybatis.generator.config.ModelType;
 import org.mybatis.generator.config.NullableProperties;
 import org.mybatis.generator.config.PluginConfiguration;
@@ -151,6 +151,7 @@ public class MyBatisGeneratorConfigurationParser {
         String targetRuntime = attributes.getProperty("targetRuntime"); //$NON-NLS-1$
         String introspectedColumnImpl = attributes.getProperty("introspectedColumnImpl"); //$NON-NLS-1$
         String id = attributes.getProperty("id"); //$NON-NLS-1$
+        assert id != null;
         ModelType dmt =
                 defaultModelType == null ? null : ModelType.getModelType(defaultModelType);
 
@@ -190,10 +191,10 @@ public class MyBatisGeneratorConfigurationParser {
             case "sqlMapGenerator" ->  //$NON-NLS-1$
                     builder.withSqlMapGeneratorConfiguration(parseSqlMapGenerator(childNode));
             case "clientGenerator" ->  //$NON-NLS-1$
-                    builder.withJavaClientGeneratorConfiguration(parseJavaClientGenerator(childNode));
+                    builder.withClientGeneratorConfiguration(parseClientGenerator(childNode, id));
             case "javaClientGenerator" -> { //$NON-NLS-1$
                 warnings.add(Messages.getString("Warning.34")); //$NON-NLS-1$
-                builder.withJavaClientGeneratorConfiguration(parseJavaClientGenerator(childNode));
+                builder.withClientGeneratorConfiguration(parseClientGenerator(childNode, id));
             }
             case "table" ->  //$NON-NLS-1$
                     builder.withTableConfiguration(parseTable(childNode));
@@ -439,14 +440,22 @@ public class MyBatisGeneratorConfigurationParser {
                 .build();
     }
 
-    private JavaClientGeneratorConfiguration parseJavaClientGenerator(Node node) {
+    private ClientGeneratorConfiguration parseClientGenerator(Node node, String contextId) {
         NullableProperties attributes = parseAttributes(node);
         String type = attributes.getProperty("type"); //$NON-NLS-1$
         String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
         String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
         Properties properties = parseProperties(node.getChildNodes());
-        return new JavaClientGeneratorConfiguration.Builder()
-                .withConfigurationType(type)
+        ClientGeneratorConfiguration.LegacyClientType legacyClientType = null;
+        if (type != null) {
+            legacyClientType = ClientGeneratorConfiguration.LegacyClientType.getByAlias(type);
+            if (legacyClientType == null) {
+                warnings.add(getString("ValidationError.31", type, contextId)); //$NON-NLS-1$
+            }
+        }
+
+        return new ClientGeneratorConfiguration.Builder()
+                .withLegacyClientType(legacyClientType)
                 .withTargetPackage(targetPackage)
                 .withTargetProject(targetProject)
                 .withProperties(properties)

@@ -26,9 +26,9 @@ import java.util.Optional;
 import java.util.Properties;
 
 import org.jspecify.annotations.Nullable;
+import org.mybatis.generator.config.ClientGeneratorConfiguration;
 import org.mybatis.generator.config.Context;
 import org.mybatis.generator.config.GeneratedKey;
-import org.mybatis.generator.config.JavaClientGeneratorConfiguration;
 import org.mybatis.generator.config.ModelGeneratorConfiguration;
 import org.mybatis.generator.config.ModelType;
 import org.mybatis.generator.config.PropertyHolder;
@@ -142,7 +142,7 @@ public abstract class CodeGenerationAttributes {
         context.getSqlMapGeneratorConfiguration().ifPresent(config ->
                 myBatis3XmlMapperPackage = calculateSqlMapPackage(config));
 
-        context.getJavaClientGeneratorConfiguration().ifPresent(config -> {
+        context.getClientGeneratorConfiguration().ifPresent(config -> {
             myBatis3JavaMapperType = calculateMyBatis3JavaMapperType(config);
             myBatis3SqlProviderType = calculateMyBatis3SqlProviderType(config);
             myBatisDynamicSqlSupportType = calculateMyBatisDynamicSqlSupportType(config);
@@ -487,17 +487,17 @@ public abstract class CodeGenerationAttributes {
         return isTrue(propertyHolder.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES));
     }
 
-    protected String calculateJavaClientInterfacePackage(JavaClientGeneratorConfiguration config) {
+    protected String calculateClientInterfacePackage(ClientGeneratorConfiguration config) {
         return config.getTargetPackage()
                 + getFullyQualifiedTable().getSubPackageForClientOrSqlMap(isSubPackagesEnabled(config));
     }
 
-    protected String calculateDynamicSqlSupportPackage(JavaClientGeneratorConfiguration c) {
+    protected String calculateDynamicSqlSupportPackage(ClientGeneratorConfiguration c) {
         String pkg = c.getProperty(PropertyRegistry.CLIENT_DYNAMIC_SQL_SUPPORT_PACKAGE);
         if (stringHasValue(pkg)) {
             return pkg + getFullyQualifiedTable().getSubPackageForClientOrSqlMap(isSubPackagesEnabled(c));
         } else {
-            return calculateJavaClientInterfacePackage(c);
+            return calculateClientInterfacePackage(c);
         }
     }
 
@@ -509,9 +509,9 @@ public abstract class CodeGenerationAttributes {
         }
     }
 
-    private String calculateMyBatis3JavaMapperType(JavaClientGeneratorConfiguration config) {
+    private String calculateMyBatis3JavaMapperType(ClientGeneratorConfiguration config) {
         StringBuilder sb = new StringBuilder();
-        sb.append(calculateJavaClientInterfacePackage(config));
+        sb.append(calculateClientInterfacePackage(config));
         sb.append('.');
         if (stringHasValue(getTableConfiguration().getMapperName())) {
             sb.append(getTableConfiguration().getMapperName());
@@ -523,9 +523,9 @@ public abstract class CodeGenerationAttributes {
         return sb.toString();
     }
 
-    private String calculateMyBatis3SqlProviderType(JavaClientGeneratorConfiguration config) {
+    private String calculateMyBatis3SqlProviderType(ClientGeneratorConfiguration config) {
         StringBuilder sb = new StringBuilder();
-        sb.append(calculateJavaClientInterfacePackage(config));
+        sb.append(calculateClientInterfacePackage(config));
         sb.append('.');
         if (stringHasValue(getTableConfiguration().getSqlProviderName())) {
             sb.append(getTableConfiguration().getSqlProviderName());
@@ -537,7 +537,7 @@ public abstract class CodeGenerationAttributes {
         return sb.toString();
     }
 
-    private String calculateMyBatisDynamicSqlSupportType(JavaClientGeneratorConfiguration config) {
+    private String calculateMyBatisDynamicSqlSupportType(ClientGeneratorConfiguration config) {
         StringBuilder sb = new StringBuilder();
         sb.append(calculateDynamicSqlSupportPackage(config));
         sb.append('.');
@@ -719,7 +719,7 @@ public abstract class CodeGenerationAttributes {
     public Optional<String> findTableOrClientGeneratorProperty(String property) {
         String value = getTableConfigurationProperty(property);
         if (!stringHasValue(value)) {
-            value = context.getJavaClientGeneratorConfiguration()
+            value = context.getClientGeneratorConfiguration()
                     .map(c -> c.getProperty(property))
                     .orElse(null);
         }

@@ -56,7 +56,7 @@ class MyBatisGeneratorTest {
         InvalidConfigurationException e =
                 assertThrows(InvalidConfigurationException.class, myBatisGenerator::generateOnly);
 
-        assertEquals(2, e.getErrors().size());
+        assertEquals(6, e.getErrors().size());
     }
 
     @Test

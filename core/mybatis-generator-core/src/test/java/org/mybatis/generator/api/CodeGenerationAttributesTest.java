@@ -19,8 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import org.junit.jupiter.api.Test;
+import org.mybatis.generator.config.ClientGeneratorConfiguration;
 import org.mybatis.generator.config.Context;
-import org.mybatis.generator.config.JavaClientGeneratorConfiguration;
 import org.mybatis.generator.config.ModelGeneratorConfiguration;
 import org.mybatis.generator.config.SqlMapGeneratorConfiguration;
 import org.mybatis.generator.config.TableConfiguration;
@@ -489,7 +489,7 @@ class CodeGenerationAttributesTest {
                 .withTargetProject("TestProject")
                 .build();
 
-        JavaClientGeneratorConfiguration javaClientGeneratorConfiguration = new JavaClientGeneratorConfiguration.Builder()
+        ClientGeneratorConfiguration clientGeneratorConfiguration = new ClientGeneratorConfiguration.Builder()
                 .withTargetPackage("foo.bar")
                 .withTargetProject("TestProject")
                 .build();
@@ -498,7 +498,7 @@ class CodeGenerationAttributesTest {
                 .withId("test")
                 .withModelGeneratorConfiguration(modelGeneratorConfiguration)
                 .withSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration)
-                .withJavaClientGeneratorConfiguration(javaClientGeneratorConfiguration)
+                .withClientGeneratorConfiguration(clientGeneratorConfiguration)
                 .build();
 
         FullyQualifiedTable fullyQualifiedTable = new FullyQualifiedTable.Builder()

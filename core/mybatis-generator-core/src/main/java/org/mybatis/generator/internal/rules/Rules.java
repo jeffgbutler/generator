@@ -232,14 +232,14 @@ public interface Rules {
     boolean generateRecordWithBLOBsClass();
 
     /**
-     * Implements the rule for generating a Java client.  This rule is
-     * only active when a javaClientGenerator configuration has been
+     * Implements the rule for generating a client.  This rule is
+     * only active when a clientGenerator configuration has been
      * specified, but the table is designated as "modelOnly".  Do not
      * generate the client if the table is designated as modelOnly.
      *
      * @return true if the Java client should be generated
      */
-    boolean generateJavaClient();
+    boolean generateClient();
 
     /**
      * In the DSQL runtimes, we only generate delete by primary key if the table has primary key columns.
