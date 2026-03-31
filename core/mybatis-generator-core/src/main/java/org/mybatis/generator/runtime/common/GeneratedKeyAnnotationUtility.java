@@ -35,9 +35,9 @@ public class GeneratedKeyAnnotationUtility {
 
     private static final String OPTIONS_TEMPLATE =
             "@Options(useGeneratedKeys=true, keyProperty=\"%s\", keyColumn=\"%s\")"; //$NON-NLS-1$
-    private static final String JAVA_SElECT_KEY_TEMPLATE =
+    private static final String JAVA_SELECT_KEY_TEMPLATE =
             "@SelectKey(statement=\"%s\", keyProperty=\"%s\", before=%s, resultType=%s.class)"; //$NON-NLS-1$
-    private static final String KOTLIN_SElECT_KEY_TEMPLATE =
+    private static final String KOTLIN_SELECT_KEY_TEMPLATE =
             "@SelectKey(statement=[\"%s\"], keyProperty=\"%s\", before=%s, resultType=%s::class)"; //$NON-NLS-1$
 
     public static Optional<JavaMethodParts> getLegacyJavaGeneratedKeyAnnotation(IntrospectedTable introspectedTable,
@@ -79,9 +79,9 @@ public class GeneratedKeyAnnotationUtility {
         JavaMethodParts.Builder builder = new JavaMethodParts.Builder();
         builder.withImport(new FullyQualifiedJavaType(SELECT_KEY_IMPORT));
         FullyQualifiedJavaType fqjt = introspectedColumn.getFullyQualifiedJavaType();
-        String annotation = String.format(JAVA_SElECT_KEY_TEMPLATE,
+        String annotation = String.format(JAVA_SELECT_KEY_TEMPLATE,
                 gk.getRuntimeSqlStatement(),
-                prefix.prefix() + introspectedColumn.getJavaProperty(),
+                prefix.value() + introspectedColumn.getJavaProperty(),
                 !gk.isIdentity(),
                 fqjt.getShortName());
         builder.withAnnotation(annotation);
@@ -93,7 +93,7 @@ public class GeneratedKeyAnnotationUtility {
         JavaMethodParts.Builder builder = new JavaMethodParts.Builder();
         builder.withImport(new FullyQualifiedJavaType(OPTIONS_IMPORT));
         String annotation = String.format(OPTIONS_TEMPLATE,
-                prefix.prefix() + introspectedColumn.getJavaProperty(),
+                prefix.value() + introspectedColumn.getJavaProperty(),
                 escapeStringForJava(introspectedColumn.getActualColumnName()));
         builder.withAnnotation(annotation);
         return builder.build();
@@ -119,9 +119,9 @@ public class GeneratedKeyAnnotationUtility {
                 builder.withImport(SELECT_KEY_IMPORT);
                 FullyQualifiedKotlinType kt =
                         JavaToKotlinTypeConverter.convert(introspectedColumn.getFullyQualifiedJavaType());
-                String annotation = String.format(KOTLIN_SElECT_KEY_TEMPLATE,
+                String annotation = String.format(KOTLIN_SELECT_KEY_TEMPLATE,
                         gk.getRuntimeSqlStatement(),
-                        Prefix.DSQL_SINGLE_ROW.prefix() + introspectedColumn.getJavaProperty(),
+                        Prefix.DSQL_SINGLE_ROW.value() + introspectedColumn.getJavaProperty(),
                         !gk.isIdentity(),
                         kt.getShortNameWithoutTypeArguments());
                 builder.withAnnotation(annotation);
@@ -135,7 +135,7 @@ public class GeneratedKeyAnnotationUtility {
         KotlinFunctionParts.Builder builder = new KotlinFunctionParts.Builder();
         builder.withImport(OPTIONS_IMPORT);
         String annotation = String.format(OPTIONS_TEMPLATE,
-                prefix.prefix() + introspectedColumn.getJavaProperty(),
+                prefix.value() + introspectedColumn.getJavaProperty(),
                 escapeStringForKotlin(introspectedColumn.getActualColumnName()));
         builder.withAnnotation(annotation);
         return builder.build();
@@ -146,14 +146,14 @@ public class GeneratedKeyAnnotationUtility {
         DSQL_SINGLE_ROW("row."), //$NON-NLS-1$
         DSQL_MULTI_ROW("records."); //$NON-NLS-1$
 
-        private final String prefix;
+        private final String value;
 
-        Prefix(String prefix) {
-            this.prefix = prefix;
+        Prefix(String value) {
+            this.value = value;
         }
 
-        public String prefix() {
-            return prefix;
+        public String value() {
+            return value;
         }
     }
 }

@@ -68,25 +68,22 @@ public class SerializablePlugin extends PluginAdapter {
     @Override
     public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass,
             IntrospectedTable introspectedTable) {
-        makeSerializable(topLevelClass, introspectedTable);
-        return true;
+        return makeSerializable(topLevelClass, introspectedTable);
     }
 
     @Override
     public boolean modelPrimaryKeyClassGenerated(TopLevelClass topLevelClass,
             IntrospectedTable introspectedTable) {
-        makeSerializable(topLevelClass, introspectedTable);
-        return true;
+        return makeSerializable(topLevelClass, introspectedTable);
     }
 
     @Override
     public boolean modelRecordWithBLOBsClassGenerated(
             TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        makeSerializable(topLevelClass, introspectedTable);
-        return true;
+        return makeSerializable(topLevelClass, introspectedTable);
     }
 
-    protected void makeSerializable(TopLevelClass topLevelClass,
+    protected boolean makeSerializable(TopLevelClass topLevelClass,
             IntrospectedTable introspectedTable) {
         if (addGWTInterface) {
             topLevelClass.addImportedType(gwtSerializable);
@@ -108,6 +105,8 @@ public class SerializablePlugin extends PluginAdapter {
 
             topLevelClass.addField(field);
         }
+
+        return true;
     }
 
     @Override

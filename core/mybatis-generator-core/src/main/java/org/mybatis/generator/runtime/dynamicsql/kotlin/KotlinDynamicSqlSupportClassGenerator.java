@@ -34,20 +34,17 @@ import org.mybatis.generator.internal.util.StringUtility;
 import org.mybatis.generator.internal.util.messages.Messages;
 
 public class KotlinDynamicSqlSupportClassGenerator extends AbstractGenerator {
-    private KotlinFile kotlinFile;
-    private KotlinType innerClass;
-    private KotlinType outerObject;
-    private KotlinProperty tableProperty;
+    private final KotlinFile kotlinFile;
+    private final KotlinType innerClass;
+    private final KotlinType outerObject;
+    private final KotlinProperty tableProperty;
     private final boolean useSnakeCase;
 
     public KotlinDynamicSqlSupportClassGenerator(Builder builder) {
         super(builder);
         useSnakeCase = introspectedTable
                 .findTableOrClientGeneratorPropertyAsBoolean(PropertyRegistry.ANY_USE_SNAKE_CASE_IDENTIFIERS);
-        generate();
-    }
 
-    private void generate() {
         FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedTable.getMyBatisDynamicSqlSupportType());
 
         kotlinFile = buildBasicFile(type);

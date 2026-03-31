@@ -28,6 +28,7 @@ import org.mybatis.generator.api.ConnectionFactory;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.JavaFormatter;
 import org.mybatis.generator.api.JavaTypeResolver;
+import org.mybatis.generator.api.KnownRuntime;
 import org.mybatis.generator.api.KotlinFormatter;
 import org.mybatis.generator.api.Plugin;
 import org.mybatis.generator.api.XmlFormatter;
@@ -191,11 +192,12 @@ public class ObjectFactory {
     }
 
     public static Plugin createPlugin(Context context, PluginConfiguration pluginConfiguration,
-                                      CommentGenerator commentGenerator) {
+                                      CommentGenerator commentGenerator, KnownRuntime knownRuntime) {
         Plugin plugin = createInternalObject(pluginConfiguration.getConfigurationType().orElseThrow());
         plugin.setContext(context);
         plugin.setProperties(pluginConfiguration.getProperties());
         plugin.setCommentGenerator(commentGenerator);
+        plugin.setKnownRuntime(knownRuntime);
         return plugin;
     }
 

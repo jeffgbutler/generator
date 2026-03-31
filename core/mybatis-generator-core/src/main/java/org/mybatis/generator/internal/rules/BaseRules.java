@@ -16,7 +16,6 @@
 package org.mybatis.generator.internal.rules;
 
 import org.mybatis.generator.api.IntrospectedTable;
-import org.mybatis.generator.api.PluginUtilities;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.config.GeneratedKey;
 import org.mybatis.generator.config.PropertyRegistry;
@@ -274,8 +273,8 @@ public abstract class BaseRules implements Rules {
             return false;
         }
 
-        boolean isLegacyMybatis3 = PluginUtilities.isLegacyMyBatis3(introspectedTable);
-        return isLegacyMybatis3 && tableConfiguration.isUpdateByExampleStatementEnabled();
+        return introspectedTable.getKnownRuntime().isLegacyMyBatis3Based()
+                && tableConfiguration.isUpdateByExampleStatementEnabled();
     }
 
     /**

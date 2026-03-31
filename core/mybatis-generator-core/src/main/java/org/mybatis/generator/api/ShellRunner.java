@@ -53,7 +53,7 @@ public class ShellRunner {
         if (args.length == 0) {
             usage();
             System.exit(0);
-            return; // only to satisfy compiler, never returns
+            return; // only to satisfy the compiler, never returns
         }
 
         Map<String, String> arguments = parseCommandLine(args);
@@ -61,7 +61,7 @@ public class ShellRunner {
         if (arguments.containsKey(HELP_1)) {
             usage();
             System.exit(0);
-            return; // only to satisfy compiler, never returns
+            return; // only to satisfy the compiler, never returns
         }
 
         if (!arguments.containsKey(CONFIG_FILE)) {
@@ -109,7 +109,6 @@ public class ShellRunner {
             for (String error : e.getErrors()) {
                 writeLine(error);
             }
-
             return;
         } catch (SQLException | IOException e) {
             e.printStackTrace(System.out);
@@ -157,8 +156,7 @@ public class ShellRunner {
                 if ((i + 1) < args.length) {
                     arguments.put(CONFIG_FILE, args[i + 1]);
                 } else {
-                    errors.add(getString(
-                            "RuntimeError.19", CONFIG_FILE)); //$NON-NLS-1$
+                    errors.add(getString("RuntimeError.19", CONFIG_FILE)); //$NON-NLS-1$
                 }
                 i++;
             } else if (OVERWRITE.equalsIgnoreCase(args[i])) {
@@ -177,8 +175,7 @@ public class ShellRunner {
                 if ((i + 1) < args.length) {
                     arguments.put(CONTEXT_IDS, args[i + 1]);
                 } else {
-                    errors.add(getString(
-                            "RuntimeError.19", CONTEXT_IDS)); //$NON-NLS-1$
+                    errors.add(getString("RuntimeError.19", CONTEXT_IDS)); //$NON-NLS-1$
                 }
                 i++;
             } else if (TABLES.equalsIgnoreCase(args[i])) {

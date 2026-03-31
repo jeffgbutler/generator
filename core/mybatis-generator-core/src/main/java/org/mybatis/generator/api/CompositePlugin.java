@@ -73,6 +73,13 @@ public abstract class CompositePlugin implements Plugin {
     }
 
     @Override
+    public void setKnownRuntime(KnownRuntime knownRuntime) {
+        for (Plugin plugin : plugins) {
+            plugin.setKnownRuntime(knownRuntime);
+        }
+    }
+
+    @Override
     public void initialized(IntrospectedTable introspectedTable) {
         for (Plugin plugin : plugins) {
             plugin.initialized(introspectedTable);
@@ -396,7 +403,7 @@ public abstract class CompositePlugin implements Plugin {
 
     @Override
     public boolean clientGeneralUpdateMethodGenerated(Method method, Interface interfaze,
-            IntrospectedTable introspectedTable) {
+                                                      IntrospectedTable introspectedTable) {
         for (Plugin plugin : plugins) {
             if (!plugin.clientGeneralUpdateMethodGenerated(method, interfaze, introspectedTable)) {
                 return false;

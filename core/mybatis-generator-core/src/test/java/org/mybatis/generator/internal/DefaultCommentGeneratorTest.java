@@ -42,8 +42,9 @@ class DefaultCommentGeneratorTest {
         Field field = new Field("testField", FullyQualifiedJavaType.getStringInstance());
         commentGenerator.addFieldAnnotation(field, getTestTable(), imports);
         String annotation = field.getAnnotations().get(0);
-        assertThat(annotation).startsWith("@Generated(value=\"org.mybatis.generator.api.MyBatisGenerator\", date=");
-        assertThat(annotation).endsWith(", comments=\"Source Table: test\")");
+        assertThat(annotation)
+                .startsWith("@Generated(value=\"org.mybatis.generator.api.MyBatisGenerator\", date=")
+                .endsWith(", comments=\"Source Table: test\")");
     }
 
     @Test
@@ -98,8 +99,9 @@ class DefaultCommentGeneratorTest {
         InnerClass innerClass = new InnerClass("Bar");
         commentGenerator.addClassAnnotationAndMarkAsDoNotDelete(innerClass, getTestTable(), imports);
         String annotation = innerClass.getAnnotations().get(0);
-        assertThat(annotation).startsWith("@Generated(value=\"org.mybatis.generator.api.MyBatisGenerator\", date=");
-        assertThat(annotation).endsWith(", comments=\"do_not_delete_during_merge\")");
+        assertThat(annotation)
+                .startsWith("@Generated(value=\"org.mybatis.generator.api.MyBatisGenerator\", date=")
+                .endsWith(", comments=\"do_not_delete_during_merge\")");
     }
 
     @Test

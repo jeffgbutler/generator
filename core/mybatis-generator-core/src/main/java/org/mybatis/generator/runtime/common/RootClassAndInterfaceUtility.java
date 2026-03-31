@@ -24,6 +24,10 @@ import org.mybatis.generator.api.dom.java.Interface;
 import org.mybatis.generator.config.PropertyRegistry;
 
 public class RootClassAndInterfaceUtility {
+    private RootClassAndInterfaceUtility() {
+        // utility class - no instances
+    }
+
     public static Optional<String> getRootClass(IntrospectedTable introspectedTable) {
         return introspectedTable.findTableOrModelGeneratorProperty(PropertyRegistry.ANY_ROOT_CLASS);
     }

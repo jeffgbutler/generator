@@ -44,28 +44,22 @@ public class ToStringPlugin extends PluginAdapter {
     }
 
     @Override
-    public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass,
-            IntrospectedTable introspectedTable) {
-        generateToString(introspectedTable, topLevelClass);
-        return true;
+    public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        return generateToString(introspectedTable, topLevelClass);
     }
 
     @Override
-    public boolean modelRecordWithBLOBsClassGenerated(
-            TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        generateToString(introspectedTable, topLevelClass);
-        return true;
+    public boolean modelRecordWithBLOBsClassGenerated(TopLevelClass topLevelClass,
+                                                      IntrospectedTable introspectedTable) {
+        return generateToString(introspectedTable, topLevelClass);
     }
 
     @Override
-    public boolean modelPrimaryKeyClassGenerated(TopLevelClass topLevelClass,
-            IntrospectedTable introspectedTable) {
-        generateToString(introspectedTable, topLevelClass);
-        return true;
+    public boolean modelPrimaryKeyClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        return generateToString(introspectedTable, topLevelClass);
     }
 
-    private void generateToString(IntrospectedTable introspectedTable,
-            TopLevelClass topLevelClass) {
+    private boolean generateToString(IntrospectedTable introspectedTable, TopLevelClass topLevelClass) {
         Method method = new Method("toString"); //$NON-NLS-1$
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getStringInstance());
@@ -95,5 +89,7 @@ public class ToStringPlugin extends PluginAdapter {
         method.addBodyLine("return sb.toString();"); //$NON-NLS-1$
 
         topLevelClass.addMethod(method);
+
+        return true;
     }
 }

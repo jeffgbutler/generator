@@ -249,30 +249,25 @@ public class EqualsHashCodePlugin extends PluginAdapter {
         StringBuilder sb = new StringBuilder();
         boolean hasTemp = false;
         for (IntrospectedColumn introspectedColumn : introspectedColumns) {
-            FullyQualifiedJavaType fqjt = introspectedColumn
-                    .getFullyQualifiedJavaType();
-
-            String getterMethod = getGetterMethodName(
-                    introspectedColumn.getJavaProperty(), fqjt);
+            FullyQualifiedJavaType fqjt = introspectedColumn.getFullyQualifiedJavaType();
+            String getterMethod = getGetterMethodName(introspectedColumn.getJavaProperty(), fqjt);
 
             sb.setLength(0);
             if (fqjt.isPrimitive()) {
-                if ("boolean".equals(fqjt.getFullyQualifiedName())) { //$NON-NLS-1$
+                switch (fqjt.getFullyQualifiedName()) {
+                case "boolean": //$NON-NLS-1$
                     sb.append("result = prime * result + ("); //$NON-NLS-1$
                     sb.append(getterMethod);
                     sb.append("() ? 1231 : 1237);"); //$NON-NLS-1$
                     method.addBodyLine(sb.toString());
-                } else if ("byte".equals(fqjt.getFullyQualifiedName())) { //$NON-NLS-1$
+                    break;
+                case "byte", "char", "int", "short": //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                     sb.append("result = prime * result + "); //$NON-NLS-1$
                     sb.append(getterMethod);
                     sb.append("();"); //$NON-NLS-1$
                     method.addBodyLine(sb.toString());
-                } else if ("char".equals(fqjt.getFullyQualifiedName())) { //$NON-NLS-1$
-                    sb.append("result = prime * result + "); //$NON-NLS-1$
-                    sb.append(getterMethod);
-                    sb.append("();"); //$NON-NLS-1$
-                    method.addBodyLine(sb.toString());
-                } else if ("double".equals(fqjt.getFullyQualifiedName())) { //$NON-NLS-1$
+                    break;
+                case "double": //$NON-NLS-1$
                     if (!hasTemp) {
                         method.addBodyLine("long temp;"); //$NON-NLS-1$
                         hasTemp = true;
@@ -281,31 +276,25 @@ public class EqualsHashCodePlugin extends PluginAdapter {
                     sb.append(getterMethod);
                     sb.append("());"); //$NON-NLS-1$
                     method.addBodyLine(sb.toString());
-                    method
-                            .addBodyLine("result = prime * result + (int) (temp ^ (temp >>> 32));"); //$NON-NLS-1$
-                } else if ("float".equals(fqjt.getFullyQualifiedName())) { //$NON-NLS-1$
-                    sb
-                            .append("result = prime * result + Float.floatToIntBits("); //$NON-NLS-1$
+                    method.addBodyLine("result = prime * result + (int) (temp ^ (temp >>> 32));"); //$NON-NLS-1$
+                    break;
+                case "float": //$NON-NLS-1$
+                    sb.append("result = prime * result + Float.floatToIntBits("); //$NON-NLS-1$
                     sb.append(getterMethod);
                     sb.append("());"); //$NON-NLS-1$
                     method.addBodyLine(sb.toString());
-                } else if ("int".equals(fqjt.getFullyQualifiedName())) { //$NON-NLS-1$
-                    sb.append("result = prime * result + "); //$NON-NLS-1$
-                    sb.append(getterMethod);
-                    sb.append("();"); //$NON-NLS-1$
-                    method.addBodyLine(sb.toString());
-                } else if ("long".equals(fqjt.getFullyQualifiedName())) { //$NON-NLS-1$
+                    break;
+                case "long": //$NON-NLS-1$
                     sb.append("result = prime * result + (int) ("); //$NON-NLS-1$
                     sb.append(getterMethod);
                     sb.append("() ^ ("); //$NON-NLS-1$
                     sb.append(getterMethod);
                     sb.append("() >>> 32));"); //$NON-NLS-1$
                     method.addBodyLine(sb.toString());
-                } else if ("short".equals(fqjt.getFullyQualifiedName())) { //$NON-NLS-1$
-                    sb.append("result = prime * result + "); //$NON-NLS-1$
-                    sb.append(getterMethod);
-                    sb.append("();"); //$NON-NLS-1$
-                    method.addBodyLine(sb.toString());
+                    break;
+                default:
+                    // all bases are covered above
+                    break;
                 }
             } else if (fqjt.isArray()) {
                 // Arrays is already imported by the generateEquals method, we don't need
