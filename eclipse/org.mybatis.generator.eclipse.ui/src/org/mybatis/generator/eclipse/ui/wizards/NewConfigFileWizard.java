@@ -167,12 +167,12 @@ public class NewConfigFileWizard extends Wizard implements INewWizard {
         jdbcConnection.addAttribute(new Attribute("password", "???")); //$NON-NLS-1$ //$NON-NLS-2$
         context.addElement(jdbcConnection);
 
-        XmlElement javaModelGenerator = new XmlElement("javaModelGenerator"); //$NON-NLS-1$
-        javaModelGenerator.addAttribute(new Attribute("targetPackage", "???")); //$NON-NLS-1$ //$NON-NLS-2$
-        javaModelGenerator.addAttribute(new Attribute("targetProject", "???")); //$NON-NLS-1$ //$NON-NLS-2$
-        context.addElement(javaModelGenerator);
+        XmlElement modelGenerator = new XmlElement("modelGenerator"); //$NON-NLS-1$
+        modelGenerator.addAttribute(new Attribute("targetPackage", "???")); //$NON-NLS-1$ //$NON-NLS-2$
+        modelGenerator.addAttribute(new Attribute("targetProject", "???")); //$NON-NLS-1$ //$NON-NLS-2$
+        context.addElement(modelGenerator);
 
-        XmlElement javaClientGenerator = new XmlElement("javaClientGenerator"); //$NON-NLS-1$
+        XmlElement javaClientGenerator = new XmlElement("clientGenerator"); //$NON-NLS-1$
         javaClientGenerator.addAttribute(new Attribute("targetPackage", "???")); //$NON-NLS-1$ //$NON-NLS-2$
         javaClientGenerator.addAttribute(new Attribute("targetProject", "???")); //$NON-NLS-1$ //$NON-NLS-2$
         javaClientGenerator.addAttribute(new Attribute("type", "XMLMAPPER")); //$NON-NLS-1$ //$NON-NLS-2$

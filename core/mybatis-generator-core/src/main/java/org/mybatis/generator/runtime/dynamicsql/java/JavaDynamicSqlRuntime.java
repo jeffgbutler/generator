@@ -27,19 +27,19 @@ public class JavaDynamicSqlRuntime extends AbstractRuntime {
     }
 
     private void calculateGenerators() {
-        javaGenerators.add(calculateJavaModelGenerator());
-        if (introspectedTable.getRules().generateJavaClient()) {
-            getClientProject().map(this::calculateJavaClientGenerator).ifPresent(javaGenerators::add);
+        javaGenerators.add(calculateModelGenerator());
+        if (introspectedTable.getRules().generateClient()) {
+            getClientProject().map(this::calculateClientGenerator).ifPresent(javaGenerators::add);
         }
     }
 
-    protected AbstractJavaGenerator calculateJavaClientGenerator(String clientProject) {
+    protected AbstractJavaGenerator calculateClientGenerator(String clientProject) {
         return initializeSubBuilder(new DynamicSqlMapperGenerator.Builder())
                 .withProject(clientProject)
                 .build();
     }
 
-    protected AbstractJavaGenerator calculateJavaModelGenerator() {
+    protected AbstractJavaGenerator calculateModelGenerator() {
         if (introspectedTable.isRecordBased()) {
             return initializeSubBuilder(new RecordModelGenerator.Builder())
                     .withProject(getModelProject())

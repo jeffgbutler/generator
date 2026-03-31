@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2006-2025 the original author or authors.
+       Copyright 2006-2026 the original author or authors.
 
        Licensed under the Apache License, Version 2.0 (the "License");
        you may not use this file except in compliance with the License.
@@ -127,9 +127,9 @@ table below summarizes the different options.</p>
     &lt;jdbcConnection driverClass="org.hsqldb.jdbcDriver"
         connectionURL="jdbc:hsqldb:mem:aname" /&gt;
 
-    &lt;javaModelGenerator targetPackage="example.model" targetProject="src/main/java"/&gt;
+    &lt;modelGenerator targetPackage="example.model" targetProject="src/main/java"/&gt;
 
-    &lt;javaClientGenerator targetPackage="example.mapper" targetProject="src/main/java"/&gt;
+    &lt;clientGenerator targetPackage="example.mapper" targetProject="src/main/java"/&gt;
 
     &lt;table tableName="FooTable" /&gt;
   &lt;/context&gt;
@@ -147,9 +147,9 @@ table below summarizes the different options.</p>
     &lt;jdbcConnection driverClass="org.hsqldb.jdbcDriver"
         connectionURL="jdbc:hsqldb:mem:aname" /&gt;
 
-    &lt;javaModelGenerator targetPackage="example.model" targetProject="src/main/kotlin"/&gt;
+    &lt;modelGenerator targetPackage="example.model" targetProject="src/main/kotlin"/&gt;
 
-    &lt;javaClientGenerator targetPackage="example.mapper" targetProject="src/main/kotlin"/&gt;
+    &lt;clientGenerator targetPackage="example.mapper" targetProject="src/main/kotlin"/&gt;
 
     &lt;table tableName="FooTable" /&gt;
   &lt;/context&gt;
@@ -167,11 +167,11 @@ table below summarizes the different options.</p>
     &lt;jdbcConnection driverClass="org.hsqldb.jdbcDriver"
         connectionURL="jdbc:hsqldb:mem:aname" /&gt;
 
-    &lt;javaModelGenerator targetPackage="example.model" targetProject="src/main/java"/&gt;
+    &lt;modelGenerator targetPackage="example.model" targetProject="src/main/java"/&gt;
 
     &lt;sqlMapGenerator targetPackage="example.mapper" targetProject="src/main/resources"/&gt;
 
-    &lt;javaClientGenerator type="XMLMAPPER" targetPackage="example.mapper" targetProject="src/main/java"/&gt;
+    &lt;clientGenerator type="XMLMAPPER" targetPackage="example.mapper" targetProject="src/main/java"/&gt;
 
     &lt;table tableName="FooTable" /&gt;
   &lt;/context&gt;
@@ -189,9 +189,9 @@ table below summarizes the different options.</p>
     &lt;jdbcConnection driverClass="org.hsqldb.jdbcDriver"
         connectionURL="jdbc:hsqldb:mem:aname" /&gt;
 
-    &lt;javaModelGenerator targetPackage="example.model" targetProject="src/main/java"/&gt;
+    &lt;modelGenerator targetPackage="example.model" targetProject="src/main/java"/&gt;
 
-    &lt;javaClientGenerator type="ANNOTATEDMAPPER" targetPackage="example.mapper" targetProject="src/main/java"/&gt;
+    &lt;clientGenerator type="ANNOTATEDMAPPER" targetPackage="example.mapper" targetProject="src/main/java"/&gt;
 
     &lt;table tableName="FooTable" /&gt;
   &lt;/context&gt;

@@ -38,6 +38,7 @@
       <item href="migratingFromAbator.html" name="Migrating from Abator" />
       <item href="configreference/xmlconfig.html" name="XML Configuration Reference" collapse="true" >
         <item href="configreference/classPathEntry.html" name="&lt;classPathEntry&gt;" />
+        <item href="configreference/clientGenerator.html" name="&lt;clientGenerator&gt;" />
         <item href="configreference/columnOverride.html" name="&lt;columnOverride&gt;" />
         <item href="configreference/columnRenamingRule.html" name="&lt;columnRenamingRule&gt;" />
         <item href="configreference/commentGenerator.html" name="&lt;commentGenerator&gt;" />
@@ -53,6 +54,7 @@
         <item href="configreference/javaModelGenerator.html" name="&lt;javaModelGenerator&gt;" />
         <item href="configreference/javaTypeResolver.html" name="&lt;javaTypeResolver&gt;" />
         <item href="configreference/jdbcConnection.html" name="&lt;jdbcConnection&gt;" />
+        <item href="configreference/modelGenerator.html" name="&lt;modelGenerator&gt;" />
         <item href="configreference/plugin.html" name="&lt;plugin&gt;" />
         <item href="configreference/properties.html" name="&lt;properties&gt;" />
         <item href="configreference/property.html" name="&lt;property&gt;" />

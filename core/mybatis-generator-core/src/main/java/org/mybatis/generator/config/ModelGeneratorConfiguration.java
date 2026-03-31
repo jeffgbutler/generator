@@ -23,17 +23,12 @@ import java.util.Objects;
 
 import org.jspecify.annotations.Nullable;
 
-public class JavaClientGeneratorConfiguration extends TypedPropertyHolder {
-    // Known types...
-    public static final String ANNOTATED_MAPPER = "AnnotatedMapper"; //$NON-NLS-1$
-    public static final String MAPPER = "Mapper"; //$NON-NLS-1$
-    public static final String MIXED_MAPPER = "MixedMapper"; //$NON-NLS-1$
-    public static final String XML_MAPPER = "XMLMapper"; //$NON-NLS-1$
+public class ModelGeneratorConfiguration extends PropertyHolder {
 
     private final String targetPackage;
     private final String targetProject;
 
-    protected JavaClientGeneratorConfiguration(Builder builder) {
+    protected ModelGeneratorConfiguration(Builder builder) {
         super(builder);
         this.targetPackage = Objects.requireNonNull(builder.targetPackage);
         this.targetProject = Objects.requireNonNull(builder.targetProject);
@@ -49,21 +44,16 @@ public class JavaClientGeneratorConfiguration extends TypedPropertyHolder {
 
     public void validate(List<String> errors, String contextId) {
         if (!stringHasValue(targetProject)) {
-            errors.add(getString("ValidationError.2", contextId)); //$NON-NLS-1$
+            errors.add(getString("ValidationError.0", contextId)); //$NON-NLS-1$
         }
 
         if (!stringHasValue(targetPackage)) {
-            errors.add(getString("ValidationError.12", "javaClientGenerator", contextId)); //$NON-NLS-1$ //$NON-NLS-2$
+            errors.add(getString("ValidationError.12", //$NON-NLS-1$
+                    "ModelGenerator", contextId)); //$NON-NLS-1$
         }
     }
 
-    public boolean requiresXmlMapper() {
-        return XML_MAPPER.equalsIgnoreCase(configurationType)
-                || MIXED_MAPPER.equalsIgnoreCase(configurationType)
-                || MAPPER.equalsIgnoreCase(configurationType);
-    }
-
-    public static class Builder extends TypedBuilder<Builder> {
+    public static class Builder extends AbstractBuilder<Builder> {
         private @Nullable String targetPackage;
         private @Nullable String targetProject;
 
@@ -77,8 +67,8 @@ public class JavaClientGeneratorConfiguration extends TypedPropertyHolder {
             return this;
         }
 
-        public JavaClientGeneratorConfiguration build() {
-            return new JavaClientGeneratorConfiguration(this);
+        public ModelGeneratorConfiguration build() {
+            return new ModelGeneratorConfiguration(this);
         }
 
         @Override

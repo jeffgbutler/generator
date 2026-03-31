@@ -158,13 +158,23 @@
     The runtimes that build code for MyBatis Dynamic SQL (MyBatis3DynamicSql and MyBatis3Kotlin) have been updated to
     use version 2.0.0 of that library, and the generated code will require that version or later.
   </li>
+  <li>The XML configuration element &lt;javaModelGenerator&gt; has been renamed to &lt;modelGenerator&gt;. Since the
+    library is generating Kotlin code in many cases, it makes sense to have the configuration element be more generic.
+    The old element name continues to work. There should be no impact to users except for a warning message that
+    encourages you to use the new name.
+  </li>
+  <li>The XML configuration element &lt;javaClientGenerator&gt; has been renamed to &lt;clientGenerator&gt;. Since the
+    library is generating Kotlin code in many cases, it makes sense to have the configuration element be more generic.
+    The old element name continues to work. There should be no impact to users except for a warning message that
+    encourages you to use the new name.
+  </li>
   <li>The Kotlin runtime has the following enhancements:
     <ul>
       <li>Generated result maps now use constructor argument mappings rather than results mapping. This is more
         consistent with how data classes are actually built and lessens the reliance on reflection tricks.
       </li>
       <li>The generator will now respect the "immutable" property on a &lt;table&gt; or
-        &lt;javaModelGenerator&gt; configuration.
+        &lt;modelGenerator&gt; configuration.
       </li>
       <li>The default model type for Kotlin is now immutable (using "val" instead of "var" in most cases).
         In addition, the model classes respect the "nullable" setting on database columns. So if a
@@ -237,11 +247,8 @@
   <li>Removed "useColumnIndexes" as a documented property on the <code>Table</code> configuration XML element.
     That property was only used for iBatis2 runtimes which are no longer supported by the library.
   </li>
-  <li>If you have created your own implementation of a Java client generator, then the API has changed. These
-      classes are now built with Builders rather than directly. If you have created such a class, you must now provide
-      an extension of <code>org.mybatis.generator.runtime.AbstractJavaClientGenerator.AbstractJavaClientGeneratorBuilder</code>
-      so the library can create your implementation. The <code>type</code> attribute of the &lt;javaClientGenerator&gt;
-      XML configuration element now expects the fully qualified name of a builder class.
+  <li>The extension point for creating your own implementation of a Java client generator has been removed.
+    We know of no usages of this poorly documented extension point, so this should not impact anyone.
   </li>
   <li>The <code>Context</code> class has changed and it now only holds configuration information. This may impact
       you if you were relying on methods in that class in a Plugin. We have added <code>CommentGenerator</code> to
@@ -503,7 +510,7 @@ deprecated and will be removed in a future version</b> - so please switch to the
       are replaced by a new set of renderer classes. Note that the new renderer classes will produce
       code that is the same as the prior methods with very few exceptions - and those exceptions are related to
       bugs in the old methods.</li>
-  <li>The attribute "implementationPackage" has been removed from the <code>&lt;javaClientGenerator&gt;</code>
+  <li>The attribute "implementationPackage" has been removed from the <code>&lt;clientGenerator&gt;</code>
       configuration. It was only used for iBatis.</li>
 </ul>
 
@@ -620,7 +627,7 @@ has changed in this release.
   <li>Created a new reference page for supplied plugins:
       <a href="reference/plugins.html">Supplied Plugins</a></li>
   <li>Issue #368 - Allowed for generation of Java Model only.  If no SQLMapGenerator
-      or JavaClientGenerator is specified in a context, then only a Java Model is generated.
+      or ClientGenerator is specified in a context, then only a Java Model is generated.
       Also, if property "modelOnly" is set to "true" on a &lt;table&gt; element, then
       only model object and, possibly XML result maps, will be generated.
   </li>
@@ -667,7 +674,7 @@ has changed in this release.
           <a href="configreference/context.html">&lt;context&gt;</a>
           element is <b>MyBatis3</b></li>
       <li>The <code>type</code> attribute of
-          <a href="configreference/javaClientGenerator.html">&lt;javaClientGenerator&gt;</a>
+          <a href="configreference/clientGenerator.html">&lt;clientGenerator&gt;</a>
           element is <b>ANNOTATEDMAPPER</b></li>
     </ul>
   </li>
@@ -678,7 +685,7 @@ has changed in this release.
           <a href="configreference/context.html">&lt;context&gt;</a>
           element is <b>MyBatis3</b></li>
       <li>The <code>type</code> attribute of
-          <a href="configreference/javaClientGenerator.html">&lt;javaClientGenerator&gt;</a>
+          <a href="configreference/clientGenerator.html">&lt;clientGenerator&gt;</a>
           element is <b>MIXEDMAPPER</b></li>
     </ul>
   </li>
@@ -689,7 +696,7 @@ has changed in this release.
   </li>
   <li>Added support for immutable objects and constructor based result maps in
       MyBatis3.  See <a href="configreference/table.html">&lt;table&gt;</a>
-      and/or <a href="configreference/javaModelGenerator.html">&lt;javaModelGenerator&gt;</a>
+      and/or <a href="configreference/modelGenerator.html">&lt;modelGenerator&gt;</a>
       for details.
   </li>
   <li>Added support for initialization blocks in the Java DOM</li>
@@ -713,7 +720,7 @@ has changed in this release.
           <a href="configreference/context.html">&lt;context&gt;</a>
           element must be changed to <b>MyBatis3</b></li>
       <li>The <code>type</code> attribute of
-          <a href="configreference/javaClientGenerator.html">&lt;javaClientGenerator&gt;</a>
+          <a href="configreference/clientGenerator.html">&lt;clientGenerator&gt;</a>
           element must be changed to <b>XMLMAPPER</b></li>
     </ol>
   </li>
@@ -958,7 +965,7 @@ details the changes, and has methods of resolving the differences.</p>
 <ul>
   <li>Fixed bug for corner case where a criteria class is created, but no criteria
       are set.</li>
-  <li>Fixed a bug that caused the JavaModelGenerator's "trimStrings" property to fail</li>
+  <li>Fixed a bug that caused the ModelGenerator's "trimStrings" property to fail</li>
   <li>Fixed the XML file merger so that internal entities are preserved</li>
   <li>Fixed the XML configuration parser so that external entities are handled properly</li>
   <li>Fixed bug - incorrect datatype mapping for JDBC BIT datatype</li>
@@ -1034,9 +1041,9 @@ details the changes, and has methods of resolving the differences.</p>
       reference page for more information.</li>
   <li>If a <code>rootClass</code> is specified for any table, Abator will now check in the
       rootClass to see if a generated property already exists in the root class.  If it does,
-      Abator will not generate the property.  The &lt;javaModelGenerator&gt; element now
+      Abator will not generate the property.  The &lt;modelGenerator&gt; element now
       accepts a property to specify the classpath of the <code>rootClass</code>.  See the
-      <a href="configreference/javaModelGenerator.html">&lt;javaModelGenerator&gt;</a>
+      <a href="configreference/modelGenerator.html">&lt;modelGenerator&gt;</a>
       reference page for more information.  Thanks to Ashok Madhavan for the beginnings
       of this code.</li>
   <li>Allowed specifying a type (pre or post) for the generated key element.  See the
@@ -1146,10 +1153,10 @@ will always be updated.</p>
     reference page for more information.</li>
   <li>Added the ability to specify the visibility of the DAO "by example" methods.
     This allows you to make the methods private for internal use only.
-    See the <a href="configreference/javaClientGenerator.html">&lt;javaClientGenerator&gt;</a>
+    See the <a href="configreference/clientGenerator.html">&lt;clientGenerator&gt;</a>
     reference page for more information.</li>
   <li>Added the ability to override the naming convention for DAO method names.
-    See the <a href="configreference/javaClientGenerator.html">&lt;javaClientGenerator&gt;</a>
+    See the <a href="configreference/clientGenerator.html">&lt;clientGenerator&gt;</a>
     reference page for more information.</li>
   <li>Added the ability to specify wildcards for schema or tableName in a table
       configuration.  This will allow generation of many tables with a simple

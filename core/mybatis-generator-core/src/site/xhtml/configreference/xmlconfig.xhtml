@@ -57,18 +57,18 @@ attributes.</p>
       &lt;property name="forceBigDecimals" value="false" /&gt;
     &lt;/javaTypeResolver&gt;
 
-    &lt;javaModelGenerator targetPackage="test.model" targetProject="\MBGTestProject\src"&gt;
+    &lt;modelGenerator targetPackage="test.model" targetProject="\MBGTestProject\src"&gt;
       &lt;property name="enableSubPackages" value="true" /&gt;
       &lt;property name="trimStrings" value="true" /&gt;
-    &lt;/javaModelGenerator&gt;
+    &lt;/modelGenerator&gt;
 
     &lt;sqlMapGenerator targetPackage="test.xml" targetProject="\MBGTestProject\src"&gt;
       &lt;property name="enableSubPackages" value="true" /&gt;
     &lt;/sqlMapGenerator&gt;
 
-    &lt;javaClientGenerator type="XMLMAPPER" targetPackage="test.mapper" targetProject="\MBGTestProject\src"&gt;
+    &lt;clientGenerator type="XMLMAPPER" targetPackage="test.mapper" targetProject="\MBGTestProject\src"&gt;
       &lt;property name="enableSubPackages" value="true" /&gt;
-    &lt;/javaClientGenerator&gt;
+    &lt;/clientGenerator&gt;
 
     &lt;table schema="DB2ADMIN" tableName="ALLTYPES" domainObjectName="Customer" &gt;
       &lt;property name="useActualColumnNames" value="true"/&gt;

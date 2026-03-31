@@ -35,8 +35,8 @@ public class Context extends PropertyHolder {
     private final @Nullable ConnectionFactoryConfiguration connectionFactoryConfiguration;
     private final @Nullable SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration;
     private final @Nullable JavaTypeResolverConfiguration javaTypeResolverConfiguration;
-    private final JavaModelGeneratorConfiguration javaModelGeneratorConfiguration;
-    private final @Nullable JavaClientGeneratorConfiguration javaClientGeneratorConfiguration;
+    private final ModelGeneratorConfiguration modelGeneratorConfiguration;
+    private final @Nullable ClientGeneratorConfiguration clientGeneratorConfiguration;
     private final List<TableConfiguration> tableConfigurations;
     private final ModelType defaultModelType;
     private final String beginningDelimiter;
@@ -60,9 +60,9 @@ public class Context extends PropertyHolder {
         sqlMapGeneratorConfiguration = builder.sqlMapGeneratorConfiguration;
         javaTypeResolverConfiguration = builder.javaTypeResolverConfiguration;
         introspectedColumnImpl = builder.introspectedColumnImpl;
-        javaModelGeneratorConfiguration = Objects.requireNonNull(builder.javaModelGeneratorConfiguration,
+        modelGeneratorConfiguration = Objects.requireNonNull(builder.modelGeneratorConfiguration,
                 getString("ValidationError.8", id)); //$NON-NLS-1$
-        javaClientGeneratorConfiguration = builder.javaClientGeneratorConfiguration;
+        clientGeneratorConfiguration = builder.clientGeneratorConfiguration;
         targetRuntime = builder.targetRuntime;
 
         String property = getProperty(PropertyRegistry.CONTEXT_BEGINNING_DELIMITER);
@@ -88,12 +88,12 @@ public class Context extends PropertyHolder {
         }
     }
 
-    public Optional<JavaClientGeneratorConfiguration> getJavaClientGeneratorConfiguration() {
-        return Optional.ofNullable(javaClientGeneratorConfiguration);
+    public Optional<ClientGeneratorConfiguration> getClientGeneratorConfiguration() {
+        return Optional.ofNullable(clientGeneratorConfiguration);
     }
 
-    public JavaModelGeneratorConfiguration getJavaModelGeneratorConfiguration() {
-        return Objects.requireNonNull(javaModelGeneratorConfiguration);
+    public ModelGeneratorConfiguration getModelGeneratorConfiguration() {
+        return Objects.requireNonNull(modelGeneratorConfiguration);
     }
 
     public Optional<JavaTypeResolverConfiguration> getJavaTypeResolverConfiguration() {
@@ -128,16 +128,16 @@ public class Context extends PropertyHolder {
             connectionFactoryConfiguration.validate(errors);
         }
 
-        javaModelGeneratorConfiguration.validate(errors, id);
-
-        if (javaClientGeneratorConfiguration != null) {
-            javaClientGeneratorConfiguration.validate(errors, id);
-        }
+        modelGeneratorConfiguration.validate(errors, id);
 
         KnownRuntime knownRuntime = KnownRuntime.getByAlias(targetRuntime);
+        if (clientGeneratorConfiguration != null) {
+            clientGeneratorConfiguration.validate(errors, id, knownRuntime);
+        }
+
         if (knownRuntime.isLegacyMyBatis3Based()
-                && javaClientGeneratorConfiguration != null
-                && javaClientGeneratorConfiguration.requiresXmlMapper()
+                && clientGeneratorConfiguration != null
+                && clientGeneratorConfiguration.requiresXmlMapper()
                 && sqlMapGeneratorConfiguration == null) {
             errors.add(getString("ValidationError.9", id)); //$NON-NLS-1$
         }
@@ -242,8 +242,8 @@ public class Context extends PropertyHolder {
         private @Nullable ConnectionFactoryConfiguration connectionFactoryConfiguration;
         private @Nullable SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration;
         private @Nullable JavaTypeResolverConfiguration javaTypeResolverConfiguration;
-        private @Nullable JavaModelGeneratorConfiguration javaModelGeneratorConfiguration;
-        private @Nullable JavaClientGeneratorConfiguration javaClientGeneratorConfiguration;
+        private @Nullable ModelGeneratorConfiguration modelGeneratorConfiguration;
+        private @Nullable ClientGeneratorConfiguration clientGeneratorConfiguration;
 
         @Override
         protected Builder getThis() {
@@ -254,7 +254,7 @@ public class Context extends PropertyHolder {
             return new Context(this);
         }
 
-        public Builder withId(@Nullable String id) {
+        public Builder withId(String id) {
             this.id = id;
             return this;
         }
@@ -316,16 +316,15 @@ public class Context extends PropertyHolder {
             return this;
         }
 
-        public Builder withJavaModelGeneratorConfiguration(
-                JavaModelGeneratorConfiguration javaModelGeneratorConfiguration) {
-            this.javaModelGeneratorConfiguration = javaModelGeneratorConfiguration;
+        public Builder withModelGeneratorConfiguration(
+                ModelGeneratorConfiguration modelGeneratorConfiguration) {
+            this.modelGeneratorConfiguration = modelGeneratorConfiguration;
             return this;
         }
 
         @SuppressWarnings("UnusedReturnValue")
-        public Builder withJavaClientGeneratorConfiguration(
-                JavaClientGeneratorConfiguration javaClientGeneratorConfiguration) {
-            this.javaClientGeneratorConfiguration = javaClientGeneratorConfiguration;
+        public Builder withClientGeneratorConfiguration(ClientGeneratorConfiguration clientGeneratorConfiguration) {
+            this.clientGeneratorConfiguration = clientGeneratorConfiguration;
             return this;
         }
     }

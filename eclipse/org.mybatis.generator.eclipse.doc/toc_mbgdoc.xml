@@ -39,6 +39,7 @@
    <topic href="html/mbgdoc/migratingFromAbator.html" label="Migrating From Abator"/>
    <topic href="html/mbgdoc/configreference/xmlconfig.html" label="XML Configuration File Reference">
       <topic href="html/mbgdoc/configreference/classPathEntry.html" label="&lt;classPathEntry&gt;"/>
+      <topic href="html/mbgdoc/configreference/clientGenerator.html" label="&lt;clientGenerator&gt;"/>
       <topic href="html/mbgdoc/configreference/columnOverride.html" label="&lt;columnOverride&gt;"/>
       <topic href="html/mbgdoc/configreference/columnRenamingRule.html" label="&lt;columnRenamingRule&gt;"/>
       <topic href="html/mbgdoc/configreference/commentGenerator.html" label="&lt;commentGenerator&gt;"/>
@@ -54,6 +55,7 @@
       <topic href="html/mbgdoc/configreference/javaModelGenerator.html" label="&lt;javaModelGenerator&gt;"/>
       <topic href="html/mbgdoc/configreference/javaTypeResolver.html" label="&lt;javaTypeResolver&gt;"/>
       <topic href="html/mbgdoc/configreference/jdbcConnection.html" label="&lt;jdbcConnection&gt;"/>
+      <topic href="html/mbgdoc/configreference/modelGenerator.html" label="&lt;modelGenerator&gt;"/>
       <topic href="html/mbgdoc/configreference/plugin.html" label="&lt;plugin&gt;"/>
       <topic href="html/mbgdoc/configreference/properties.html" label="&lt;properties&gt;"/>
       <topic href="html/mbgdoc/configreference/property.html" label="&lt;property&gt;"/>

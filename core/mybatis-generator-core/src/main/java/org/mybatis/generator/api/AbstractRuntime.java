@@ -27,7 +27,7 @@ import org.mybatis.generator.codegen.AbstractGenerator;
 import org.mybatis.generator.codegen.AbstractJavaGenerator;
 import org.mybatis.generator.codegen.AbstractKotlinGenerator;
 import org.mybatis.generator.codegen.AbstractXmlGenerator;
-import org.mybatis.generator.config.JavaClientGeneratorConfiguration;
+import org.mybatis.generator.config.ClientGeneratorConfiguration;
 import org.mybatis.generator.config.SqlMapGeneratorConfiguration;
 
 public abstract class AbstractRuntime extends AbstractGenerator {
@@ -40,11 +40,11 @@ public abstract class AbstractRuntime extends AbstractGenerator {
     }
 
     protected Optional<String> getClientProject() {
-        return context.getJavaClientGeneratorConfiguration().map(JavaClientGeneratorConfiguration::getTargetProject);
+        return context.getClientGeneratorConfiguration().map(ClientGeneratorConfiguration::getTargetProject);
     }
 
     protected String getModelProject() {
-        return context.getJavaModelGeneratorConfiguration().getTargetProject();
+        return context.getModelGeneratorConfiguration().getTargetProject();
     }
 
     /**

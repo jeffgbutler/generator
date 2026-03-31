@@ -30,7 +30,7 @@ public class KotlinDynamicSqlRuntime extends AbstractRuntime {
 
     private void calculateGenerators() {
         kotlinGenerators.add(calculateKotlinDataClassGenerator());
-        if (introspectedTable.getRules().generateJavaClient()) {
+        if (introspectedTable.getRules().generateClient()) {
             getClientProject().map(this::calculateKotlinMapperAndExtensionsGenerator).ifPresent(kotlinGenerators::add);
         }
     }

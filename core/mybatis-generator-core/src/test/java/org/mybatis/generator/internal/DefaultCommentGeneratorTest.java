@@ -29,7 +29,7 @@ import org.mybatis.generator.api.dom.java.Field;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.api.dom.java.InnerClass;
 import org.mybatis.generator.config.Context;
-import org.mybatis.generator.config.JavaModelGeneratorConfiguration;
+import org.mybatis.generator.config.ModelGeneratorConfiguration;
 import org.mybatis.generator.config.PropertyRegistry;
 import org.mybatis.generator.config.TableConfiguration;
 
@@ -156,7 +156,7 @@ class DefaultCommentGeneratorTest {
                         .withIntrospectedTableName("test")
                         .build())
                 .withContext(new Context.Builder().withId("test-context")
-                        .withJavaModelGeneratorConfiguration(new JavaModelGeneratorConfiguration.Builder()
+                        .withModelGeneratorConfiguration(new ModelGeneratorConfiguration.Builder()
                                 .withTargetPackage("foo")
                                 .withTargetProject("test-project")
                                 .build())

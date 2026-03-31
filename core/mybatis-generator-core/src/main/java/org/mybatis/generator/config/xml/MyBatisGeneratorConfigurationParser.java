@@ -30,6 +30,7 @@ import java.util.Optional;
 import java.util.Properties;
 
 import org.jspecify.annotations.Nullable;
+import org.mybatis.generator.config.ClientGeneratorConfiguration;
 import org.mybatis.generator.config.ColumnOverride;
 import org.mybatis.generator.config.ColumnRenamingRule;
 import org.mybatis.generator.config.CommentGeneratorConfiguration;
@@ -42,9 +43,8 @@ import org.mybatis.generator.config.IgnoredColumn;
 import org.mybatis.generator.config.IgnoredColumnException;
 import org.mybatis.generator.config.IgnoredColumnPattern;
 import org.mybatis.generator.config.JDBCConnectionConfiguration;
-import org.mybatis.generator.config.JavaClientGeneratorConfiguration;
-import org.mybatis.generator.config.JavaModelGeneratorConfiguration;
 import org.mybatis.generator.config.JavaTypeResolverConfiguration;
+import org.mybatis.generator.config.ModelGeneratorConfiguration;
 import org.mybatis.generator.config.ModelType;
 import org.mybatis.generator.config.NullableProperties;
 import org.mybatis.generator.config.PluginConfiguration;
@@ -53,6 +53,7 @@ import org.mybatis.generator.config.SqlMapGeneratorConfiguration;
 import org.mybatis.generator.config.TableConfiguration;
 import org.mybatis.generator.exception.XMLParserException;
 import org.mybatis.generator.internal.ObjectFactory;
+import org.mybatis.generator.internal.util.messages.Messages;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -66,10 +67,12 @@ import org.w3c.dom.NodeList;
 public class MyBatisGeneratorConfigurationParser {
     private final Properties extraProperties;
     private final Properties configurationProperties;
+    private final List<String> warnings;
 
-    public MyBatisGeneratorConfigurationParser(@Nullable Properties extraProperties) {
+    public MyBatisGeneratorConfigurationParser(@Nullable Properties extraProperties, List<String> warnings) {
         this.extraProperties = Objects.requireNonNullElseGet(extraProperties, Properties::new);
         configurationProperties = new Properties();
+        this.warnings = warnings;
     }
 
     public Configuration parseConfiguration(Element rootNode) throws XMLParserException {
@@ -148,6 +151,7 @@ public class MyBatisGeneratorConfigurationParser {
         String targetRuntime = attributes.getProperty("targetRuntime"); //$NON-NLS-1$
         String introspectedColumnImpl = attributes.getProperty("introspectedColumnImpl"); //$NON-NLS-1$
         String id = attributes.getProperty("id"); //$NON-NLS-1$
+        assert id != null;
         ModelType dmt =
                 defaultModelType == null ? null : ModelType.getModelType(defaultModelType);
 
@@ -176,14 +180,22 @@ public class MyBatisGeneratorConfigurationParser {
                     builder.withJdbcConnectionConfiguration(parseJdbcConnection(childNode));
             case "connectionFactory" ->  //$NON-NLS-1$
                     builder.withConnectionFactoryConfiguration(parseConnectionFactory(childNode));
-            case "javaModelGenerator" ->  //$NON-NLS-1$
-                    builder.withJavaModelGeneratorConfiguration(parseJavaModelGenerator(childNode));
+            case "modelGenerator" ->  //$NON-NLS-1$
+                    builder.withModelGeneratorConfiguration(parseModelGenerator(childNode));
+            case "javaModelGenerator" -> { //$NON-NLS-1$
+                warnings.add(Messages.getString("Warning.33")); //$NON-NLS-1$
+                builder.withModelGeneratorConfiguration(parseModelGenerator(childNode));
+            }
             case "javaTypeResolver" ->  //$NON-NLS-1$
                     builder.withJavaTypeResolverConfiguration(parseJavaTypeResolver(childNode));
             case "sqlMapGenerator" ->  //$NON-NLS-1$
                     builder.withSqlMapGeneratorConfiguration(parseSqlMapGenerator(childNode));
-            case "javaClientGenerator" ->  //$NON-NLS-1$
-                    builder.withJavaClientGeneratorConfiguration(parseJavaClientGenerator(childNode));
+            case "clientGenerator" ->  //$NON-NLS-1$
+                    builder.withClientGeneratorConfiguration(parseClientGenerator(childNode, id));
+            case "javaClientGenerator" -> { //$NON-NLS-1$
+                warnings.add(Messages.getString("Warning.34")); //$NON-NLS-1$
+                builder.withClientGeneratorConfiguration(parseClientGenerator(childNode, id));
+            }
             case "table" ->  //$NON-NLS-1$
                     builder.withTableConfiguration(parseTable(childNode));
             default -> {
@@ -416,26 +428,34 @@ public class MyBatisGeneratorConfigurationParser {
                 .build();
     }
 
-    protected JavaModelGeneratorConfiguration parseJavaModelGenerator(Node node) {
+    protected ModelGeneratorConfiguration parseModelGenerator(Node node) {
         NullableProperties attributes = parseAttributes(node);
         String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
         String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
         Properties properties = parseProperties(node.getChildNodes());
-        return new JavaModelGeneratorConfiguration.Builder()
+        return new ModelGeneratorConfiguration.Builder()
                 .withTargetPackage(targetPackage)
                 .withTargetProject(targetProject)
                 .withProperties(properties)
                 .build();
     }
 
-    private JavaClientGeneratorConfiguration parseJavaClientGenerator(Node node) {
+    private ClientGeneratorConfiguration parseClientGenerator(Node node, String contextId) {
         NullableProperties attributes = parseAttributes(node);
         String type = attributes.getProperty("type"); //$NON-NLS-1$
         String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
         String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
         Properties properties = parseProperties(node.getChildNodes());
-        return new JavaClientGeneratorConfiguration.Builder()
-                .withConfigurationType(type)
+        ClientGeneratorConfiguration.LegacyClientType legacyClientType = null;
+        if (type != null) {
+            legacyClientType = ClientGeneratorConfiguration.LegacyClientType.getByAlias(type);
+            if (legacyClientType == null) {
+                warnings.add(getString("ValidationError.31", type, contextId)); //$NON-NLS-1$
+            }
+        }
+
+        return new ClientGeneratorConfiguration.Builder()
+                .withLegacyClientType(legacyClientType)
                 .withTargetPackage(targetPackage)
                 .withTargetProject(targetProject)
                 .withProperties(properties)

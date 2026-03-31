@@ -193,8 +193,8 @@ public class RulesDelegate implements Rules {
     }
 
     @Override
-    public boolean generateJavaClient() {
-        return rules.generateJavaClient();
+    public boolean generateClient() {
+        return rules.generateClient();
     }
 
     @Override

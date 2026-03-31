@@ -15,10 +15,10 @@
  */
 package org.mybatis.generator.runtime.mybatis3;
 
-import java.util.Optional;
+import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
-import org.mybatis.generator.config.JavaClientGeneratorConfiguration;
-import org.mybatis.generator.config.TypedPropertyHolder;
+import org.mybatis.generator.config.ClientGeneratorConfiguration;
+import org.mybatis.generator.exception.InternalException;
 import org.mybatis.generator.runtime.common.RecordModelGenerator;
 import org.mybatis.generator.runtime.common.SimpleModelGenerator;
 import org.mybatis.generator.runtime.mybatis3.javamapper.SimpleAnnotatedMapperGenerator;
@@ -45,18 +45,19 @@ public class LegacySimpleJavaRuntime extends LegacyJavaRuntime {
     }
 
     @Override
-    protected Optional<String> calculateJavaClientGeneratorBuilderType() {
-        return context.getJavaClientGeneratorConfiguration().flatMap(TypedPropertyHolder::getConfigurationType)
-                .map(t -> {
-                    if (JavaClientGeneratorConfiguration.XML_MAPPER.equalsIgnoreCase(t)) {
-                        return SimpleJavaMapperGenerator.Builder.class.getName();
-                    } else if (JavaClientGeneratorConfiguration.ANNOTATED_MAPPER.equalsIgnoreCase(t)) {
-                        return SimpleAnnotatedMapperGenerator.Builder.class.getName();
-                    } else if (JavaClientGeneratorConfiguration.MAPPER.equalsIgnoreCase(t)) {
-                        return SimpleJavaMapperGenerator.Builder.class.getName();
-                    } else {
-                        return t;
-                    }
+    protected void calculateClientGenerator(ClientGeneratorConfiguration clientGeneratorConfiguration) {
+        clientGeneratorConfiguration.getLegacyClientType()
+                .map(s -> switch (s) {
+                case XML_MAPPER -> new SimpleJavaMapperGenerator.Builder();
+                case ANNOTATED_MAPPER -> new SimpleAnnotatedMapperGenerator.Builder();
+                default -> throw new InternalException(
+                        getString("ValidationError.31", s.name(), context.getId())); //$NON-NLS-1$
+                })
+                .ifPresent(builder -> {
+                    initializeSubBuilder(builder)
+                            .withProject(clientGeneratorConfiguration.getTargetProject())
+                            .build();
+                    javaGenerators.add(builder.build());
                 });
     }
 

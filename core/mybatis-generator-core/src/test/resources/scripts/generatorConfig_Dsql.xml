@@ -31,14 +31,14 @@
         connectionURL="jdbc:hsqldb:mem:aname"
         userId="sa" />
 
-    <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.model" targetProject="MAVEN">
+    <modelGenerator targetPackage="mbg.test.mb3.generated.dsql.model" targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />
       <property name="trimStrings" value="true" />
-    </javaModelGenerator>
+    </modelGenerator>
 
-    <javaClientGenerator targetPackage="mbg.test.mb3.generated.dsql.mapper" targetProject="MAVEN">
+    <clientGenerator targetPackage="mbg.test.mb3.generated.dsql.mapper" targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />
-    </javaClientGenerator>
+    </clientGenerator>
 
     <table tableName="FieldsOnly" enableSelectByExample="false"/>
     <table tableName="PKOnly">
@@ -85,15 +85,15 @@
 
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver" connectionURL="jdbc:hsqldb:mem:aname" userId="sa" />
 
-    <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.record.model" targetProject="MAVEN">
+    <modelGenerator targetPackage="mbg.test.mb3.generated.dsql.record.model" targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />
       <property name="trimStrings" value="true" />
-    </javaModelGenerator>
+    </modelGenerator>
 
-    <javaClientGenerator targetPackage="mbg.test.mb3.generated.dsql.record.mapper" targetProject="MAVEN">
+    <clientGenerator targetPackage="mbg.test.mb3.generated.dsql.record.mapper" targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />
       <property name="useSnakeCaseIdentifiers" value="true" />
-    </javaClientGenerator>
+    </clientGenerator>
 
     <table tableName="FieldsOnly" enableSelectByExample="false"/>
     <table tableName="PKOnly">
@@ -144,15 +144,15 @@
 
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver" connectionURL="jdbc:hsqldb:mem:aname" userId="sa" />
 
-    <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.jspecify.record.model" targetProject="MAVEN">
+    <modelGenerator targetPackage="mbg.test.mb3.generated.dsql.jspecify.record.model" targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />
       <property name="trimStrings" value="true" />
-    </javaModelGenerator>
+    </modelGenerator>
 
-    <javaClientGenerator targetPackage="mbg.test.mb3.generated.dsql.jspecify.record.mapper" targetProject="MAVEN">
+    <clientGenerator targetPackage="mbg.test.mb3.generated.dsql.jspecify.record.mapper" targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />
       <property name="useSnakeCaseIdentifiers" value="true" />
-    </javaClientGenerator>
+    </clientGenerator>
 
     <table tableName="FieldsOnly" enableSelectByExample="false"/>
     <table tableName="PKOnly" />
@@ -195,11 +195,11 @@
 
     <jdbcConnection driverClass="org.hsqldb.jdbcDriver" connectionURL="jdbc:hsqldb:mem:aname" userId="sa" />
 
-    <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.readonly.model" targetProject="MAVEN">
+    <modelGenerator targetPackage="mbg.test.mb3.generated.dsql.readonly.model" targetProject="MAVEN">
       <property name="trimStrings" value="true" />
-    </javaModelGenerator>
+    </modelGenerator>
 
-    <javaClientGenerator targetPackage="mbg.test.mb3.generated.dsql.readonly.mapper"
+    <clientGenerator targetPackage="mbg.test.mb3.generated.dsql.readonly.mapper"
       targetProject="MAVEN"/>
 
     <table tableName="PKFields" alias="B" >
@@ -241,16 +241,16 @@
         connectionURL="jdbc:hsqldb:mem:aname"
         userId="sa" />
 
-    <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.miscellaneous.model" targetProject="MAVEN">
+    <modelGenerator targetPackage="mbg.test.mb3.generated.dsql.miscellaneous.model" targetProject="MAVEN">
       <property name="trimStrings" value="true" />
       <property name="rootClass" value="mbg.test.common.BaseClass" />
-    </javaModelGenerator>
+    </modelGenerator>
 
-    <javaClientGenerator targetPackage="mbg.test.mb3.generated.dsql.miscellaneous.mapper" targetProject="MAVEN">
+    <clientGenerator targetPackage="mbg.test.mb3.generated.dsql.miscellaneous.mapper" targetProject="MAVEN">
       <property name="dynamicSqlSupportPackage" value="mbg.test.mb3.generated.dsql.miscellaneous.support"/>
       <property name="rootInterface" value="mbg.test.common.BaseGenericInterface&lt;T extends mbg.test.common.Entity&gt;" />
       <property name="injectModelIntoRootInterface" value="true" />
-    </javaClientGenerator>
+    </clientGenerator>
 
     <table tableName="PKFields" domainObjectName="MyObject" alias="A" >
       <ignoreColumn column="fred" />
@@ -296,10 +296,10 @@
         connectionURL="jdbc:hsqldb:mem:aname"
         userId="sa" />
 
-    <javaModelGenerator targetPackage="mbg.test.mb3.generated.dsql.modelonly" targetProject="MAVEN">
+    <modelGenerator targetPackage="mbg.test.mb3.generated.dsql.modelonly" targetProject="MAVEN">
       <property name="enableSubPackages" value="true" />
       <property name="trimStrings" value="true" />
-    </javaModelGenerator>
+    </modelGenerator>
 
     <table tableName="FieldsOnly" />
     <table tableName="PKOnly">

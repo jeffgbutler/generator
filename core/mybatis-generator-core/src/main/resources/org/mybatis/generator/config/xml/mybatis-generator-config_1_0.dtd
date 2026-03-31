@@ -51,7 +51,7 @@
   tables.
 -->
 <!ELEMENT context (property*, plugin*, commentGenerator?, (connectionFactory | jdbcConnection), javaTypeResolver?,
-                         javaModelGenerator, sqlMapGenerator?, javaClientGenerator?, table+)>
+    (modelGenerator | javaModelGenerator), sqlMapGenerator?, (clientGenerator | javaClientGenerator)?, table+)>
 <!ATTLIST context id ID #REQUIRED
   defaultModelType CDATA #IMPLIED
   targetRuntime CDATA #IMPLIED
@@ -107,9 +107,19 @@
   The javaModelGenerator element is used to define properties of the Java Model Generator.
   The Java Model Generator builds primary key classes, record classes, and Query by Example 
   indicator classes.
+  This element is deprecated - please use "modelGenerator" instead.
 -->
 <!ELEMENT javaModelGenerator (property*)>
 <!ATTLIST javaModelGenerator
+  targetPackage CDATA #REQUIRED
+  targetProject CDATA #REQUIRED>
+
+<!--
+  The modelGenerator element is used to define properties of the Model Generator (either Java or Kotlin
+  can be produced). The Model Generator builds Java model classes, Java records, or Kotlin data classes.
+-->
+<!ELEMENT modelGenerator (property*)>
+<!ATTLIST modelGenerator
   targetPackage CDATA #REQUIRED
   targetProject CDATA #REQUIRED>
 
@@ -138,9 +148,22 @@
   The Java Client Generator builds Java interface and implementation classes
   (as required) for each table.
   If this element is missing, then the generator will not build Java Client classes.
+  This element is deprecated. Please use "clientGenerator" instead.
 -->
 <!ELEMENT javaClientGenerator (property*)>
 <!ATTLIST javaClientGenerator
+  type CDATA #IMPLIED
+  targetPackage CDATA #REQUIRED
+  targetProject CDATA #REQUIRED>
+
+<!--
+  The clientGenerator element is used to define properties of the client Generator.
+  The Client Generator builds Java or Kotlin interface and implementation classes
+  (as required) for each table.
+  If this element is missing, then the generator will not build Client classes.
+-->
+<!ELEMENT clientGenerator (property*)>
+<!ATTLIST clientGenerator
   type CDATA #IMPLIED
   targetPackage CDATA #REQUIRED
   targetProject CDATA #REQUIRED>

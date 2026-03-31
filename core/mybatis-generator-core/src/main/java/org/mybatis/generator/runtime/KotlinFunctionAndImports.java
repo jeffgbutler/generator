@@ -70,7 +70,7 @@ public class KotlinFunctionAndImports {
 
         public Builder withExtraFunctionParts(KotlinFunctionParts kotlinFunctionParts) {
             if (function == null) {
-                throw new InternalException(getString("RuntimeError.31")); //$NON-NLS-1$
+                throw new InternalException(getString("RuntimeError.30")); //$NON-NLS-1$
             }
 
             for (KotlinArg argument : kotlinFunctionParts.getArguments()) {
