@@ -60,6 +60,7 @@ public class TableConfiguration extends PropertyHolder {
     private final @Nullable String mapperName;
     private final @Nullable String sqlProviderName;
     private final List<IgnoredColumnPattern> ignoredColumnPatterns;
+    private final String fullyQualifiedName;
 
     protected TableConfiguration(Builder builder) {
         super(builder);
@@ -89,6 +90,7 @@ public class TableConfiguration extends PropertyHolder {
         domainObjectRenamingRule = builder.domainObjectRenamingRule;
         columnRenamingRule = builder.columnRenamingRule;
         ignoredColumnPatterns = Collections.unmodifiableList(builder.ignoredColumnPatterns);
+        fullyQualifiedName = composeFullyQualifiedTableName(catalog, schema, tableName, '.');
     }
 
     public boolean isDeleteByPrimaryKeyStatementEnabled() {
@@ -209,13 +211,17 @@ public class TableConfiguration extends PropertyHolder {
         return tableName;
     }
 
+    public String getFullyQualifiedName() {
+        return fullyQualifiedName;
+    }
+
     public List<ColumnOverride> getColumnOverrides() {
         return columnOverrides;
     }
 
     /**
      * Returns a List of Strings. The values are the columns
-     * that were specified to be ignored in the table, but do not exist in the
+     * that were specified to be ignored in the table but do not exist in the
      * table.
      *
      * @return a List of Strings - the columns that were improperly configured
@@ -243,7 +249,7 @@ public class TableConfiguration extends PropertyHolder {
 
     @Override
     public String toString() {
-        return composeFullyQualifiedTableName(catalog, schema, tableName, '.');
+        return fullyQualifiedName;
     }
 
     public boolean isDelimitIdentifiers() {
@@ -264,44 +270,41 @@ public class TableConfiguration extends PropertyHolder {
                     "ValidationError.6", Integer.toString(listPosition))); //$NON-NLS-1$
         }
 
-        String fqTableName = composeFullyQualifiedTableName(
-                catalog, schema, tableName, '.');
-
         if (generatedKey != null) {
             // if the model type is immutable or record, then we cannot have generated keys
             ModelType mt = getModelType().orElseGet(context::getDefaultModelType);
             if (mt == ModelType.RECORD) {
-                errors.add(Messages.getString("ValidationError.30", fqTableName, context.getId(), //$NON-NLS-1$
+                errors.add(Messages.getString("ValidationError.30", fullyQualifiedName, context.getId(), //$NON-NLS-1$
                         "record")); //$NON-NLS-1$
             }
 
             // we're going to allow generated keys for Kotlin even if the rest of the model is immutable
             if (isImmutable(context) && knownRuntime != KnownRuntime.MYBATIS3_KOTLIN) {
-                errors.add(Messages.getString("ValidationError.30", fqTableName, context.getId(), //$NON-NLS-1$
+                errors.add(Messages.getString("ValidationError.30", fullyQualifiedName, context.getId(), //$NON-NLS-1$
                         "immutable")); //$NON-NLS-1$
             }
 
-            generatedKey.validate(errors, fqTableName, context.getId());
+            generatedKey.validate(errors, fullyQualifiedName, context.getId());
         }
 
         if (domainObjectRenamingRule != null) {
-            domainObjectRenamingRule.validate(errors, fqTableName);
+            domainObjectRenamingRule.validate(errors, fullyQualifiedName);
         }
 
         if (columnRenamingRule != null) {
-            columnRenamingRule.validate(errors, fqTableName);
+            columnRenamingRule.validate(errors, fullyQualifiedName);
         }
 
         for (ColumnOverride columnOverride : columnOverrides) {
-            columnOverride.validate(errors, fqTableName);
+            columnOverride.validate(errors, fullyQualifiedName);
         }
 
         for (IgnoredColumn ignoredColumn : ignoredColumns.keySet()) {
-            ignoredColumn.validate(errors, fqTableName);
+            ignoredColumn.validate(errors, fullyQualifiedName);
         }
 
         for (IgnoredColumnPattern ignoredColumnPattern : ignoredColumnPatterns) {
-            ignoredColumnPattern.validate(errors, fqTableName);
+            ignoredColumnPattern.validate(errors, fullyQualifiedName);
         }
     }
 
