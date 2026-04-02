@@ -124,14 +124,14 @@ public class GeneratorAntTask extends Task {
                 log(error, Project.MSG_ERR);
             }
 
-            throw new BuildException(e.getMessage());
+            throw new BuildException(e.getMessage(), e);
         } catch (SQLException | IOException e) {
-            throw new BuildException(e.getMessage());
+            throw new BuildException(e.getMessage(), e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (Exception e) {
             log(e, Project.MSG_ERR);
-            throw new BuildException(e.getMessage());
+            throw new BuildException(e.getMessage(), e);
         }
 
         for (String error : warnings) {
