@@ -69,7 +69,7 @@ public class IntrospectionEngine {
             progressCallback.startTask(getString("Progress.0")); //$NON-NLS-1$
 
             DatabaseIntrospector databaseIntrospector = new DatabaseIntrospector(
-                    contextValues.context(), connection.getMetaData(), javaTypeResolver, warnings);
+                    contextValues.context(), connection.getMetaData(), javaTypeResolver);
 
             for (TableConfiguration tc : contextValues.context().tableConfigurations()) {
                 if (!shouldIntrospect(tc)) {
@@ -83,6 +83,8 @@ public class IntrospectionEngine {
 
                 progressCallback.checkCancel();
             }
+
+            warnings.addAll(databaseIntrospector.getWarnings());
         }
 
         return introspectedTables;

@@ -16,6 +16,7 @@
 package org.mybatis.generator.api;
 
 import static org.mybatis.generator.internal.util.ClassloaderUtility.getCustomClassloader;
+import static org.mybatis.generator.internal.util.StringUtility.mapStringValueOrElseGet;
 import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
 import java.io.BufferedWriter;
@@ -348,17 +349,13 @@ public class MyBatisGenerator {
      *             Signals that an I/O exception has occurred.
      */
     private void writeFile(File file, String content, @Nullable String fileEncoding) throws IOException {
-        try (OutputStream fos = Files.newOutputStream(file.toPath(), StandardOpenOption.CREATE,
+        Charset cs = mapStringValueOrElseGet(fileEncoding, Charset::forName, Charset::defaultCharset);
+        try (OutputStream outputStream = Files.newOutputStream(file.toPath(), StandardOpenOption.CREATE,
                 StandardOpenOption.TRUNCATE_EXISTING)) {
-            OutputStreamWriter osw;
-            if (fileEncoding == null) {
-                osw = new OutputStreamWriter(fos);
-            } else {
-                osw = new OutputStreamWriter(fos, Charset.forName(fileEncoding));
-            }
-
-            try (BufferedWriter bw = new BufferedWriter(osw)) {
-                bw.write(content);
+            try (OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, cs)) {
+                try (BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
+                    bufferedWriter.write(content);
+                }
             }
         }
     }

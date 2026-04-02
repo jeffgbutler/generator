@@ -84,14 +84,15 @@ public class ProviderApplyWhereMethodGenerator extends AbstractJavaClassMethodGe
 
         try (InputStream is =
                 ProviderApplyWhereMethodGenerator.class.getResourceAsStream("ApplyWhereMethod.txt")) { //$NON-NLS-1$
-            BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(is)));
-            String line;
-            boolean foundDelimiter = false;
-            while ((line = br.readLine()) != null) {
-                if (foundDelimiter) {
-                    answer.add(line.trim());
-                } else {
-                    foundDelimiter = line.equals("--- method lines below ---"); //$NON-NLS-1$
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(is)))) {
+                String line;
+                boolean foundDelimiter = false;
+                while ((line = br.readLine()) != null) {
+                    if (foundDelimiter) {
+                        answer.add(line.trim());
+                    } else {
+                        foundDelimiter = line.equals("--- method lines below ---"); //$NON-NLS-1$
+                    }
                 }
             }
         } catch (IOException e) {
