@@ -60,6 +60,15 @@ public class StringUtility {
         }
     }
 
+    public static <T extends Throwable> String stringValueOrElseThrow(@Nullable String s,
+                                                                      Supplier<T> exceptionSupplier) throws T {
+        if (stringHasValue(s)) {
+            return s;
+        } else {
+            throw exceptionSupplier.get();
+        }
+    }
+
     public static String stringValueOrElseGet(@Nullable String s, Supplier<String> supplier) {
         return mapStringValueOrElseGet(s, UnaryOperator.identity(), supplier);
     }

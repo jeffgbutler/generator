@@ -45,36 +45,23 @@ import org.mybatis.generator.internal.util.messages.Messages;
  * @author Jeff Butler
  */
 public class SqlScriptRunner {
-    private String driver;
+    private final String driver;
     private final String url;
     private final @Nullable String userid;
-    private @Nullable String password;
+    private final @Nullable String password;
     private final String sourceFile;
-    /**
-     * Not null in practice - setLog must be called before use.
-     */
-    private @Nullable Log log;
+    private final Log log;
 
-    public SqlScriptRunner(String sourceFile, String driver, String url,
-            @Nullable String userId, @Nullable String password) throws MojoExecutionException {
-
-        if (!StringUtility.stringHasValue(sourceFile)) {
-            throw new MojoExecutionException("SQL script file is required");
-        }
-
-        if (!StringUtility.stringHasValue(driver)) {
-            throw new MojoExecutionException("JDBC Driver is required");
-        }
-
-        if (!StringUtility.stringHasValue(url)) {
-            throw new MojoExecutionException("JDBC URL is required");
-        }
-
-        this.sourceFile = sourceFile;
-        this.driver = driver;
-        this.url = url;
-        this.userid = userId;
-        this.password = password;
+    public SqlScriptRunner(Builder builder) throws MojoExecutionException {
+        sourceFile = StringUtility.stringValueOrElseThrow(builder.sourceFile,
+                () -> new MojoExecutionException("SQL script file is required"));
+        driver = StringUtility.stringValueOrElseThrow(builder.driver,
+                () -> new MojoExecutionException("JDBC Driver is required"));
+        url = StringUtility.stringValueOrElseThrow(builder.url,
+                () -> new MojoExecutionException("JDBC URL is required"));
+        userid = builder.userid;
+        password = builder.password;
+        log = Objects.requireNonNull(builder.log);
     }
 
     public void executeScript() throws MojoExecutionException {
@@ -129,16 +116,8 @@ public class SqlScriptRunner {
         return driver;
     }
 
-    public void setDriver(String driver) {
-        this.driver = driver;
-    }
-
     public @Nullable String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     private void closeConnection(@Nullable Connection connection) {
@@ -194,10 +173,6 @@ public class SqlScriptRunner {
         return s.isEmpty() ? null : s;
     }
 
-    public void setLog(Log log) {
-        this.log = log;
-    }
-
     private BufferedReader getScriptReader() throws MojoExecutionException, IOException {
         BufferedReader answer;
 
@@ -223,5 +198,46 @@ public class SqlScriptRunner {
 
     private Log getLog() {
         return Objects.requireNonNull(log);
+    }
+
+    public static class Builder {
+        private @Nullable String driver;
+        private @Nullable String url;
+        private @Nullable String userid;
+        private @Nullable String password;
+        private @Nullable String sourceFile;
+        private @Nullable Log log;
+
+        public Builder withSourceFile(String sourceFile) {
+            this.sourceFile = sourceFile;
+            return this;
+        }
+
+        public Builder withDriver(@Nullable String driver) {
+            this.driver = driver;
+            return this;
+        }
+
+        public Builder withUrl(@Nullable String url) {
+            this.url = url;
+            return this;
+        }
+        public Builder withUserId(@Nullable String userid) {
+            this.userid = userid;
+            return this;
+        }
+        public Builder withPassword(@Nullable String password) {
+            this.password = password;
+            return this;
+        }
+
+        public Builder withLog(Log log) {
+            this.log = log;
+            return this;
+        }
+
+        public SqlScriptRunner build() throws MojoExecutionException {
+            return new SqlScriptRunner(this);
+        }
     }
 }
