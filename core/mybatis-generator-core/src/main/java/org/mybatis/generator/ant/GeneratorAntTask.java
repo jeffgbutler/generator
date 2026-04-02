@@ -152,7 +152,6 @@ public class GeneratorAntTask extends Task {
             throw new BuildException(getString("RuntimeError.0")); //$NON-NLS-1$
         }
 
-
         Path configurationFile = Path.of(configfile);
         if (Files.notExists(configurationFile)) {
             throw new BuildException(getString("RuntimeError.1", configfile)); //$NON-NLS-1$

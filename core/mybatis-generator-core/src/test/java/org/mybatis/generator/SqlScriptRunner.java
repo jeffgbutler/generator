@@ -16,6 +16,7 @@
 package org.mybatis.generator;
 
 import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+import static org.mybatis.generator.internal.util.StringUtility.stringValueOrElseThrow;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -41,17 +42,9 @@ public class SqlScriptRunner {
     public SqlScriptRunner(InputStream sourceFile, String driver, String url,
             String userId, String password) throws Exception {
 
-        if (!stringHasValue(driver)) {
-            throw new Exception("JDBC Driver is required");
-        }
-
-        if (!stringHasValue(url)) {
-            throw new Exception("JDBC URL is required");
-        }
-
+        this.driver = stringValueOrElseThrow(driver, () -> new Exception("JDBC Driver is required"));
+        this.url = stringValueOrElseThrow(url, () -> new Exception("JDBC URL is required"));
         this.sourceFile = sourceFile;
-        this.driver = driver;
-        this.url = url;
         this.userid = userId;
         this.password = password;
     }
