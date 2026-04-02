@@ -32,7 +32,7 @@ import org.mybatis.generator.runtime.mybatis3.ListUtilities;
 import org.mybatis.generator.runtime.mybatis3.javamapper.elements.InsertMethodGenerator;
 
 public class AnnotatedInsertMethodGenerator extends InsertMethodGenerator {
-    protected AnnotatedInsertMethodGenerator(Builder builder) {
+    protected AnnotatedInsertMethodGenerator(AnnotatedBuilder builder) {
         super(builder);
     }
 
@@ -118,9 +118,9 @@ public class AnnotatedInsertMethodGenerator extends InsertMethodGenerator {
         builder.withAnnotation("})"); //$NON-NLS-1$
     }
 
-    public static class Builder extends InsertMethodGenerator.Builder {
+    public static class AnnotatedBuilder extends InsertMethodGenerator.Builder {
         @Override
-        protected Builder getThis() {
+        protected AnnotatedBuilder getThis() {
             return this;
         }
 

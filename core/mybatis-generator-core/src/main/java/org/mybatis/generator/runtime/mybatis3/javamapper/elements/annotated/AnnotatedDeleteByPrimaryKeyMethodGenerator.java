@@ -24,7 +24,7 @@ import org.mybatis.generator.runtime.mybatis3.javamapper.elements.DeleteByPrimar
 
 public class AnnotatedDeleteByPrimaryKeyMethodGenerator extends DeleteByPrimaryKeyMethodGenerator {
 
-    protected AnnotatedDeleteByPrimaryKeyMethodGenerator(Builder builder) {
+    protected AnnotatedDeleteByPrimaryKeyMethodGenerator(AnnotatedBuilder builder) {
         super(builder);
     }
 
@@ -44,9 +44,9 @@ public class AnnotatedDeleteByPrimaryKeyMethodGenerator extends DeleteByPrimaryK
                 .build();
     }
 
-    public static class Builder extends DeleteByPrimaryKeyMethodGenerator.Builder {
+    public static class AnnotatedBuilder extends DeleteByPrimaryKeyMethodGenerator.Builder {
         @Override
-        protected Builder getThis() {
+        protected AnnotatedBuilder getThis() {
             return this;
         }
 

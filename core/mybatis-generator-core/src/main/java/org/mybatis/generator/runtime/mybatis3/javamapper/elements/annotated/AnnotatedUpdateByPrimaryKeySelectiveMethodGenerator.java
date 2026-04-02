@@ -21,7 +21,7 @@ import org.mybatis.generator.runtime.mybatis3.javamapper.elements.UpdateByPrimar
 
 public class AnnotatedUpdateByPrimaryKeySelectiveMethodGenerator extends UpdateByPrimaryKeySelectiveMethodGenerator {
 
-    protected AnnotatedUpdateByPrimaryKeySelectiveMethodGenerator(Builder builder) {
+    protected AnnotatedUpdateByPrimaryKeySelectiveMethodGenerator(AnnotatedBuilder builder) {
         super(builder);
     }
 
@@ -41,9 +41,9 @@ public class AnnotatedUpdateByPrimaryKeySelectiveMethodGenerator extends UpdateB
                 .build();
     }
 
-    public static class Builder extends UpdateByPrimaryKeySelectiveMethodGenerator.Builder {
+    public static class AnnotatedBuilder extends UpdateByPrimaryKeySelectiveMethodGenerator.Builder {
         @Override
-        protected Builder getThis() {
+        protected AnnotatedBuilder getThis() {
             return this;
         }
 

@@ -21,7 +21,7 @@ import org.mybatis.generator.runtime.mybatis3.javamapper.elements.UpdateByExampl
 
 public class AnnotatedUpdateByExampleWithBLOBsMethodGenerator extends UpdateByExampleWithBLOBsMethodGenerator {
 
-    protected AnnotatedUpdateByExampleWithBLOBsMethodGenerator(Builder builder) {
+    protected AnnotatedUpdateByExampleWithBLOBsMethodGenerator(AnnotatedBuilder builder) {
         super(builder);
     }
 
@@ -41,9 +41,9 @@ public class AnnotatedUpdateByExampleWithBLOBsMethodGenerator extends UpdateByEx
                 .build();
     }
 
-    public static class Builder extends UpdateByExampleWithBLOBsMethodGenerator.Builder {
+    public static class AnnotatedBuilder extends UpdateByExampleWithBLOBsMethodGenerator.Builder {
         @Override
-        protected Builder getThis() {
+        protected AnnotatedBuilder getThis() {
             return this;
         }
 

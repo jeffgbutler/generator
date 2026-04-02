@@ -27,7 +27,7 @@ public class AnnotatedSelectByPrimaryKeyMethodGenerator extends SelectByPrimaryK
 
     private final boolean useResultMapIfAvailable;
 
-    protected AnnotatedSelectByPrimaryKeyMethodGenerator(Builder builder) {
+    protected AnnotatedSelectByPrimaryKeyMethodGenerator(AnnotatedBuilder builder) {
         super(builder);
         this.useResultMapIfAvailable = builder.useResultMapIfAvailable;
     }
@@ -87,16 +87,16 @@ public class AnnotatedSelectByPrimaryKeyMethodGenerator extends SelectByPrimaryK
         }
     }
 
-    public static class Builder extends SelectByPrimaryKeyMethodGenerator.AbstractBuilder<Builder> {
+    public static class AnnotatedBuilder extends SelectByPrimaryKeyMethodGenerator.AbstractBuilder<AnnotatedBuilder> {
         private boolean useResultMapIfAvailable;
 
-        public Builder useResultMapIfAvailable(boolean useResultMapIfAvailable) {
+        public AnnotatedBuilder useResultMapIfAvailable(boolean useResultMapIfAvailable) {
             this.useResultMapIfAvailable = useResultMapIfAvailable;
             return this;
         }
 
         @Override
-        protected Builder getThis() {
+        protected AnnotatedBuilder getThis() {
             return this;
         }
 

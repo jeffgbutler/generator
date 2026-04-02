@@ -21,7 +21,7 @@ import org.mybatis.generator.runtime.common.GeneratedKeyAnnotationUtility;
 import org.mybatis.generator.runtime.mybatis3.javamapper.elements.InsertSelectiveMethodGenerator;
 
 public class AnnotatedInsertSelectiveMethodGenerator extends InsertSelectiveMethodGenerator {
-    protected AnnotatedInsertSelectiveMethodGenerator(Builder builder) {
+    protected AnnotatedInsertSelectiveMethodGenerator(AnnotatedBuilder builder) {
         super(builder);
     }
 
@@ -46,9 +46,9 @@ public class AnnotatedInsertSelectiveMethodGenerator extends InsertSelectiveMeth
         return builder.build();
     }
 
-    public static class Builder extends InsertSelectiveMethodGenerator.Builder {
+    public static class AnnotatedBuilder extends InsertSelectiveMethodGenerator.Builder {
         @Override
-        protected Builder getThis() {
+        protected AnnotatedBuilder getThis() {
             return this;
         }
 

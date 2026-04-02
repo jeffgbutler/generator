@@ -21,7 +21,7 @@ import org.mybatis.generator.runtime.mybatis3.javamapper.elements.UpdateByPrimar
 
 public class AnnotatedUpdateByPrimaryKeyWithBLOBsMethodGenerator extends UpdateByPrimaryKeyWithBLOBsMethodGenerator {
 
-    protected AnnotatedUpdateByPrimaryKeyWithBLOBsMethodGenerator(Builder builder) {
+    protected AnnotatedUpdateByPrimaryKeyWithBLOBsMethodGenerator(AnnotatedBuilder builder) {
         super(builder);
     }
 
@@ -33,9 +33,9 @@ public class AnnotatedUpdateByPrimaryKeyWithBLOBsMethodGenerator extends UpdateB
                 .build();
     }
 
-    public static class Builder extends UpdateByPrimaryKeyWithBLOBsMethodGenerator.Builder {
+    public static class AnnotatedBuilder extends UpdateByPrimaryKeyWithBLOBsMethodGenerator.Builder {
         @Override
-        protected Builder getThis() {
+        protected AnnotatedBuilder getThis() {
             return this;
         }
 

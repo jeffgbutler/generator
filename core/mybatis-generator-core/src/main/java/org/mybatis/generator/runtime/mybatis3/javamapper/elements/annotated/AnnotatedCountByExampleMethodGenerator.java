@@ -21,7 +21,7 @@ import org.mybatis.generator.runtime.mybatis3.javamapper.elements.CountByExample
 
 public class AnnotatedCountByExampleMethodGenerator extends CountByExampleMethodGenerator {
 
-    protected AnnotatedCountByExampleMethodGenerator(Builder builder) {
+    protected AnnotatedCountByExampleMethodGenerator(AnnotatedBuilder builder) {
         super(builder);
     }
 
@@ -41,9 +41,9 @@ public class AnnotatedCountByExampleMethodGenerator extends CountByExampleMethod
                 .build();
     }
 
-    public static class Builder extends CountByExampleMethodGenerator.Builder {
+    public static class AnnotatedBuilder extends CountByExampleMethodGenerator.Builder {
         @Override
-        protected Builder getThis() {
+        protected AnnotatedBuilder getThis() {
             return this;
         }
 
