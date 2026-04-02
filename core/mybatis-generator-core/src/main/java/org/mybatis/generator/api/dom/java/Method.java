@@ -17,6 +17,7 @@ package org.mybatis.generator.api.dom.java;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -125,7 +126,7 @@ public class Method extends JavaElement {
     }
 
     public List<Parameter> getParameters() {
-        return parameters;
+        return Collections.unmodifiableList(parameters);
     }
 
     public void addParameter(Parameter parameter) {
@@ -145,7 +146,7 @@ public class Method extends JavaElement {
     }
 
     public List<FullyQualifiedJavaType> getExceptions() {
-        return exceptions;
+        return Collections.unmodifiableList(exceptions);
     }
 
     public void addException(FullyQualifiedJavaType exception) {
@@ -193,7 +194,7 @@ public class Method extends JavaElement {
     }
 
     public List<String> getReturnTypeAnnotations() {
-        return returnTypeAnnotations;
+        return Collections.unmodifiableList(returnTypeAnnotations);
     }
 
     public void addReturnTypeAnnotation(String annotation) {

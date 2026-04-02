@@ -204,8 +204,4 @@ public class NewConfigFileWizard extends Wizard implements INewWizard {
     public void init(IWorkbench workbench, IStructuredSelection selection) {
         this.selection = selection;
     }
-
-    public void init(IWorkbench workbench, ISelection selection) {
-        this.selection = selection;
-    }
 }

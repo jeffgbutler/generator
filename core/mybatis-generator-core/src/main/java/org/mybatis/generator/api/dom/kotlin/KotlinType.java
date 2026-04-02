@@ -117,6 +117,7 @@ public class KotlinType extends KotlinNamedItemContainer {
             return this;
         }
 
+        @Override
         public Builder getThis() {
             return this;
         }

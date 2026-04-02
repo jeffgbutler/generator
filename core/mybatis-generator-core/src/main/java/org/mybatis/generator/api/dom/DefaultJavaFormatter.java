@@ -15,6 +15,7 @@
  */
 package org.mybatis.generator.api.dom;
 
+import org.jspecify.annotations.Nullable;
 import org.mybatis.generator.api.JavaFormatter;
 import org.mybatis.generator.api.dom.java.CompilationUnit;
 import org.mybatis.generator.api.dom.java.CompilationUnitVisitor;
@@ -34,6 +35,8 @@ import org.mybatis.generator.config.Context;
  * @author Jeff Butler
  */
 public class DefaultJavaFormatter implements JavaFormatter, CompilationUnitVisitor<String> {
+    protected @Nullable Context context;
+
     @Override
     public String getFormattedContent(CompilationUnit compilationUnit) {
         return compilationUnit.accept(this);
@@ -41,7 +44,7 @@ public class DefaultJavaFormatter implements JavaFormatter, CompilationUnitVisit
 
     @Override
     public void setContext(Context context) {
-        // context is not used in the default formatter
+        this.context = context;
     }
 
     @Override
