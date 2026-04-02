@@ -48,7 +48,6 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.mybatis.generator.eclipse.ui.Activator;
 import org.mybatis.generator.eclipse.ui.Messages;
-import org.mybatis.generator.eclipse.ui.launcher.GeneratorLaunchConstants;
 import org.mybatis.generator.eclipse.ui.launcher.GeneratorLaunchShortcut;
 import org.mybatis.generator.internal.util.StringUtility;
 
@@ -62,7 +61,7 @@ import org.mybatis.generator.internal.util.StringUtility;
  * @author Jeff Butler
  *
  */
-public abstract class AbstractGeneratorComposite extends Composite implements GeneratorLaunchConstants {
+public abstract class AbstractGeneratorComposite extends Composite {
 
     protected Text txtFileName;
     protected String javaProjectName;

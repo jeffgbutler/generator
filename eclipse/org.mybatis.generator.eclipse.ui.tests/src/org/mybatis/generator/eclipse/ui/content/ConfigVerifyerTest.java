@@ -29,7 +29,7 @@ public class ConfigVerifyerTest {
     @Test
     public void testValidFile() {
         ConfigVerifyer cf = new ConfigVerifyer((File) null);
-        InputStream resource = getClass()
+        InputStream resource = ConfigVerifyerTest.class
                 .getResourceAsStream("/org/mybatis/generator/eclipse/ui/content/GoodConfigFile.xml");
         
         assertThat(cf.isConfigFile(resource)).isTrue();
@@ -38,7 +38,7 @@ public class ConfigVerifyerTest {
     @Test
     public void testInvalidFile() {
         ConfigVerifyer cf = new ConfigVerifyer((File) null);
-        InputStream resource = getClass()
+        InputStream resource = ConfigVerifyerTest.class
                 .getResourceAsStream("/org/mybatis/generator/eclipse/ui/content/NotAConfigFile.xml");
         
         assertThat(cf.isConfigFile(resource)).isFalse();

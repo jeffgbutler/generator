@@ -36,7 +36,7 @@ public class MixedMapperGenerator extends JavaMapperGenerator {
 
     @Override
     protected void addDeleteByPrimaryKeyMethod(Interface interfaze) {
-        initializeSubBuilder(new AnnotatedDeleteByPrimaryKeyMethodGenerator.Builder())
+        initializeSubBuilder(new AnnotatedDeleteByPrimaryKeyMethodGenerator.AnnotatedBuilder())
                 .isSimple(false)
                 .build()
                 .execute(interfaze);
@@ -44,7 +44,7 @@ public class MixedMapperGenerator extends JavaMapperGenerator {
 
     @Override
     protected void addInsertMethod(Interface interfaze) {
-        initializeSubBuilder(new AnnotatedInsertMethodGenerator.Builder())
+        initializeSubBuilder(new AnnotatedInsertMethodGenerator.AnnotatedBuilder())
                 .isSimple(false)
                 .build()
                 .execute(interfaze);
@@ -52,7 +52,7 @@ public class MixedMapperGenerator extends JavaMapperGenerator {
 
     @Override
     protected void addSelectByPrimaryKeyMethod(Interface interfaze) {
-        initializeSubBuilder(new AnnotatedSelectByPrimaryKeyMethodGenerator.Builder())
+        initializeSubBuilder(new AnnotatedSelectByPrimaryKeyMethodGenerator.AnnotatedBuilder())
                 .isSimple(false)
                 .useResultMapIfAvailable(true)
                 .build()
@@ -61,14 +61,14 @@ public class MixedMapperGenerator extends JavaMapperGenerator {
 
     @Override
     protected void addUpdateByPrimaryKeyWithBLOBsMethod(Interface interfaze) {
-        initializeSubBuilder(new AnnotatedUpdateByPrimaryKeyWithBLOBsMethodGenerator.Builder())
+        initializeSubBuilder(new AnnotatedUpdateByPrimaryKeyWithBLOBsMethodGenerator.AnnotatedBuilder())
                 .build()
                 .execute(interfaze);
     }
 
     @Override
     protected void addUpdateByPrimaryKeyWithoutBLOBsMethod(Interface interfaze) {
-        initializeSubBuilder(new AnnotatedUpdateByPrimaryKeyWithoutBLOBsMethodGenerator.Builder())
+        initializeSubBuilder(new AnnotatedUpdateByPrimaryKeyWithoutBLOBsMethodGenerator.AnnotatedBuilder())
                 .isSimple(false)
                 .build()
                 .execute(interfaze);

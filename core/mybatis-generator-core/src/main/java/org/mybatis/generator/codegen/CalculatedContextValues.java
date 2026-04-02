@@ -58,9 +58,14 @@ public class CalculatedContextValues {
         kotlinFileEncoding = context.getProperty(PropertyRegistry.CONTEXT_KOTLIN_FILE_ENCODING);
         Objects.requireNonNull(builder.warnings);
 
+        // this will either be the alias entered in the configuration, or the default if nothing was specified
+        String builderAlias = context.getTargetRuntime().orElse(Defaults.DEFAULT_RUNTIME.getAlias());
+        // this will either be a successful lookup by alias, or UNKNOWN
+        knownRuntime = KnownRuntime.getByAlias(builderAlias);
+
         pluginAggregator = new PluginAggregator();
         context.pluginConfigurations().forEach(pluginConfiguration -> {
-            Plugin plugin = ObjectFactory.createPlugin(context, pluginConfiguration, commentGenerator);
+            Plugin plugin = ObjectFactory.createPlugin(context, pluginConfiguration, commentGenerator, knownRuntime);
             if (plugin.validate(builder.warnings)) {
                 pluginAggregator.addPlugin(plugin);
             } else {
@@ -70,10 +75,6 @@ public class CalculatedContextValues {
             }
         });
 
-        // this will either be the alias entered in the configuration, or the default if nothing was specified
-        String builderAlias = context.getTargetRuntime().orElse(Defaults.DEFAULT_RUNTIME.getAlias());
-        // this will either be a successful lookup by alias, or UNKNOWN
-        knownRuntime = KnownRuntime.getByAlias(builderAlias);
         if (knownRuntime == KnownRuntime.UNKNOWN) {
             runtimeBuilderClassName = builderAlias;
         } else {

@@ -15,6 +15,7 @@
  */
 package org.mybatis.generator.api.dom;
 
+import org.jspecify.annotations.Nullable;
 import org.mybatis.generator.api.KotlinFormatter;
 import org.mybatis.generator.api.dom.kotlin.KotlinFile;
 import org.mybatis.generator.api.dom.kotlin.render.KotlinFileRenderer;
@@ -26,6 +27,8 @@ import org.mybatis.generator.config.Context;
  * @author Jeff Butler
  */
 public class DefaultKotlinFormatter implements KotlinFormatter {
+    protected @Nullable Context context;
+
     @Override
     public String getFormattedContent(KotlinFile kotlinFile) {
         return new KotlinFileRenderer().render(kotlinFile);
@@ -33,6 +36,6 @@ public class DefaultKotlinFormatter implements KotlinFormatter {
 
     @Override
     public void setContext(Context context) {
-        // context is not used in the default formatter
+        this.context = context;
     }
 }

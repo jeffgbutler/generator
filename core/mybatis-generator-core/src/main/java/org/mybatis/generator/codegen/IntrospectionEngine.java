@@ -15,7 +15,6 @@
  */
 package org.mybatis.generator.codegen;
 
-import static org.mybatis.generator.internal.util.StringUtility.composeFullyQualifiedTableName;
 import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
 import java.sql.Connection;
@@ -70,31 +69,38 @@ public class IntrospectionEngine {
             progressCallback.startTask(getString("Progress.0")); //$NON-NLS-1$
 
             DatabaseIntrospector databaseIntrospector = new DatabaseIntrospector(
-                    contextValues.context(), connection.getMetaData(), javaTypeResolver, warnings);
+                    contextValues.context(), connection.getMetaData(), javaTypeResolver);
 
             for (TableConfiguration tc : contextValues.context().tableConfigurations()) {
-                String tableName = composeFullyQualifiedTableName(tc.getCatalog(), tc.getSchema(),
-                        tc.getTableName(), '.');
-
-                if (isTableExcluded(tableName)) {
+                if (!shouldIntrospect(tc)) {
                     continue;
                 }
 
-                if (!tc.areAnyStatementsEnabled()) {
-                    warnings.add(getString("Warning.0", tableName)); //$NON-NLS-1$
-                    continue;
-                }
-
-                progressCallback.startTask(getString("Progress.1", tableName)); //$NON-NLS-1$
+                progressCallback.startTask(getString("Progress.1", tc.getFullyQualifiedName())); //$NON-NLS-1$
                 List<IntrospectedTable> tables = databaseIntrospector
                         .introspectTables(tc, contextValues.knownRuntime(), contextValues.pluginAggregator());
                 introspectedTables.addAll(tables);
 
                 progressCallback.checkCancel();
             }
+
+            warnings.addAll(databaseIntrospector.getWarnings());
         }
 
         return introspectedTables;
+    }
+
+    private boolean shouldIntrospect(TableConfiguration tc) {
+        if (isTableExcluded(tc.getFullyQualifiedName())) {
+            return false;
+        }
+
+        if (contextValues.knownRuntime().isLegacyMyBatis3Based() && !tc.areAnyStatementsEnabled()) {
+            warnings.add(getString("Warning.0", tc.getFullyQualifiedName())); //$NON-NLS-1$
+            return false;
+        }
+
+        return true;
     }
 
     private boolean isTableExcluded(String tableName) {

@@ -72,7 +72,7 @@ public class RecordBuilderPlugin extends BaseRecordPlugin {
         innerClass.setVisibility(JavaVisibility.PUBLIC);
 
         for (IntrospectedColumn column : columns) {
-            innerClass.addField(generateBuilderField(table, column, jspecifyEnabled));
+            innerClass.addField(generateBuilderField(column, jspecifyEnabled));
             innerClass.addMethod(generateBuilderMethod(column));
         }
 
@@ -81,8 +81,7 @@ public class RecordBuilderPlugin extends BaseRecordPlugin {
         return innerClass;
     }
 
-    private Field generateBuilderField(IntrospectedTable introspectedTable, IntrospectedColumn column,
-                                       boolean jspecifyEnabled) {
+    private Field generateBuilderField(IntrospectedColumn column, boolean jspecifyEnabled) {
         Field field = new Field(column.getJavaProperty(), column.getFullyQualifiedJavaType());
         if (jspecifyEnabled) {
             field.addAnnotation(JSpecifyPlugin.NULLABLE_ANNOTATION);

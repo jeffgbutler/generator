@@ -22,7 +22,7 @@ import org.mybatis.generator.runtime.mybatis3.javamapper.elements.SelectByExampl
 
 public class AnnotatedSelectByExampleWithoutBLOBsMethodGenerator extends SelectByExampleWithoutBLOBsMethodGenerator {
 
-    protected AnnotatedSelectByExampleWithoutBLOBsMethodGenerator(Builder builder) {
+    protected AnnotatedSelectByExampleWithoutBLOBsMethodGenerator(AnnotatedBuilder builder) {
         super(builder);
     }
 
@@ -56,9 +56,9 @@ public class AnnotatedSelectByExampleWithoutBLOBsMethodGenerator extends SelectB
         builder.withImport(new FullyQualifiedJavaType("org.apache.ibatis.annotations.SelectProvider")); //$NON-NLS-1$
     }
 
-    public static class Builder extends SelectByExampleWithoutBLOBsMethodGenerator.Builder {
+    public static class AnnotatedBuilder extends SelectByExampleWithoutBLOBsMethodGenerator.Builder {
         @Override
-        protected Builder getThis() {
+        protected AnnotatedBuilder getThis() {
             return this;
         }
 

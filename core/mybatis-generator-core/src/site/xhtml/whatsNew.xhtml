@@ -273,9 +273,7 @@
   </li>
   <li>The <code>IntrospectedTable.getTargetRuntime()</code> method has been removed. It is replaced by
       <code>IntrospectedTable.getKnownRuntime()</code>. Plugins might use these methods to function differently
-      for different runtimes. The new return value has much more information than the previous value. Additionally,
-      there are new utility methods <code>PluginUtilities.isDynamicSQL(IntrospectedTable)</code> and
-      <code>PluginUtilities.isLegacyMybatis(IntrospectedTable)</code> that may be helpful.
+      for different runtimes. The new return value has much more information than the previous value.
   </li>
   <li>If you run the generator directly from Java code (i.e. not from Maven, Ant, Eclipse, or the command line runner)
       then you will notice that the interface to the <code>MyBatisGenerator</code> class has changed. The class now

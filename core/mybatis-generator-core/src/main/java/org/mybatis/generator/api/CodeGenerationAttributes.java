@@ -15,8 +15,10 @@
  */
 package org.mybatis.generator.api;
 
+import static org.mybatis.generator.internal.util.StringUtility.ifStringHasValueElse;
 import static org.mybatis.generator.internal.util.StringUtility.isTrue;
-import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+import static org.mybatis.generator.internal.util.StringUtility.mapStringValueOrElseGet;
+import static org.mybatis.generator.internal.util.StringUtility.stringValueOrElseGet;
 import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
 import java.util.HashMap;
@@ -37,6 +39,7 @@ import org.mybatis.generator.config.SqlMapGeneratorConfiguration;
 import org.mybatis.generator.config.TableConfiguration;
 import org.mybatis.generator.exception.InternalException;
 import org.mybatis.generator.internal.rules.Rules;
+import org.mybatis.generator.internal.util.StringUtility;
 
 /**
  * This class holds calculated attributes for all code generator implementations. The class
@@ -493,33 +496,25 @@ public abstract class CodeGenerationAttributes {
     }
 
     protected String calculateDynamicSqlSupportPackage(ClientGeneratorConfiguration c) {
-        String pkg = c.getProperty(PropertyRegistry.CLIENT_DYNAMIC_SQL_SUPPORT_PACKAGE);
-        if (stringHasValue(pkg)) {
-            return pkg + getFullyQualifiedTable().getSubPackageForClientOrSqlMap(isSubPackagesEnabled(c));
-        } else {
-            return calculateClientInterfacePackage(c);
-        }
+        return StringUtility.mapStringValueOrElseGet(c.getProperty(PropertyRegistry.CLIENT_DYNAMIC_SQL_SUPPORT_PACKAGE),
+                s -> s + getFullyQualifiedTable().getSubPackageForClientOrSqlMap(isSubPackagesEnabled(c)),
+                () -> calculateClientInterfacePackage(c));
     }
 
     private String calculateMyBatisDynamicSQLTableObjectName() {
-        if (stringHasValue(getTableConfiguration().getDynamicSqlTableObjectName())) {
-            return getTableConfiguration().getDynamicSqlTableObjectName();
-        } else {
-            return getFullyQualifiedTable().getDomainObjectName();
-        }
+        return stringValueOrElseGet(getTableConfiguration().getDynamicSqlTableObjectName(),
+                () -> getFullyQualifiedTable().getDomainObjectName());
     }
 
     private String calculateMyBatis3JavaMapperType(ClientGeneratorConfiguration config) {
         StringBuilder sb = new StringBuilder();
         sb.append(calculateClientInterfacePackage(config));
         sb.append('.');
-        if (stringHasValue(getTableConfiguration().getMapperName())) {
-            sb.append(getTableConfiguration().getMapperName());
-        } else {
+        ifStringHasValueElse(getTableConfiguration().getMapperName(), sb::append, () -> {
             getFullyQualifiedTable().getDomainObjectSubPackage().ifPresent(sp -> sb.append(sp).append('.'));
             sb.append(getFullyQualifiedTable().getDomainObjectName());
             sb.append("Mapper"); //$NON-NLS-1$
-        }
+        });
         return sb.toString();
     }
 
@@ -527,13 +522,11 @@ public abstract class CodeGenerationAttributes {
         StringBuilder sb = new StringBuilder();
         sb.append(calculateClientInterfacePackage(config));
         sb.append('.');
-        if (stringHasValue(getTableConfiguration().getSqlProviderName())) {
-            sb.append(getTableConfiguration().getSqlProviderName());
-        } else {
+        ifStringHasValueElse(getTableConfiguration().getSqlProviderName(), sb::append, () -> {
             getFullyQualifiedTable().getDomainObjectSubPackage().ifPresent(sp -> sb.append(sp).append('.'));
             sb.append(getFullyQualifiedTable().getDomainObjectName());
             sb.append("SqlProvider"); //$NON-NLS-1$
-        }
+        });
         return sb.toString();
     }
 
@@ -541,13 +534,11 @@ public abstract class CodeGenerationAttributes {
         StringBuilder sb = new StringBuilder();
         sb.append(calculateDynamicSqlSupportPackage(config));
         sb.append('.');
-        if (stringHasValue(getTableConfiguration().getDynamicSqlSupportClassName())) {
-            sb.append(getTableConfiguration().getDynamicSqlSupportClassName());
-        } else {
+        ifStringHasValueElse(getTableConfiguration().getDynamicSqlSupportClassName(), sb::append, () -> {
             getFullyQualifiedTable().getDomainObjectSubPackage().ifPresent(sp -> sb.append(sp).append('.'));
             sb.append(getFullyQualifiedTable().getDomainObjectName());
             sb.append("DynamicSqlSupport"); //$NON-NLS-1$
-        }
+        });
         return sb.toString();
     }
 
@@ -586,34 +577,27 @@ public abstract class CodeGenerationAttributes {
      */
     protected String calculateModelExamplePackage(String modelPackage) {
         ModelGeneratorConfiguration config = context.getModelGeneratorConfiguration();
-        String exampleTargetPackage = config.getProperty(PropertyRegistry.MODEL_GENERATOR_EXAMPLE_PACKAGE);
-        if (!stringHasValue(exampleTargetPackage)) {
-            return modelPackage;
-        }
-
-        return exampleTargetPackage + getFullyQualifiedTable().getSubPackageForModel(isSubPackagesEnabled(config));
+        return mapStringValueOrElseGet(config.getProperty(PropertyRegistry.MODEL_GENERATOR_EXAMPLE_PACKAGE),
+                s -> s + getFullyQualifiedTable().getSubPackageForModel(isSubPackagesEnabled(config)),
+                () -> modelPackage);
     }
 
     private String calculateSqlMapPackage(SqlMapGeneratorConfiguration config) {
         StringBuilder sb = new StringBuilder();
         sb.append(config.getTargetPackage());
         sb.append(getFullyQualifiedTable().getSubPackageForClientOrSqlMap(isSubPackagesEnabled(config)));
-        if (stringHasValue(getTableConfiguration().getMapperName())) {
-            String mapperName = getTableConfiguration().getMapperName();
+        ifStringHasValueElse(getTableConfiguration().getMapperName(), mapperName -> {
             int ind = mapperName.lastIndexOf('.');
             if (ind != -1) {
                 sb.append('.').append(mapperName, 0, ind);
             }
-        } else {
-            getFullyQualifiedTable().getDomainObjectSubPackage().ifPresent(sp -> sb.append('.').append(sp));
-        }
+        }, () -> getFullyQualifiedTable().getDomainObjectSubPackage().ifPresent(sp -> sb.append('.').append(sp)));
         return sb.toString();
     }
 
     protected String calculateMyBatis3XmlMapperFileName() {
-        StringBuilder sb = new StringBuilder();
-        if (stringHasValue(getTableConfiguration().getMapperName())) {
-            String mapperName = getTableConfiguration().getMapperName();
+        return StringUtility.mapStringValueOrElseGet(getTableConfiguration().getMapperName(), mapperName -> {
+            StringBuilder sb = new StringBuilder();
             int ind = mapperName.lastIndexOf('.');
             if (ind == -1) {
                 sb.append(mapperName);
@@ -621,11 +605,8 @@ public abstract class CodeGenerationAttributes {
                 sb.append(mapperName.substring(ind + 1));
             }
             sb.append(".xml"); //$NON-NLS-1$
-        } else {
-            sb.append(getFullyQualifiedTable().getDomainObjectName());
-            sb.append("Mapper.xml"); //$NON-NLS-1$
-        }
-        return sb.toString();
+            return sb.toString();
+        }, () -> getFullyQualifiedTable().getDomainObjectName() + "Mapper.xml"); //$NON-NLS-1$
     }
 
     // this method should be called after myBatis3JavaMapperType and myBatis3XmlMapperPackage values
@@ -646,12 +627,10 @@ public abstract class CodeGenerationAttributes {
         StringBuilder sb = new StringBuilder();
         sb.append(myBatis3XmlMapperPackage);
         sb.append('.');
-        if (stringHasValue(getTableConfiguration().getMapperName())) {
-            sb.append(getTableConfiguration().getMapperName());
-        } else {
+        ifStringHasValueElse(getTableConfiguration().getMapperName(), sb::append, () -> {
             sb.append(getFullyQualifiedTable().getDomainObjectName());
             sb.append("Mapper"); //$NON-NLS-1$
-        }
+        });
         return sb.toString();
     }
 
@@ -708,23 +687,16 @@ public abstract class CodeGenerationAttributes {
     }
 
     public Optional<String> findTableOrModelGeneratorProperty(String property) {
-        String value = getTableConfigurationProperty(property);
-        if (!stringHasValue(value)) {
-            value = context.getModelGeneratorConfiguration().getProperty(property);
-        }
-
-        return Optional.ofNullable(value);
+        return StringUtility.mapStringValueOrElseGet(getTableConfigurationProperty(property),
+                Optional::of,
+                () -> Optional.ofNullable(context.getModelGeneratorConfiguration().getProperty(property)));
     }
 
     public Optional<String> findTableOrClientGeneratorProperty(String property) {
-        String value = getTableConfigurationProperty(property);
-        if (!stringHasValue(value)) {
-            value = context.getClientGeneratorConfiguration()
-                    .map(c -> c.getProperty(property))
-                    .orElse(null);
-        }
-
-        return Optional.ofNullable(value);
+        return StringUtility.mapStringValueOrElseGet(getTableConfigurationProperty(property),
+                Optional::of,
+                () -> context.getClientGeneratorConfiguration()
+                        .map(c -> c.getProperty(property)));
     }
 
     public boolean findTableOrClientGeneratorPropertyAsBoolean(String property) {

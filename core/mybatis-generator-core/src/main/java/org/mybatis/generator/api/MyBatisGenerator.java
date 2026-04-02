@@ -16,6 +16,7 @@
 package org.mybatis.generator.api;
 
 import static org.mybatis.generator.internal.util.ClassloaderUtility.getCustomClassloader;
+import static org.mybatis.generator.internal.util.StringUtility.mapStringValueOrElseGet;
 import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
 import java.io.BufferedWriter;
@@ -66,7 +67,6 @@ import org.mybatis.generator.merge.xml.XmlFileMergerJaxp;
  * @see org.mybatis.generator.config.xml.ConfigurationParser
  */
 public class MyBatisGenerator {
-    private static final ProgressCallback NULL_PROGRESS_CALLBACK = new ProgressCallback() { };
     private final Configuration configuration;
     private final ShellCallback shellCallback;
     private final ProgressCallback progressCallback;
@@ -81,7 +81,7 @@ public class MyBatisGenerator {
     private MyBatisGenerator(Builder builder) {
         configuration = Objects.requireNonNull(builder.configuration, getString("RuntimeError.2")); //$NON-NLS-1$
         shellCallback = Objects.requireNonNullElseGet(builder.shellCallback, DefaultShellCallback::new);
-        progressCallback = Objects.requireNonNullElse(builder.progressCallback, NULL_PROGRESS_CALLBACK);
+        progressCallback = Objects.requireNonNullElseGet(builder.progressCallback, () -> new ProgressCallback() {});
         fullyQualifiedTableNames = builder.fullyQualifiedTableNames;
         contextIds = builder.contextIds;
 
@@ -283,67 +283,44 @@ public class MyBatisGenerator {
         }
     }
 
-    private void writeGeneratedJavaFile(GeneratedJavaFile gjf, JavaFormatter javaFormatter,
+    private void writeGeneratedJavaFile(GeneratedJavaFile gf, JavaFormatter javaFormatter,
                                         @Nullable String javaFileEncoding, List<String> warnings)
             throws InterruptedException, IOException {
-        Path targetFile;
-        String source = javaFormatter.getFormattedContent(gjf.getCompilationUnit());
-        try {
-            File directory = shellCallback.getDirectory(gjf.getTargetProject(), gjf.getTargetPackage());
-            targetFile = directory.toPath().resolve(gjf.getFileName());
-            if (Files.exists(targetFile)) {
-                if (isJavaFileMergeEnabled) {
-                    source = javaFileMerger.getMergedSource(source, targetFile.toFile(), javaFileEncoding);
-                } else if (isOverwriteEnabled) {
-                    warnings.add(getString("Warning.11", targetFile.toFile().getAbsolutePath())); //$NON-NLS-1$
-                } else {
-                    targetFile = getUniqueFileName(directory, gjf.getFileName());
-                    warnings.add(getString("Warning.2", targetFile.toFile().getAbsolutePath())); //$NON-NLS-1$
-                }
-            }
-
-            progressCallback.checkCancel();
-            progressCallback.startTask(getString("Progress.15", targetFile.toString())); //$NON-NLS-1$
-            writeFile(targetFile.toFile(), source, javaFileEncoding);
-        } catch (ShellException e) {
-            warnings.add(e.getMessage());
-        }
+        String source = javaFormatter.getFormattedContent(gf.getCompilationUnit());
+        writeFile(source, javaFileEncoding, gf, warnings, isJavaFileMergeEnabled,
+                (newContent, existingContent) -> javaFileMerger.getMergedSource(newContent, existingContent,
+                        javaFileEncoding));
     }
 
     private void writeGeneratedKotlinFile(GeneratedKotlinFile gf, KotlinFormatter kotlinFormatter,
                                           @Nullable String kotlinFileEncoding, List<String> warnings)
             throws InterruptedException, IOException {
-        Path targetFile;
         String source = kotlinFormatter.getFormattedContent(gf.getKotlinFile());
-        try {
-            File directory = shellCallback.getDirectory(gf.getTargetProject(), gf.getTargetPackage());
-            targetFile = directory.toPath().resolve(gf.getFileName());
-            if (Files.exists(targetFile)) {
-                if (isOverwriteEnabled) {
-                    warnings.add(getString("Warning.11", targetFile.toFile().getAbsolutePath())); //$NON-NLS-1$
-                } else {
-                    targetFile = getUniqueFileName(directory, gf.getFileName());
-                    warnings.add(getString("Warning.2", targetFile.toFile().getAbsolutePath())); //$NON-NLS-1$
-                }
-            }
-
-            progressCallback.checkCancel();
-            progressCallback.startTask(getString("Progress.15", targetFile.toString())); //$NON-NLS-1$
-            writeFile(targetFile.toFile(), source, kotlinFileEncoding);
-        } catch (ShellException e) {
-            warnings.add(e.getMessage());
-        }
+        writeFile(source, kotlinFileEncoding, gf, warnings, false, Merger.noMerge());
     }
 
     private void writeGenericGeneratedFile(GenericGeneratedFile gf, List<String> warnings)
             throws InterruptedException, IOException {
-        Path targetFile;
         String source = gf.getFormattedContent();
+        writeFile(source, gf.getFileEncoding().orElse(null), gf, warnings, false, Merger.noMerge());
+    }
+
+    private void writeGeneratedXmlFile(GeneratedXmlFile gf, XmlFormatter xmlFormatter, List<String> warnings)
+            throws InterruptedException, IOException {
+        String source = xmlFormatter.getFormattedContent(gf.getDocument());
+        writeFile(source, "UTF-8", gf, warnings, true, XmlFileMergerJaxp::getMergedSource); //$NON-NLS-1$
+    }
+
+    private void writeFile(String content, @Nullable String encoding, GeneratedFile gf, List<String> warnings,
+                           boolean mergeEnabled, Merger merger)
+            throws InterruptedException, IOException {
         try {
             File directory = shellCallback.getDirectory(gf.getTargetProject(), gf.getTargetPackage());
-            targetFile = directory.toPath().resolve(gf.getFileName());
+            Path targetFile = directory.toPath().resolve(gf.getFileName());
             if (Files.exists(targetFile)) {
-                if (isOverwriteEnabled) {
+                if (mergeEnabled && gf.isMergeable()) {
+                    content = merger.apply(content, targetFile.toFile());
+                } else if (isOverwriteEnabled) {
                     warnings.add(getString("Warning.11", targetFile.toFile().getAbsolutePath())); //$NON-NLS-1$
                 } else {
                     targetFile = getUniqueFileName(directory, gf.getFileName());
@@ -353,33 +330,7 @@ public class MyBatisGenerator {
 
             progressCallback.checkCancel();
             progressCallback.startTask(getString("Progress.15", targetFile.toString())); //$NON-NLS-1$
-            writeFile(targetFile.toFile(), source, gf.getFileEncoding().orElse(null));
-        } catch (ShellException e) {
-            warnings.add(e.getMessage());
-        }
-    }
-
-    private void writeGeneratedXmlFile(GeneratedXmlFile gxf, XmlFormatter xmlFormatter, List<String> warnings)
-            throws InterruptedException, IOException {
-        Path targetFile;
-        String source = xmlFormatter.getFormattedContent(gxf.getDocument());
-        try {
-            File directory = shellCallback.getDirectory(gxf.getTargetProject(), gxf.getTargetPackage());
-            targetFile = directory.toPath().resolve(gxf.getFileName());
-            if (Files.exists(targetFile)) {
-                if (gxf.isMergeable()) {
-                    source = XmlFileMergerJaxp.getMergedSource(source, targetFile.toFile());
-                } else if (isOverwriteEnabled) {
-                    warnings.add(getString("Warning.11", targetFile.toFile().getAbsolutePath())); //$NON-NLS-1$
-                } else {
-                    targetFile = getUniqueFileName(directory, gxf.getFileName());
-                    warnings.add(getString("Warning.2", targetFile.toFile().getAbsolutePath())); //$NON-NLS-1$
-                }
-            }
-
-            progressCallback.checkCancel();
-            progressCallback.startTask(getString("Progress.15", targetFile.toString())); //$NON-NLS-1$
-            writeFile(targetFile.toFile(), source, "UTF-8"); //$NON-NLS-1$
+            writeFile(targetFile.toFile(), content, encoding);
         } catch (ShellException e) {
             warnings.add(e.getMessage());
         }
@@ -398,17 +349,13 @@ public class MyBatisGenerator {
      *             Signals that an I/O exception has occurred.
      */
     private void writeFile(File file, String content, @Nullable String fileEncoding) throws IOException {
-        try (OutputStream fos = Files.newOutputStream(file.toPath(), StandardOpenOption.CREATE,
+        Charset cs = mapStringValueOrElseGet(fileEncoding, Charset::forName, Charset::defaultCharset);
+        try (OutputStream outputStream = Files.newOutputStream(file.toPath(), StandardOpenOption.CREATE,
                 StandardOpenOption.TRUNCATE_EXISTING)) {
-            OutputStreamWriter osw;
-            if (fileEncoding == null) {
-                osw = new OutputStreamWriter(fos);
-            } else {
-                osw = new OutputStreamWriter(fos, Charset.forName(fileEncoding));
-            }
-
-            try (BufferedWriter bw = new BufferedWriter(osw)) {
-                bw.write(content);
+            try (OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, cs)) {
+                try (BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
+                    bufferedWriter.write(content);
+                }
             }
         }
     }
@@ -508,6 +455,15 @@ public class MyBatisGenerator {
 
     private record ContextValuesAndTables(CalculatedContextValues contextValues,
                                           List<IntrospectedTable> introspectedTables) { }
+
+    @FunctionalInterface
+    private interface Merger {
+        String apply(String newContent, File existingContent) throws ShellException;
+
+        static Merger noMerge() {
+            return (newContent, existingContent) -> newContent;
+        }
+    }
 
     public static class Builder {
         private @Nullable Configuration configuration;

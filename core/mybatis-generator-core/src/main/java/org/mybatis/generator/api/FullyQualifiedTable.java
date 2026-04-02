@@ -16,7 +16,9 @@
 package org.mybatis.generator.api;
 
 import static org.mybatis.generator.internal.util.StringUtility.composeFullyQualifiedTableName;
+import static org.mybatis.generator.internal.util.StringUtility.mapStringValueOrElseGet;
 import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+import static org.mybatis.generator.internal.util.StringUtility.stringValueOrElseGet;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -44,27 +46,27 @@ public class FullyQualifiedTable {
     private final @Nullable DomainObjectRenamingRule domainObjectRenamingRule;
 
     public FullyQualifiedTable(Builder builder) {
-        this.introspectedCatalog = builder.introspectedCatalog;
-        this.introspectedSchema = builder.introspectedSchema;
-        this.introspectedTableName = Objects.requireNonNull(builder.introspectedTableName);
-        this.ignoreQualifiersAtRuntime = builder.ignoreQualifiersAtRuntime;
-        this.runtimeCatalog = builder.runtimeCatalog;
-        this.runtimeSchema = builder.runtimeSchema;
-        this.runtimeTableName = builder.runtimeTableName;
-        this.domainObjectRenamingRule = builder.domainObjectRenamingRule;
+        introspectedCatalog = builder.introspectedCatalog;
+        introspectedSchema = builder.introspectedSchema;
+        introspectedTableName = Objects.requireNonNull(builder.introspectedTableName);
+        ignoreQualifiersAtRuntime = builder.ignoreQualifiersAtRuntime;
+        runtimeCatalog = builder.runtimeCatalog;
+        runtimeSchema = builder.runtimeSchema;
+        runtimeTableName = builder.runtimeTableName;
+        domainObjectRenamingRule = builder.domainObjectRenamingRule;
 
         if (stringHasValue(builder.domainObjectName)) {
             int index = builder.domainObjectName.lastIndexOf('.');
             if (index == -1) {
-                this.configuredDomainObjectName = builder.domainObjectName;
+                configuredDomainObjectName = builder.domainObjectName;
             } else {
-                this.configuredDomainObjectName = builder.domainObjectName.substring(index + 1);
-                this.domainObjectSubPackage = builder.domainObjectName.substring(0, index);
+                configuredDomainObjectName = builder.domainObjectName.substring(index + 1);
+                domainObjectSubPackage = builder.domainObjectName.substring(0, index);
             }
         }
 
         if (builder.alias == null) {
-            this.alias = null;
+            alias = null;
         } else {
             this.alias = builder.alias.trim();
         }
@@ -142,16 +144,13 @@ public class FullyQualifiedTable {
     }
 
     public String getDomainObjectName() {
-        if (stringHasValue(configuredDomainObjectName)) {
-            return configuredDomainObjectName;
-        }
+        return stringValueOrElseGet(configuredDomainObjectName, this::calculateDomainObjectName);
+    }
 
-        String finalDomainObjectName;
-        if (stringHasValue(runtimeTableName)) {
-            finalDomainObjectName = JavaBeansUtil.getCamelCaseString(runtimeTableName, true);
-        } else {
-            finalDomainObjectName = JavaBeansUtil.getCamelCaseString(introspectedTableName, true);
-        }
+    private String calculateDomainObjectName() {
+        String finalDomainObjectName = mapStringValueOrElseGet(runtimeTableName,
+                s -> JavaBeansUtil.getCamelCaseString(s, true),
+                () -> JavaBeansUtil.getCamelCaseString(introspectedTableName, true));
 
         if (domainObjectRenamingRule != null) {
             Pattern pattern = domainObjectRenamingRule.pattern();

@@ -32,6 +32,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
+import org.jspecify.annotations.Nullable;
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.Configuration;
 import org.mybatis.generator.config.xml.ConfigurationParser;
@@ -43,33 +44,33 @@ import org.mybatis.generator.internal.util.StringUtility;
 import org.mybatis.generator.internal.util.messages.Messages;
 
 /**
- * Goal which generates MyBatis artifacts.
+ * Goal that generates MyBatis artifacts.
  */
 @Mojo(name = "generate", defaultPhase = LifecyclePhase.GENERATE_SOURCES,
         requiresDependencyResolution = ResolutionScope.TEST)
 public class MyBatisGeneratorMojo extends AbstractMojo {
 
-    private final ThreadLocal<ClassLoader> savedClassloader = new ThreadLocal<>();
+    private final ThreadLocal<@Nullable ClassLoader> savedClassloader = new ThreadLocal<>();
 
     /**
      * Maven Project.
      */
     @Parameter(property = "project", required = true, readonly = true)
-    private MavenProject project;
+    private @Nullable MavenProject project;
 
     /**
      * Output Directory.
      */
     @Parameter(property = "mybatis.generator.outputDirectory",
             defaultValue = "${project.build.directory}/generated-sources/mybatis-generator", required = true)
-    private File outputDirectory;
+    private @Nullable File outputDirectory;
 
     /**
      * Location of the configuration file.
      */
     @Parameter(property = "mybatis.generator.configurationFile",
             defaultValue = "${project.basedir}/src/main/resources/generatorConfig.xml", required = true)
-    private File configurationFile;
+    private @Nullable File configurationFile;
 
     /**
      * Specifies whether the mojo writes progress messages to the log.
@@ -91,43 +92,43 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
      * supplied also, and jdbcUserId and jdbcPassword may be supplied.
      */
     @Parameter(property = "mybatis.generator.sqlScript")
-    private String sqlScript;
+    private @Nullable String sqlScript;
 
     /**
      * JDBC Driver to use if a sql.script.file is specified.
      */
     @Parameter(property = "mybatis.generator.jdbcDriver")
-    private String jdbcDriver;
+    private @Nullable String jdbcDriver;
 
     /**
      * JDBC URL to use if a sql.script.file is specified.
      */
     @Parameter(property = "mybatis.generator.jdbcURL")
-    private String jdbcURL;
+    private @Nullable String jdbcURL;
 
     /**
      * JDBC user ID to use if a sql.script.file is specified.
      */
     @Parameter(property = "mybatis.generator.jdbcUserId")
-    private String jdbcUserId;
+    private @Nullable String jdbcUserId;
 
     /**
      * JDBC password to use if a sql.script.file is specified.
      */
     @Parameter(property = "mybatis.generator.jdbcPassword")
-    private String jdbcPassword;
+    private @Nullable String jdbcPassword;
 
     /**
      * Comma-delimited list of table names to generate.
      */
     @Parameter(property = "mybatis.generator.tableNames")
-    private String tableNames;
+    private @Nullable String tableNames;
 
     /**
      * Comma-delimited list of contexts to generate.
      */
     @Parameter(property = "mybatis.generator.contexts")
-    private String contexts;
+    private @Nullable String contexts;
 
     /**
      * Skip generator.
@@ -174,6 +175,7 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
         // use of a properties file in the build.  Typically, the properties file
         // is in the project's source tree, but the plugin classpath does not
         // include the project classpath.
+        assert project != null;
         List<Resource> resources = project.getResources();
         List<String> resourceDirectories = new ArrayList<>();
         for (Resource resource: resources) {
@@ -249,6 +251,7 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
                 // so that the project dependency classes can be found
                 // directly, without adding the classpath to configuration's classPathEntries
                 // repeatedly.Examples are JDBC drivers, root classes, root interfaces, etc.
+                assert project != null;
                 Set<String> entries = new HashSet<>();
                 if (includeCompileDependencies) {
                     entries.addAll(project.getCompileClasspathElements());
@@ -277,13 +280,19 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
             return;
         }
 
-        SqlScriptRunner scriptRunner = new SqlScriptRunner(sqlScript,
-                jdbcDriver, jdbcURL, jdbcUserId, jdbcPassword);
-        scriptRunner.setLog(getLog());
+        SqlScriptRunner scriptRunner = new SqlScriptRunner.Builder()
+                .withSourceFile(sqlScript)
+                .withDriver(jdbcDriver)
+                .withUrl(jdbcURL)
+                .withUserId(jdbcUserId)
+                .withPassword(jdbcPassword)
+                .withLog(getLog())
+                .build();
         scriptRunner.executeScript();
     }
 
     public File getOutputDirectory() {
+        assert outputDirectory != null;
         return outputDirectory;
     }
 

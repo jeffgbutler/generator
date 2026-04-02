@@ -48,6 +48,7 @@ public abstract class KotlinNamedItemContainer extends KotlinNamedItem {
             return getThis();
         }
 
+        @Override
         protected abstract T getThis();
     }
 }

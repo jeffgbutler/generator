@@ -15,7 +15,7 @@
  */
 package org.mybatis.generator.internal;
 
-import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+import static org.mybatis.generator.internal.util.StringUtility.stringValueOrElse;
 import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
 import java.net.URL;
@@ -28,6 +28,7 @@ import org.mybatis.generator.api.ConnectionFactory;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.JavaFormatter;
 import org.mybatis.generator.api.JavaTypeResolver;
+import org.mybatis.generator.api.KnownRuntime;
 import org.mybatis.generator.api.KotlinFormatter;
 import org.mybatis.generator.api.Plugin;
 import org.mybatis.generator.api.XmlFormatter;
@@ -191,11 +192,12 @@ public class ObjectFactory {
     }
 
     public static Plugin createPlugin(Context context, PluginConfiguration pluginConfiguration,
-                                      CommentGenerator commentGenerator) {
+                                      CommentGenerator commentGenerator, KnownRuntime knownRuntime) {
         Plugin plugin = createInternalObject(pluginConfiguration.getConfigurationType().orElseThrow());
         plugin.setContext(context);
         plugin.setProperties(pluginConfiguration.getProperties());
         plugin.setCommentGenerator(commentGenerator);
+        plugin.setKnownRuntime(knownRuntime);
         return plugin;
     }
 
@@ -226,11 +228,8 @@ public class ObjectFactory {
     }
 
     public static JavaFormatter createJavaFormatter(Context context) {
-        String type = context.getProperty(PropertyRegistry.CONTEXT_JAVA_FORMATTER);
-        if (!stringHasValue(type)) {
-            type = Defaults.DEFAULT_JAVA_FORMATTER;
-        }
-
+        String type = stringValueOrElse(context.getProperty(PropertyRegistry.CONTEXT_JAVA_FORMATTER),
+                Defaults.DEFAULT_JAVA_FORMATTER);
         JavaFormatter answer = createInternalObject(type);
 
         answer.setContext(context);
@@ -239,11 +238,8 @@ public class ObjectFactory {
     }
 
     public static KotlinFormatter createKotlinFormatter(Context context) {
-        String type = context.getProperty(PropertyRegistry.CONTEXT_KOTLIN_FORMATTER);
-        if (!stringHasValue(type)) {
-            type = Defaults.DEFAULT_KOTLIN_FORMATTER;
-        }
-
+        String type = stringValueOrElse(context.getProperty(PropertyRegistry.CONTEXT_KOTLIN_FORMATTER),
+                Defaults.DEFAULT_KOTLIN_FORMATTER);
         KotlinFormatter answer = createInternalObject(type);
 
         answer.setContext(context);
@@ -252,11 +248,8 @@ public class ObjectFactory {
     }
 
     public static XmlFormatter createXmlFormatter(Context context) {
-        String type = context.getProperty(PropertyRegistry.CONTEXT_XML_FORMATTER);
-        if (!stringHasValue(type)) {
-            type = Defaults.DEFAULT_XML_FORMATTER;
-        }
-
+        String type = stringValueOrElse(context.getProperty(PropertyRegistry.CONTEXT_XML_FORMATTER),
+                Defaults.DEFAULT_XML_FORMATTER);
         XmlFormatter answer = createInternalObject(type);
 
         answer.setContext(context);

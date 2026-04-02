@@ -58,17 +58,20 @@ import org.mybatis.generator.internal.util.JavaBeansUtil;
 public class DatabaseIntrospector {
     private final DatabaseMetaData databaseMetaData;
     private final JavaTypeResolver javaTypeResolver;
-    private final List<String> warnings;
+    private final List<String> warnings = new ArrayList<>();
     private final Context context;
     private final Log logger;
 
     public DatabaseIntrospector(Context context, DatabaseMetaData databaseMetaData,
-                                JavaTypeResolver javaTypeResolver, List<String> warnings) {
+                                JavaTypeResolver javaTypeResolver) {
         this.context = context;
         this.databaseMetaData = databaseMetaData;
         this.javaTypeResolver = javaTypeResolver;
-        this.warnings = warnings;
         logger = LogFactory.getLog(getClass());
+    }
+
+    public List<String> getWarnings() {
+        return Collections.unmodifiableList(warnings);
     }
 
     private void calculatePrimaryKey(FullyQualifiedTable table, IntrospectedTable introspectedTable) {

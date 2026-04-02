@@ -43,6 +43,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.mybatis.generator.eclipse.ui.Messages;
+import org.mybatis.generator.eclipse.ui.launcher.GeneratorLaunchConstants;
 
 /**
  * It is a bit of an extravagance to have this in a separate class from the tab,
@@ -197,20 +198,22 @@ public class SqlScriptComposite extends AbstractGeneratorComposite {
     }
 
     public void initializeFrom(ILaunchConfiguration configuration) {
-        txtFileName.setText(getTextOrBlank(configuration, ATTR_SQL_SCRIPT_FILE_NAME));
-        txtJdbcDriver.setText(getTextOrBlank(configuration, ATTR_SQL_SCRIPT_DRIVER_CLASS));
-        txtJdbcURL.setText(getTextOrBlank(configuration, ATTR_SQL_SCRIPT_CONNECTION_URL));
-        btnSecureStorage.setSelection(getBooleanOrFalse(configuration, ATTR_SQL_SCRIPT_SECURE_CREDENTIALS));
+        txtFileName.setText(getTextOrBlank(configuration, GeneratorLaunchConstants.ATTR_SQL_SCRIPT_FILE_NAME));
+        txtJdbcDriver.setText(getTextOrBlank(configuration, GeneratorLaunchConstants.ATTR_SQL_SCRIPT_DRIVER_CLASS));
+        txtJdbcURL.setText(getTextOrBlank(configuration, GeneratorLaunchConstants.ATTR_SQL_SCRIPT_CONNECTION_URL));
+        btnSecureStorage.setSelection(getBooleanOrFalse(configuration,
+                GeneratorLaunchConstants.ATTR_SQL_SCRIPT_SECURE_CREDENTIALS));
 
         txtUserID.setText(LauncherUtils.getUserId(configuration));
         txtPassword.setText(LauncherUtils.getPassword(configuration));
     }
 
     public void performApply(ILaunchConfigurationWorkingCopy configuration) {
-        configuration.setAttribute(ATTR_SQL_SCRIPT_FILE_NAME, txtFileName.getText());
-        configuration.setAttribute(ATTR_SQL_SCRIPT_DRIVER_CLASS, txtJdbcDriver.getText());
-        configuration.setAttribute(ATTR_SQL_SCRIPT_CONNECTION_URL, txtJdbcURL.getText());
-        configuration.setAttribute(ATTR_SQL_SCRIPT_SECURE_CREDENTIALS, btnSecureStorage.getSelection());
+        configuration.setAttribute(GeneratorLaunchConstants.ATTR_SQL_SCRIPT_FILE_NAME, txtFileName.getText());
+        configuration.setAttribute(GeneratorLaunchConstants.ATTR_SQL_SCRIPT_DRIVER_CLASS, txtJdbcDriver.getText());
+        configuration.setAttribute(GeneratorLaunchConstants.ATTR_SQL_SCRIPT_CONNECTION_URL, txtJdbcURL.getText());
+        configuration.setAttribute(GeneratorLaunchConstants.ATTR_SQL_SCRIPT_SECURE_CREDENTIALS,
+                btnSecureStorage.getSelection());
         LauncherUtils.setUserId(configuration, txtUserID.getText(), sqlScriptTab.getShell());
         LauncherUtils.setPassword(configuration, txtPassword.getText(), sqlScriptTab.getShell());
     }

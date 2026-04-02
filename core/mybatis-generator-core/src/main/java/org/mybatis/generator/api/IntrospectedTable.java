@@ -250,6 +250,7 @@ public class IntrospectedTable extends CodeGenerationAttributes {
             return new IntrospectedTable(this);
         }
 
+        @Override
         protected Builder getThis() {
             return this;
         }

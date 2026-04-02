@@ -102,6 +102,8 @@ public interface Plugin {
      */
     void setCommentGenerator(CommentGenerator commentGenerator);
 
+    void setKnownRuntime(KnownRuntime knownRuntime);
+
     /**
      * This method is called just before the getGeneratedXXXFiles methods are called on the introspected table. Plugins
      * can implement this method to override any of the default attributes, or change the results of database

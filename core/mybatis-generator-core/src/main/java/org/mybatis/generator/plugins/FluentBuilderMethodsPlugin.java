@@ -52,7 +52,7 @@ public class FluentBuilderMethodsPlugin extends PluginAdapter {
         Method fluentMethod = new Method("with" + method.getName().substring(3)); //$NON-NLS-1$
         fluentMethod.setVisibility(JavaVisibility.PUBLIC);
         fluentMethod.setReturnType(topLevelClass.getType());
-        fluentMethod.getParameters().addAll(method.getParameters());
+        method.getParameters().forEach(fluentMethod::addParameter);
 
         commentGenerator.addGeneralMethodAnnotation(fluentMethod, introspectedTable, topLevelClass.getImportedTypes());
 

@@ -27,7 +27,7 @@ import org.mybatis.generator.runtime.mybatis3.javamapper.elements.SelectAllMetho
 
 public class AnnotatedSelectAllMethodGenerator extends SelectAllMethodGenerator {
 
-    protected AnnotatedSelectAllMethodGenerator(Builder builder) {
+    protected AnnotatedSelectAllMethodGenerator(AnnotatedBuilder builder) {
         super(builder);
     }
 
@@ -79,9 +79,9 @@ public class AnnotatedSelectAllMethodGenerator extends SelectAllMethodGenerator 
         builder.withImport(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Select")); //$NON-NLS-1$
     }
 
-    public static class Builder extends SelectAllMethodGenerator.Builder {
+    public static class AnnotatedBuilder extends SelectAllMethodGenerator.Builder {
         @Override
-        protected Builder getThis() {
+        protected AnnotatedBuilder getThis() {
             return this;
         }
 

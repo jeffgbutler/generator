@@ -22,6 +22,7 @@ import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -136,7 +137,7 @@ public class MyBatisGeneratorConfigurationParser {
 
     private void loadPropertiesFromURL(String url) throws XMLParserException {
         try {
-            URL resourceUrl = new URL(url);
+            URL resourceUrl = URI.create(url).toURL();
             InputStream inputStream = resourceUrl.openConnection().getInputStream();
             configurationProperties.load(inputStream);
             inputStream.close();

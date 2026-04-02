@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 import org.jspecify.annotations.Nullable;
+import org.mybatis.generator.internal.util.StringUtility;
 
 public abstract class AbstractRenamingRule {
     protected final String searchString;
@@ -28,7 +29,7 @@ public abstract class AbstractRenamingRule {
 
     protected AbstractRenamingRule(@Nullable String searchString, @Nullable String replaceString) {
         this.searchString = Objects.requireNonNull(searchString);
-        this.replaceString = Objects.requireNonNullElse(replaceString, ""); //$NON-NLS-1$
+        this.replaceString = StringUtility.stringValueOrElse(replaceString, ""); //$NON-NLS-1$
         pattern = Pattern.compile(searchString);
     }
 

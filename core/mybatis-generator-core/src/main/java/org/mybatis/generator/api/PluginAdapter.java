@@ -31,6 +31,7 @@ public abstract class PluginAdapter implements Plugin {
     protected Context context;
     protected final Properties properties = new Properties();
     protected CommentGenerator commentGenerator;
+    protected KnownRuntime knownRuntime;
 
     protected PluginAdapter() {
     }
@@ -48,5 +49,10 @@ public abstract class PluginAdapter implements Plugin {
     @Override
     public void setCommentGenerator(CommentGenerator commentGenerator) {
         this.commentGenerator = commentGenerator;
+    }
+
+    @Override
+    public void setKnownRuntime(KnownRuntime knownRuntime) {
+        this.knownRuntime = knownRuntime;
     }
 }

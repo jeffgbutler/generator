@@ -24,7 +24,6 @@ import java.util.Map;
 import org.mybatis.generator.api.FullyQualifiedTable;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
-import org.mybatis.generator.api.PluginUtilities;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.api.dom.java.Interface;
 import org.mybatis.generator.api.dom.java.Method;
@@ -49,8 +48,7 @@ public class RowBoundsPlugin extends PluginAdapter {
 
     @Override
     public boolean validate(List<String> warnings) {
-        String targetRuntime = context.getTargetRuntime().orElse("MyBatis3DynamicSql"); //$NON-NLS-1$
-        if ("MyBatis3DynamicSql".equalsIgnoreCase(targetRuntime)) { //$NON-NLS-1$
+        if (knownRuntime.isDynamicSqlBased()) {
             warnings.add(Messages.getString("Warning.30")); //$NON-NLS-1$
             return false;
         }
@@ -58,40 +56,27 @@ public class RowBoundsPlugin extends PluginAdapter {
     }
 
     @Override
-    public boolean clientSelectByExampleWithBLOBsMethodGenerated(Method method,
-            Interface interfaze, IntrospectedTable introspectedTable) {
-        if (PluginUtilities.isLegacyMyBatis3(introspectedTable)) {
-            copyAndAddMethod(method, interfaze);
-        }
-        return true;
+    public boolean clientSelectByExampleWithBLOBsMethodGenerated(Method method, Interface interfaze,
+                                                                 IntrospectedTable introspectedTable) {
+        return copyAndAddMethod(method, interfaze);
     }
 
     @Override
-    public boolean clientSelectByExampleWithoutBLOBsMethodGenerated(
-            Method method, Interface interfaze,
-            IntrospectedTable introspectedTable) {
-        if (PluginUtilities.isLegacyMyBatis3(introspectedTable)) {
-            copyAndAddMethod(method, interfaze);
-        }
-        return true;
+    public boolean clientSelectByExampleWithoutBLOBsMethodGenerated(Method method, Interface interfaze,
+                                                                    IntrospectedTable introspectedTable) {
+        return copyAndAddMethod(method, interfaze);
     }
 
     @Override
-    public boolean sqlMapSelectByExampleWithoutBLOBsElementGenerated(
-            XmlElement element, IntrospectedTable introspectedTable) {
-        if (PluginUtilities.isLegacyMyBatis3(introspectedTable)) {
-            copyAndSaveElement(element, introspectedTable.getFullyQualifiedTable());
-        }
-        return true;
+    public boolean sqlMapSelectByExampleWithoutBLOBsElementGenerated(XmlElement element,
+                                                                     IntrospectedTable introspectedTable) {
+        return copyAndSaveElement(element, introspectedTable.getFullyQualifiedTable());
     }
 
     @Override
-    public boolean sqlMapSelectByExampleWithBLOBsElementGenerated(
-            XmlElement element, IntrospectedTable introspectedTable) {
-        if (PluginUtilities.isLegacyMyBatis3(introspectedTable)) {
-            copyAndSaveElement(element, introspectedTable.getFullyQualifiedTable());
-        }
-        return true;
+    public boolean sqlMapSelectByExampleWithBLOBsElementGenerated(XmlElement element,
+                                                                  IntrospectedTable introspectedTable) {
+        return copyAndSaveElement(element, introspectedTable.getFullyQualifiedTable());
     }
 
     /**
@@ -99,8 +84,7 @@ public class RowBoundsPlugin extends PluginAdapter {
      * previous calls.
      */
     @Override
-    public boolean sqlMapDocumentGenerated(Document document,
-            IntrospectedTable introspectedTable) {
+    public boolean sqlMapDocumentGenerated(Document document, IntrospectedTable introspectedTable) {
         List<XmlElement> elements = elementsToAdd.get(introspectedTable.getFullyQualifiedTable());
         if (elements != null) {
             for (XmlElement element : elements) {
@@ -118,12 +102,14 @@ public class RowBoundsPlugin extends PluginAdapter {
      * @param method the method
      * @param interfaze the interface
      */
-    private void copyAndAddMethod(Method method, Interface interfaze) {
+    private boolean copyAndAddMethod(Method method, Interface interfaze) {
         Method newMethod = new Method(method);
         newMethod.setName(method.getName() + "WithRowbounds"); //$NON-NLS-1$
         newMethod.addParameter(new Parameter(rowBounds, "rowBounds")); //$NON-NLS-1$
         interfaze.addMethod(newMethod);
         interfaze.addImportedType(rowBounds);
+
+        return true;
     }
 
     /**
@@ -132,7 +118,7 @@ public class RowBoundsPlugin extends PluginAdapter {
      * @param element the base element
      * @param fqt the fully qualified type
      */
-    private void copyAndSaveElement(XmlElement element, FullyQualifiedTable fqt) {
+    private boolean copyAndSaveElement(XmlElement element, FullyQualifiedTable fqt) {
         XmlElement newElement = new XmlElement(element);
 
         // remove old id attribute and add a new one with the new name
@@ -152,5 +138,7 @@ public class RowBoundsPlugin extends PluginAdapter {
         // later
         List<XmlElement> elements = elementsToAdd.computeIfAbsent(fqt, k -> new ArrayList<>());
         elements.add(newElement);
+
+        return true;
     }
 }

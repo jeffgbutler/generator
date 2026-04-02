@@ -33,6 +33,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.mybatis.generator.eclipse.ui.Messages;
 import org.mybatis.generator.eclipse.ui.content.ConfigVerifyer;
+import org.mybatis.generator.eclipse.ui.launcher.GeneratorLaunchConstants;
 
 /**
  * It is a bit of an extravagance to have this in a separate class from the tab,
@@ -82,7 +83,7 @@ public class ConfigurationComposite extends AbstractGeneratorComposite {
     }
 
     public void initializeFrom(ILaunchConfiguration configuration) {
-        txtFileName.setText(getTextOrBlank(configuration, ATTR_CONFIGURATION_FILE_NAME));
+        txtFileName.setText(getTextOrBlank(configuration, GeneratorLaunchConstants.ATTR_CONFIGURATION_FILE_NAME));
         try {
             javaProjectName = configuration.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, (String) null);
         } catch (CoreException e) {
@@ -91,7 +92,7 @@ public class ConfigurationComposite extends AbstractGeneratorComposite {
     }
     
     public void performApply(ILaunchConfigurationWorkingCopy configuration) {
-        configuration.setAttribute(ATTR_CONFIGURATION_FILE_NAME, txtFileName.getText());
+        configuration.setAttribute(GeneratorLaunchConstants.ATTR_CONFIGURATION_FILE_NAME, txtFileName.getText());
         configuration.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, javaProjectName);
     }
 

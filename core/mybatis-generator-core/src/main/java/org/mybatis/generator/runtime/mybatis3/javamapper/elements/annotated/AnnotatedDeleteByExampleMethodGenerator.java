@@ -21,7 +21,7 @@ import org.mybatis.generator.runtime.mybatis3.javamapper.elements.DeleteByExampl
 
 public class AnnotatedDeleteByExampleMethodGenerator extends DeleteByExampleMethodGenerator {
 
-    protected AnnotatedDeleteByExampleMethodGenerator(Builder builder) {
+    protected AnnotatedDeleteByExampleMethodGenerator(AnnotatedBuilder builder) {
         super(builder);
     }
 
@@ -41,9 +41,9 @@ public class AnnotatedDeleteByExampleMethodGenerator extends DeleteByExampleMeth
                 .build();
     }
 
-    public static class Builder extends DeleteByExampleMethodGenerator.Builder {
+    public static class AnnotatedBuilder extends DeleteByExampleMethodGenerator.Builder {
         @Override
-        protected Builder getThis() {
+        protected AnnotatedBuilder getThis() {
             return this;
         }
 
