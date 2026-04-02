@@ -15,9 +15,14 @@
  */
 package org.mybatis.generator.internal.util;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 import org.jspecify.annotations.Nullable;
 
@@ -45,6 +50,44 @@ public class StringUtility {
 
     public static boolean stringHasValue(@Nullable String s) {
         return s != null && !s.isEmpty();
+    }
+
+    public static String stringValueOrElse(@Nullable String s, String defaultValue) {
+        if (stringHasValue(s)) {
+            return s;
+        } else {
+            return defaultValue;
+        }
+    }
+
+    public static String stringValueOrElseGet(@Nullable String s, Supplier<String> supplier) {
+        return mapStringValueOrElseGet(s, UnaryOperator.identity(), supplier);
+    }
+
+    public static <T> T mapStringValueOrElseGet(@Nullable String s, Function<String, T> mapper,
+                                                Supplier<T> supplier) {
+        if (stringHasValue(s)) {
+            return mapper.apply(s);
+        } else {
+            return supplier.get();
+        }
+    }
+
+    public static String mapStringValueOrElse(@Nullable String s, UnaryOperator<String> mapper, String defaultValue) {
+        if (stringHasValue(s)) {
+            return mapper.apply(s);
+        } else {
+            return defaultValue;
+        }
+    }
+
+    public static void ifStringHasValueElse(@Nullable String s, Consumer<String> consumer,
+                                            Runnable runnable) {
+        if (stringHasValue(s)) {
+            consumer.accept(s);
+        } else {
+            runnable.run();
+        }
     }
 
     public static String composeFullyQualifiedTableName(@Nullable String catalog,
@@ -119,26 +162,25 @@ public class StringUtility {
     }
 
     /**
-     * Given an input string, tokenize on the commas and trim all token. Returns an empty set if the input string is
+     * Given an input string, tokenize on the commas and trim all tokens. Returns an empty set if the input string is
      * null.
      *
-     * @param in
-     *            strong to tokenize.
+     * @param in string to tokenize.
      *
      * @return Set of tokens
      */
-    public static Set<String> tokenize(String in) {
-        Set<String> answer = new HashSet<>();
-        if (StringUtility.stringHasValue(in)) {
-            StringTokenizer st = new StringTokenizer(in, ","); //$NON-NLS-1$
+    public static Set<String> tokenize(@Nullable String in) {
+        return mapStringValueOrElseGet(in, str -> {
+            Set<String> answer = new HashSet<>();
+            StringTokenizer st = new StringTokenizer(str, ","); //$NON-NLS-1$
             while (st.hasMoreTokens()) {
                 String s = st.nextToken().trim();
                 if (!s.isEmpty()) {
                     answer.add(s);
                 }
             }
-        }
-        return answer;
+            return answer;
+        }, Collections::emptySet);
     }
 
     public static String convertCamelCaseToSnakeCase(String in) {

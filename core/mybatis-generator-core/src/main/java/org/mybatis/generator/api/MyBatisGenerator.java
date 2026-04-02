@@ -66,7 +66,6 @@ import org.mybatis.generator.merge.xml.XmlFileMergerJaxp;
  * @see org.mybatis.generator.config.xml.ConfigurationParser
  */
 public class MyBatisGenerator {
-    private static final ProgressCallback NULL_PROGRESS_CALLBACK = new ProgressCallback() { };
     private final Configuration configuration;
     private final ShellCallback shellCallback;
     private final ProgressCallback progressCallback;
@@ -81,7 +80,7 @@ public class MyBatisGenerator {
     private MyBatisGenerator(Builder builder) {
         configuration = Objects.requireNonNull(builder.configuration, getString("RuntimeError.2")); //$NON-NLS-1$
         shellCallback = Objects.requireNonNullElseGet(builder.shellCallback, DefaultShellCallback::new);
-        progressCallback = Objects.requireNonNullElse(builder.progressCallback, NULL_PROGRESS_CALLBACK);
+        progressCallback = Objects.requireNonNullElseGet(builder.progressCallback, () -> new ProgressCallback() {});
         fullyQualifiedTableNames = builder.fullyQualifiedTableNames;
         contextIds = builder.contextIds;
 

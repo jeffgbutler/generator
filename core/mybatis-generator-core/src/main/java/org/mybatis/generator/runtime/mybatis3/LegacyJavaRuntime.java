@@ -123,11 +123,7 @@ public class LegacyJavaRuntime extends AbstractRuntime {
         String project = context.getModelGeneratorConfiguration()
                 .getProperty(PropertyRegistry.MODEL_GENERATOR_EXAMPLE_PROJECT);
 
-        if (StringUtility.stringHasValue(project)) {
-            return project;
-        } else {
-            return getModelProject();
-        }
+        return StringUtility.stringValueOrElseGet(project, this::getModelProject);
     }
 
     public static class Builder extends AbstractRuntimeBuilder<Builder> {

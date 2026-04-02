@@ -16,6 +16,7 @@
 package org.mybatis.generator.ant;
 
 import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+import static org.mybatis.generator.internal.util.StringUtility.tokenize;
 import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
 import java.io.File;
@@ -24,11 +25,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -141,31 +140,11 @@ public class GeneratorAntTask extends Task {
     }
 
     private Set<String> calculateContexts() {
-        Set<String> contexts = new HashSet<>();
-        if (stringHasValue(contextIds)) {
-            StringTokenizer st = new StringTokenizer(contextIds, ","); //$NON-NLS-1$
-            while (st.hasMoreTokens()) {
-                String s = st.nextToken().trim();
-                if (!s.isEmpty()) {
-                    contexts.add(s);
-                }
-            }
-        }
-        return contexts;
+        return tokenize(contextIds);
     }
 
     private Set<String> calculateTables() {
-        Set<String> fullyqualifiedTables = new HashSet<>();
-        if (stringHasValue(fullyQualifiedTableNames)) {
-            StringTokenizer st = new StringTokenizer(fullyQualifiedTableNames, ","); //$NON-NLS-1$
-            while (st.hasMoreTokens()) {
-                String s = st.nextToken().trim();
-                if (!s.isEmpty()) {
-                    fullyqualifiedTables.add(s);
-                }
-            }
-        }
-        return fullyqualifiedTables;
+        return tokenize(fullyQualifiedTableNames);
     }
 
     private File calculateConfigurationFile() {

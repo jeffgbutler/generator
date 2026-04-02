@@ -1,5 +1,5 @@
 /*
- *    Copyright 2006-2025 the original author or authors.
+ *    Copyright 2006-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 package org.mybatis.generator.plugins;
 
+import static org.mybatis.generator.internal.util.StringUtility.mapStringValueOrElse;
+import static org.mybatis.generator.internal.util.StringUtility.mapStringValueOrElseGet;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +29,6 @@ import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.api.dom.java.Interface;
 import org.mybatis.generator.api.dom.kotlin.KotlinFile;
 import org.mybatis.generator.api.dom.kotlin.KotlinType;
-import org.mybatis.generator.internal.util.StringUtility;
 
 /**
  * This plugin adds a CacheNamespace annotation to generated Java or Kotlin mapper interfaces.
@@ -145,11 +147,9 @@ public class CacheNamespacePlugin extends PluginAdapter {
                 .map(Optional::get)
                 .collect(Collectors.joining(", ")); //$NON-NLS-1$
 
-        if (StringUtility.stringHasValue(attributes)) {
-            return "@CacheNamespace(" + attributes + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-        } else {
-            return "@CacheNamespace"; //$NON-NLS-1$
-        }
+        return mapStringValueOrElse(attributes,
+                s -> "@CacheNamespace(" + s + ")", //$NON-NLS-1$ //$NON-NLS-2$
+                "@CacheNamespace"); //$NON-NLS-1$
     }
 
     private Optional<String> calculateAttribute(IntrospectedTable introspectedTable,
@@ -179,10 +179,6 @@ public class CacheNamespacePlugin extends PluginAdapter {
             value = properties.getProperty(propertyName);
         }
 
-        if (StringUtility.stringHasValue(value)) {
-            return Optional.of(value);
-        } else {
-            return Optional.empty();
-        }
+        return mapStringValueOrElseGet(value, Optional::of, Optional::empty);
     }
 }

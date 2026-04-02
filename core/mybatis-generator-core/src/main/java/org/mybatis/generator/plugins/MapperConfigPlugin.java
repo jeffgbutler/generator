@@ -63,16 +63,14 @@ public class MapperConfigPlugin extends PluginAdapter {
     public boolean validate(List<String> warnings) {
         boolean valid = true;
 
-        if (!stringHasValue(properties
-                .getProperty("targetProject"))) { //$NON-NLS-1$
+        if (!stringHasValue(properties.getProperty("targetProject"))) { //$NON-NLS-1$
             warnings.add(getString("ValidationError.18", //$NON-NLS-1$
                     "MapperConfigPlugin", //$NON-NLS-1$
                     "targetProject")); //$NON-NLS-1$
             valid = false;
         }
 
-        if (!stringHasValue(properties
-                .getProperty("targetPackage"))) { //$NON-NLS-1$
+        if (!stringHasValue(properties.getProperty("targetPackage"))) { //$NON-NLS-1$
             warnings.add(getString("ValidationError.18", //$NON-NLS-1$
                     "MapperConfigPlugin", //$NON-NLS-1$
                     "targetPackage")); //$NON-NLS-1$

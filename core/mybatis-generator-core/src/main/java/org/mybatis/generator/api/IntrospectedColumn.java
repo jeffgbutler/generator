@@ -246,7 +246,7 @@ public class IntrospectedColumn {
     }
 
     public String getJdbcTypeName() {
-        return Objects.requireNonNullElse(jdbcTypeName, "OTHER");//$NON-NLS-1$
+        return StringUtility.stringValueOrElse(jdbcTypeName, "OTHER");//$NON-NLS-1$
     }
 
     public void setJdbcTypeName(@Nullable String jdbcTypeName) {
