@@ -29,6 +29,6 @@
       <link toc="toc_mbgdoc.xml"/>
    </topic>
    <topic label="Reference">
-      <link toc="api-docs.xml"/>
+      <link toc="toc-api.xml"/>
    </topic>
 </toc>

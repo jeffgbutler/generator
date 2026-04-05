@@ -32,7 +32,7 @@
   </target>
 
   <target name="zip.it.up" depends="refresh.base.docs">
-    <zip destfile="doc.zip" basedir="." includes="html/**.*" />
+    <zip destfile="doc.zip" basedir="." includes="html/**/*.*" />
   </target>
 	
   <target name="refresh" depends="zip.it.up" if="eclipse.running">

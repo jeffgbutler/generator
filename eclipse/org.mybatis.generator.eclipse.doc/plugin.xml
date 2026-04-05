@@ -23,6 +23,6 @@
     <toc file="toc.xml" primary="true"/>
     <toc file="toc_mbgdoc.xml"/>
     <toc file="toc_eclipseui.xml"/>
-    <toc file="api-docs.xml"/>
+    <toc file="toc-api.xml"/>
   </extension>
 </plugin>

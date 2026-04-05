@@ -63,6 +63,24 @@
           </licenseSets>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.eclipse.tycho.extras</groupId>
+        <artifactId>tycho-document-bundle-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>javadoc</id>
+            <goals>
+              <goal>javadoc</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.basedir}/html/api-docs/javadoc</outputDirectory>
+              <tocFile>${project.basedir}/toc-api.xml</tocFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
@@ -83,29 +101,19 @@
       </plugin>
 
       <plugin>
-        <groupId>org.eclipse.tycho.extras</groupId>
-        <artifactId>tycho-document-bundle-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>javadoc</id>
-            <goals>
-              <goal>javadoc</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.basedir}/html/api-docs/javadoc</outputDirectory>
-              <tocFile>${project.basedir}/api-docs.xml</tocFile>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-clean-plugin</artifactId>
         <configuration>
           <filesets>
             <fileset>
               <directory>html</directory>
+            </fileset>
+            <fileset>
+              <directory>.</directory>
+              <includes>
+                <include>doc.zip</include>
+                <include>toc-api.xml</include>
+              </includes>
             </fileset>
           </filesets>
         </configuration>
