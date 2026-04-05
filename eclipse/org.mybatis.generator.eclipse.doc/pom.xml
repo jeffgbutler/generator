@@ -93,7 +93,7 @@
             </goals>
             <configuration>
               <outputDirectory>${project.basedir}/html/api-docs/javadoc</outputDirectory>
-              <tocFile>${project.basedir}/html/api-docs.xml</tocFile>
+              <tocFile>${project.basedir}/api-docs.xml</tocFile>
             </configuration>
           </execution>
         </executions>

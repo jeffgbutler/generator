@@ -23,12 +23,12 @@
    <topic href="html/releasenotes.html" label="Release Notes">
    </topic>
    <topic label="Using the Eclipse User Interface">
-      <link toc="html/toc_eclipseui.xml"/>
+      <link toc="toc_eclipseui.xml"/>
    </topic>
    <topic label="MyBatis Generator Core Documentation">
-      <link toc="html/toc_mbgdoc.xml"/>
+      <link toc="toc_mbgdoc.xml"/>
    </topic>
    <topic label="Reference">
-      <link toc="html/api-docs.xml"/>
+      <link toc="api-docs.xml"/>
    </topic>
 </toc>
