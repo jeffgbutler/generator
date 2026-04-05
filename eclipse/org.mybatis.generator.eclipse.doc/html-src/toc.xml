@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
        Copyright 2006-2025 the original author or authors.
@@ -16,23 +17,18 @@
 
 
 -->
-<project default="refresh" basedir=".">
-  <target name="refresh.base.docs">
-  	<copy todir="html">
-   	  <fileset dir="html-src">
-   	  </fileset>
-  	</copy>
+<?NLS TYPE="org.eclipse.help.toc"?>
 
-  	<copy todir="html/mbgdoc">
-  	  <fileset dir="../../core/mybatis-generator-core/src/site/xhtml">
-  	    <include name="**/*.xhtml"/>
-  	  </fileset>
-      <mapper type="glob" from="*.xhtml" to="*.html" />
-  	</copy>
-  </target>
-	
-  <target name="refresh" depends="refresh.base.docs" if="eclipse.running">
-    <echo message="Refreshing the Eclipse Project..."/>
-    <eclipse.refreshLocal resource="org.mybatis.generator.eclipse.doc"/>
-  </target>
-</project>
+<toc label="MyBatis Generator User&apos;s Guide">
+   <topic href="html/releasenotes.html" label="Release Notes">
+   </topic>
+   <topic label="Using the Eclipse User Interface">
+      <link toc="html/toc_eclipseui.xml"/>
+   </topic>
+   <topic label="MyBatis Generator Core Documentation">
+      <link toc="html/toc_mbgdoc.xml"/>
+   </topic>
+   <topic label="Reference">
+      <link toc="html/api-docs.xml"/>
+   </topic>
+</toc>

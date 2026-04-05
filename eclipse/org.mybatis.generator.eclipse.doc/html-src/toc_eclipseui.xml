@@ -19,16 +19,19 @@
 -->
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="MyBatis Generator User&apos;s Guide">
-   <topic href="html/eclipseui/releasenotes.html" label="Release Notes">
-   </topic>
-   <topic label="Using the Eclipse User Interface">
-      <anchor id="eclipseui"/>
-   </topic>
-   <topic label="MyBatis Generator Core Documentation">
-      <anchor id="mbgdoc"/>
-   </topic>
-   <topic label="API Reference">
-      <anchor id="javadoc"/>
-   </topic>
+<toc label="Eclipse User Interface Guide">
+      <topic href="html/eclipseui/quickstart.html" label="Quickstart Guide">
+      </topic>
+      <topic href="html/eclipseui/eclipseui.html" label="Using the Eclipse User Interface">
+      </topic>
+      <topic href="html/eclipseui/usingTheLauncher.html" label="Using the Launcher">
+      </topic>
+      <topic href="html/eclipseui/usingAnt.html" label="Using the Ant Task">
+      </topic>
+      <topic href="html/eclipseui/buildingFromSource.html" label="Building from Source">
+      </topic>
+      <topic href="html/eclipseui/manualTesting.html" label="Manual Test Scripts">
+      </topic>
+      <topic href="html/eclipseui/publishing.html" label="Publishing a New Version">
+      </topic>
 </toc>
