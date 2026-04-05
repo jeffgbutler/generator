@@ -66,11 +66,15 @@ Those projects are structured as follows:</p>
   <tr>
     <td><code>org.mybatis.generator.eclipse.doc</code></td>
     <td>This plug-in holds the documentation for MBG.  There is an Ant build file in this
-      plugin (buildDoc.xml) that will build the documentation and package it for inclusion
+      plugin (buildDoc.xml) that will copy some documentation from the base project and package it for inclusion
       into the Eclipse help system.  The Ant script merges the core MBG documentation into
-      the eclpse documentation.  If you need to correct something in the core MBG
+      the eclipse documentation.  If you need to correct something in the core MBG
       documentation, you must make the correction in the core MPB project - NOT the
-      eclipse documentation project.</td>
+      eclipse documentation project.
+	  <p>The plug-in uses Tycho to build the JavaDocs and also build a TOC file for the JavaDocs.
+		The documentation is not fully built until the maven package command runs.
+	  </p>
+	</td>
   </tr>
   <tr>
     <td><code>org.mybatis.generator.eclipse.ui</code></td>
@@ -151,7 +155,7 @@ familiar with git and the Eclipse plug-in development environment (PDE).</p>
     <code>org.mybatis.generator.core</code> project.  There are two ways to solve this:
       <ol type="a">
         <li>If you are comfortable with Maven, then you can run the Maven build by
-          executing "./mvnw clean verify" on the <code>pom.xml</code> in the
+          executing "./mvnw clean package" on the <code>pom.xml</code> in the
           parent directory of all Eclipse projects (../eclipse)
           A slight warning: this will download many 
           dependent JARs from Maven central and eclipse.org the first time you run it.

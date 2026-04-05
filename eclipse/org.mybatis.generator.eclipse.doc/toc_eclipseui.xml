@@ -19,7 +19,7 @@
 -->
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="Eclipse User Interface Guide" link_to="toc.xml#eclipseui">
+<toc label="Eclipse User Interface Guide">
       <topic href="html/eclipseui/quickstart.html" label="Quickstart Guide">
       </topic>
       <topic href="html/eclipseui/eclipseui.html" label="Using the Eclipse User Interface">

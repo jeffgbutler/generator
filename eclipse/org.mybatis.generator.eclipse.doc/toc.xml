@@ -20,15 +20,15 @@
 <?NLS TYPE="org.eclipse.help.toc"?>
 
 <toc label="MyBatis Generator User&apos;s Guide">
-   <topic href="html/eclipseui/releasenotes.html" label="Release Notes">
+   <topic href="html/releasenotes.html" label="Release Notes">
    </topic>
    <topic label="Using the Eclipse User Interface">
-      <anchor id="eclipseui"/>
+      <link toc="toc_eclipseui.xml"/>
    </topic>
    <topic label="MyBatis Generator Core Documentation">
-      <anchor id="mbgdoc"/>
+      <link toc="toc_mbgdoc.xml"/>
    </topic>
-   <topic label="API Reference">
-      <anchor id="javadoc"/>
+   <topic label="Reference">
+      <link toc="toc-api.xml"/>
    </topic>
 </toc>

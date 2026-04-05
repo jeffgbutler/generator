@@ -19,22 +19,10 @@
 -->
 <?eclipse version="3.2"?>
 <plugin>
-
-   <extension
-         point="org.eclipse.help.toc">
-      <toc
-            file="toc.xml"
-            primary="true">
-      </toc>
-      <toc
-            file="toc_mbgdoc.xml">
-      </toc>
-      <toc
-            file="toc_javadoc.xml">
-      </toc>
-      <toc
-            file="toc_eclipseui.xml">
-      </toc>
-   </extension>
-
+  <extension point="org.eclipse.help.toc">
+    <toc file="toc.xml" primary="true"/>
+    <toc file="toc_mbgdoc.xml"/>
+    <toc file="toc_eclipseui.xml"/>
+    <toc file="toc-api.xml"/>
+  </extension>
 </plugin>

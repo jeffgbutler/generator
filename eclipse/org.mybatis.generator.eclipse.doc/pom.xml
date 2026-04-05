@@ -34,6 +34,19 @@
     <!-- skip sonar - no code here -->
     <sonar.skip>true</sonar.skip>
   </properties>
+  
+  <dependencies>
+    <dependency>
+      <groupId>org.mybatis.generator</groupId>
+      <artifactId>org.mybatis.generator.core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mybatis.generator</groupId>
+      <artifactId>org.mybatis.generator.eclipse.ui</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
@@ -50,6 +63,24 @@
           </licenseSets>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.eclipse.tycho.extras</groupId>
+        <artifactId>tycho-document-bundle-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>javadoc</id>
+            <goals>
+              <goal>javadoc</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.basedir}/html/api-docs/javadoc</outputDirectory>
+              <tocFile>${project.basedir}/toc-api.xml</tocFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
@@ -59,7 +90,7 @@
             <goals>
               <goal>run</goal>
             </goals>
-            <phase>generate-sources</phase>
+            <phase>prepare-package</phase>
             <configuration>
               <target>
                 <ant antfile="buildDoc.xml" target="refresh" />
@@ -76,6 +107,13 @@
           <filesets>
             <fileset>
               <directory>html</directory>
+            </fileset>
+            <fileset>
+              <directory>.</directory>
+              <includes>
+                <include>doc.zip</include>
+                <include>toc-api.xml</include>
+              </includes>
             </fileset>
           </filesets>
         </configuration>
