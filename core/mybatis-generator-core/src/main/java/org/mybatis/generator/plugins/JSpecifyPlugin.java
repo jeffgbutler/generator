@@ -110,7 +110,8 @@ public class JSpecifyPlugin extends PluginAdapter {
     @Override
     public boolean modelFieldGenerated(Field field, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn,
                                        IntrospectedTable introspectedTable, ModelClassType modelClassType) {
-        if (isEnabled(introspectedTable) && introspectedColumn.isNullable()) {
+        if (isEnabled(introspectedTable) && introspectedColumn.isNullable()
+                && !introspectedColumn.getFullyQualifiedJavaType().isPrimitive()) {
             topLevelClass.addImportedType(NULLABLE_IMPORT);
             field.addTypeAnnotation(NULLABLE_ANNOTATION);
         }
@@ -122,7 +123,8 @@ public class JSpecifyPlugin extends PluginAdapter {
     public boolean modelGetterMethodGenerated(Method method, TopLevelClass topLevelClass,
                                               IntrospectedColumn introspectedColumn,
                                               IntrospectedTable introspectedTable, ModelClassType modelClassType) {
-        if (isEnabled(introspectedTable) && introspectedColumn.isNullable()) {
+        if (isEnabled(introspectedTable) && introspectedColumn.isNullable()
+                && !introspectedColumn.getFullyQualifiedJavaType().isPrimitive()) {
             topLevelClass.addImportedType(NULLABLE_IMPORT);
             method.addReturnTypeAnnotation(NULLABLE_ANNOTATION);
         }
@@ -159,6 +161,7 @@ public class JSpecifyPlugin extends PluginAdapter {
 
     private boolean isColumnNullable(String property, IntrospectedTable introspectedTable) {
         return introspectedTable.getAllColumns().stream()
+                .filter(c -> !c.getFullyQualifiedJavaType().isPrimitive())
                 .filter(c -> c.getJavaProperty().equals(property))
                 .anyMatch(IntrospectedColumn::isNullable);
     }

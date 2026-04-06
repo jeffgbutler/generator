@@ -345,6 +345,23 @@
     <table tableName="CompoundKey">
       <property name="constructorBased" value="true"/>
     </table>
+    <table tableName="awful table" alias="A">
+      <property name="immutable" value="false"/>
+      <generatedKey column="CuStOmEr iD" sqlStatement="HSQLDB" identity="true" />
+      <columnOverride column="first name" property="firstFirstName" />
+      <columnOverride column="first_name" property="secondFirstName" />
+      <columnOverride column="firstName" property="thirdFirstName" />
+      <columnOverride column="from" delimitedColumnName="true" >
+        <property name="fredswife" value="wilma"/>
+      </columnOverride>
+      <columnOverride column="active" javaType="boolean" />
+      <columnOverride column="_id1" delimitedColumnName="true" />
+      <columnOverride column="$id2" delimitedColumnName="true" />
+      <columnOverride column="id5_" delimitedColumnName="true" />
+      <columnOverride column="id6$" delimitedColumnName="true" />
+      <columnOverride column="id7$$" delimitedColumnName="true" />
+      <columnOverride column="class" property="dbClass" />
+    </table>
   </context>
 
   <context id="miscellaneousTests_immutable_conditional" targetRuntime="MyBatis3" defaultModelType="conditional">
