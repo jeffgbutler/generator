@@ -81,7 +81,7 @@ public class ObjectFactory {
      *            the class loader
      */
     public static synchronized void addExternalClassLoader(ClassLoader classLoader) {
-        ObjectFactory.externalClassLoaders.add(classLoader);
+        externalClassLoaders.add(classLoader);
     }
 
     /**
@@ -126,13 +126,13 @@ public class ObjectFactory {
 
     @SuppressWarnings("unchecked")
     public static <T> Class<T> internalClassForName(String type) throws ClassNotFoundException {
-        Class<?> clazz = null;
-
+        Class<?> clazz;
         try {
             ClassLoader cl = Thread.currentThread().getContextClassLoader();
             clazz = Class.forName(type, true, cl);
         } catch (Exception e) {
             // ignore - failsafe below
+            clazz = null;
         }
 
         if (clazz == null) {

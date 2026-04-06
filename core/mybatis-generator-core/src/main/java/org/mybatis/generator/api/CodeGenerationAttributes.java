@@ -39,7 +39,6 @@ import org.mybatis.generator.config.SqlMapGeneratorConfiguration;
 import org.mybatis.generator.config.TableConfiguration;
 import org.mybatis.generator.exception.InternalException;
 import org.mybatis.generator.internal.rules.Rules;
-import org.mybatis.generator.internal.util.StringUtility;
 
 /**
  * This class holds calculated attributes for all code generator implementations. The class
@@ -496,7 +495,7 @@ public abstract class CodeGenerationAttributes {
     }
 
     protected String calculateDynamicSqlSupportPackage(ClientGeneratorConfiguration c) {
-        return StringUtility.mapStringValueOrElseGet(c.getProperty(PropertyRegistry.CLIENT_DYNAMIC_SQL_SUPPORT_PACKAGE),
+        return mapStringValueOrElseGet(c.getProperty(PropertyRegistry.CLIENT_DYNAMIC_SQL_SUPPORT_PACKAGE),
                 s -> s + getFullyQualifiedTable().getSubPackageForClientOrSqlMap(isSubPackagesEnabled(c)),
                 () -> calculateClientInterfacePackage(c));
     }
@@ -596,7 +595,7 @@ public abstract class CodeGenerationAttributes {
     }
 
     protected String calculateMyBatis3XmlMapperFileName() {
-        return StringUtility.mapStringValueOrElseGet(getTableConfiguration().getMapperName(), mapperName -> {
+        return mapStringValueOrElseGet(getTableConfiguration().getMapperName(), mapperName -> {
             StringBuilder sb = new StringBuilder();
             int ind = mapperName.lastIndexOf('.');
             if (ind == -1) {
@@ -687,13 +686,13 @@ public abstract class CodeGenerationAttributes {
     }
 
     public Optional<String> findTableOrModelGeneratorProperty(String property) {
-        return StringUtility.mapStringValueOrElseGet(getTableConfigurationProperty(property),
+        return mapStringValueOrElseGet(getTableConfigurationProperty(property),
                 Optional::of,
                 () -> Optional.ofNullable(context.getModelGeneratorConfiguration().getProperty(property)));
     }
 
     public Optional<String> findTableOrClientGeneratorProperty(String property) {
-        return StringUtility.mapStringValueOrElseGet(getTableConfigurationProperty(property),
+        return mapStringValueOrElseGet(getTableConfigurationProperty(property),
                 Optional::of,
                 () -> context.getClientGeneratorConfiguration()
                         .map(c -> c.getProperty(property)));
