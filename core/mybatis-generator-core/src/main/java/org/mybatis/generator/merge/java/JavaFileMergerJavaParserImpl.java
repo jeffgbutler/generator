@@ -17,6 +17,8 @@ package org.mybatis.generator.merge.java;
 
 import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
+import java.util.List;
+
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.ParserConfiguration;
@@ -28,8 +30,7 @@ import com.github.javaparser.printer.DefaultPrettyPrinter;
 import com.github.javaparser.printer.Printer;
 import com.github.javaparser.printer.lexicalpreservation.DefaultLexicalPreservingPrinter;
 import org.jspecify.annotations.Nullable;
-import org.mybatis.generator.exception.MultiMessageException;
-import org.mybatis.generator.exception.ShellException;
+import org.mybatis.generator.exception.MergeException;
 
 /**
  * This class handles the task of merging changes into an existing Java file using JavaParser.
@@ -97,10 +98,10 @@ public class JavaFileMergerJavaParserImpl implements JavaFileMerger {
      * @param newFileContent the content of the newly generated Java file
      * @param existingFileContent the content of the existing Java file
      * @return the merged source, properly formatted
-     * @throws ShellException if the file cannot be merged for some reason
+     * @throws MergeException if the file cannot be merged for some reason
      */
     @Override
-    public String getMergedSource(String newFileContent, String existingFileContent) throws ShellException {
+    public String getMergedSource(String newFileContent, String existingFileContent) throws MergeException {
         ParserConfiguration parserConfiguration = new ParserConfiguration();
         parserConfiguration.setLanguageLevel(ParserConfiguration.LanguageLevel.JAVA_25);
         parserConfiguration.setLexicalPreservationEnabled(true);
@@ -148,7 +149,7 @@ public class JavaFileMergerJavaParserImpl implements JavaFileMerger {
     }
 
     private ParseResults parseAndFindMainTypeDeclaration(JavaParser javaParser, String source, FileType fileType)
-            throws ShellException {
+            throws MergeException {
         ParseResult<CompilationUnit> parseResult = javaParser.parse(source);
 
         // little hack to pull the result out of the lambda. This allows us to avoid "orElseThrow()" later on
@@ -156,8 +157,10 @@ public class JavaFileMergerJavaParserImpl implements JavaFileMerger {
         parseResult.ifSuccessful(cu -> compilationUnits[0] = cu);
 
         if (compilationUnits[0] == null) {
-            var mme = new MultiMessageException(parseResult.getProblems().stream().map(Problem::toString).toList());
-            throw new ShellException(getString("RuntimeError.28", fileType.toString()), mme); //$NON-NLS-1$
+            List<String> details = parseResult.getProblems().stream()
+                    .map(Problem::toString)
+                    .toList();
+            throw new MergeException(getString("RuntimeError.28", fileType.toString()), details); //$NON-NLS-1$
         }
 
         return new ParseResults(compilationUnits[0], findMainTypeDeclaration(compilationUnits[0], fileType));
@@ -172,7 +175,7 @@ public class JavaFileMergerJavaParserImpl implements JavaFileMerger {
     }
 
     private TypeDeclaration<?> findMainTypeDeclaration(CompilationUnit compilationUnit, FileType fileType)
-            throws ShellException {
+            throws MergeException {
         // Return the first public type declaration, or the first type declaration if no public one exists
         TypeDeclaration<?> firstType = null;
         for (TypeDeclaration<?> typeDeclaration : compilationUnit.getTypes()) {
@@ -184,7 +187,7 @@ public class JavaFileMergerJavaParserImpl implements JavaFileMerger {
             }
         }
         if (firstType == null) {
-            throw new ShellException(getString("RuntimeError.29", fileType.toString())); //$NON-NLS-1$
+            throw new MergeException(getString("RuntimeError.29", fileType.toString())); //$NON-NLS-1$
         }
         return firstType;
     }

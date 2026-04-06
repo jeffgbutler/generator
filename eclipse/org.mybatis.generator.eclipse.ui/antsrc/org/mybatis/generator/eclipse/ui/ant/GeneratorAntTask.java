@@ -1,5 +1,5 @@
 /*
- *    Copyright 2006-2025 the original author or authors.
+ *    Copyright 2006-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -60,11 +60,6 @@ public class GeneratorAntTask extends Task {
         super();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.tools.ant.Task#execute()
-     */
     @Override
     public void execute() throws BuildException {
         
@@ -139,17 +134,17 @@ public class GeneratorAntTask extends Task {
             warnings.addAll(generator.generateAndWrite());
 
         } catch (XMLParserException e) {
-            for (String error : e.getErrors()) {
+            for (String error : e.getExtraMessages()) {
                 log(error, Project.MSG_ERR);
             }
 
-            throw new BuildException(e.getMessage());
+            throw new BuildException(e.getMessage(), e);
         } catch (SQLException e) {
-            throw new BuildException(e.getMessage());
+            throw new BuildException(e.getMessage(), e);
         } catch (IOException e) {
-            throw new BuildException(e.getMessage());
+            throw new BuildException(e.getMessage(), e);
         } catch (InvalidConfigurationException e) {
-            throw new BuildException(e.getMessage());
+            throw new BuildException(e.getMessage(), e);
         } catch (InterruptedException e) {
             throw new BuildException("Cancelled by user");
         } finally {

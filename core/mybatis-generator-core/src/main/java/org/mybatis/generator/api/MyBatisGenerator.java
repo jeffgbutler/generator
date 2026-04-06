@@ -46,6 +46,7 @@ import org.mybatis.generator.config.Configuration;
 import org.mybatis.generator.config.Context;
 import org.mybatis.generator.exception.InternalException;
 import org.mybatis.generator.exception.InvalidConfigurationException;
+import org.mybatis.generator.exception.MergeException;
 import org.mybatis.generator.exception.ShellException;
 import org.mybatis.generator.internal.DefaultShellCallback;
 import org.mybatis.generator.internal.ObjectFactory;
@@ -333,6 +334,9 @@ public class MyBatisGenerator {
             writeFile(targetFile.toFile(), content, encoding);
         } catch (ShellException e) {
             warnings.add(e.getMessage());
+        } catch (MergeException e) {
+            warnings.add(e.getMessage());
+            warnings.addAll(e.getExtraMessages());
         }
     }
 
@@ -458,7 +462,7 @@ public class MyBatisGenerator {
 
     @FunctionalInterface
     private interface Merger {
-        String apply(String newContent, File existingContent) throws ShellException;
+        String apply(String newContent, File existingContent) throws MergeException;
 
         static Merger noMerge() {
             return (newContent, existingContent) -> newContent;

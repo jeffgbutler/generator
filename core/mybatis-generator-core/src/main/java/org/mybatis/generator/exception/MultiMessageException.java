@@ -1,5 +1,5 @@
 /*
- *    Copyright 2006-2025 the original author or authors.
+ *    Copyright 2006-2026 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,23 +22,28 @@ import java.util.List;
 public class MultiMessageException extends Exception {
 
     @Serial
-    private static final long serialVersionUID = -5358501949588130025L;
-    private final List<String> errors = new ArrayList<>();
+    private static final long serialVersionUID = 510308249364188685L;
+    private final List<String> extraMessages = new ArrayList<>();
 
-    public MultiMessageException(List<String> errors) {
-        this.errors.addAll(errors);
+    public MultiMessageException(String message, List<String> extraMessages) {
+        this(message);
+        this.extraMessages.addAll(extraMessages);
     }
 
-    public MultiMessageException(String error) {
-        this.errors.add(error);
+    public MultiMessageException(String message) {
+        super(message);
     }
 
-    public List<String> getErrors() {
-        return errors;
+    public MultiMessageException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    @Override
-    public String getMessage() {
-        return errors.get(0);
+    public MultiMessageException(String message, Throwable cause, List<String> extraMessages) {
+        this(message, cause);
+        this.extraMessages.addAll(extraMessages);
+    }
+
+    public List<String> getExtraMessages() {
+        return extraMessages;
     }
 }

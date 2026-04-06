@@ -120,10 +120,9 @@ public class GeneratorAntTask extends Task {
 
             warnings.addAll(myBatisGenerator.generateAndWrite());
         } catch (XMLParserException | InvalidConfigurationException e) {
-            for (String error : e.getErrors()) {
+            for (String error : e.getExtraMessages()) {
                 log(error, Project.MSG_ERR);
             }
-
             throw new BuildException(e.getMessage(), e);
         } catch (SQLException | IOException e) {
             throw new BuildException(e.getMessage(), e);

@@ -44,8 +44,8 @@ public class Configuration {
     }
 
     /**
-     * This method does a simple validate, it makes sure that all required fields have been filled in and that all
-     * implementation classes exist and are of the proper type. It does not do any more complex operations such as:
+     * This method does a simple validation, it makes sure that all required fields have been filled in and that all
+     * implementation classes exist and are of the proper type. It does not do any more complex operations such as
      * validating that database tables exist or validating that named columns exist
      *
      * @throws InvalidConfigurationException
@@ -71,7 +71,7 @@ public class Configuration {
         }
 
         if (!errors.isEmpty()) {
-            throw new InvalidConfigurationException(errors);
+            throw new InvalidConfigurationException(getString("ValidationError.32"), errors); //$NON-NLS-1$
         }
     }
 

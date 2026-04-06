@@ -217,13 +217,13 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
 
             warnings.addAll(myBatisGenerator.generateAndWrite());
         } catch (XMLParserException | InvalidConfigurationException e) {
-            for (String error : e.getErrors()) {
+            for (String error : e.getExtraMessages()) {
                 getLog().error(error);
             }
 
-            throw new MojoExecutionException(e.getMessage());
+            throw new MojoExecutionException(e.getMessage(), e);
         } catch (SQLException | IOException e) {
-            throw new MojoExecutionException(e.getMessage());
+            throw new MojoExecutionException(e.getMessage(), e);
         } catch (InterruptedException e) {
             // ignore (will never happen with the DefaultShellCallback)
         }
