@@ -83,7 +83,7 @@ public class RecordBuilderPlugin extends BaseRecordPlugin {
 
     private Field generateBuilderField(IntrospectedColumn column, boolean jspecifyEnabled) {
         Field field = new Field(column.getJavaProperty(), column.getFullyQualifiedJavaType());
-        if (jspecifyEnabled) {
+        if (jspecifyEnabled && !column.getFullyQualifiedJavaType().isPrimitive()) {
             field.addAnnotation(JSpecifyPlugin.NULLABLE_ANNOTATION);
         }
         field.setVisibility(JavaVisibility.PRIVATE);
