@@ -21,7 +21,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.jspecify.annotations.Nullable;
-import org.mybatis.generator.exception.ShellException;
+import org.mybatis.generator.exception.MergeException;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
@@ -54,7 +54,7 @@ public class DomWriter {
         this.document = document;
     }
 
-    public synchronized String getFormattedDocument() throws ShellException {
+    public synchronized String getFormattedDocument() throws MergeException {
         write(document);
         return sw.toString();
     }
@@ -192,7 +192,7 @@ public class DomWriter {
         return document.getXmlVersion();
     }
 
-    protected void writeAnyNode(Node node) throws ShellException {
+    protected void writeAnyNode(Node node) throws MergeException {
         short type = node.getNodeType();
         switch (type) {
         case Node.DOCUMENT_NODE:
@@ -228,11 +228,11 @@ public class DomWriter {
             break;
 
         default:
-            throw new ShellException(getString("RuntimeError.18", Short.toString(type))); //$NON-NLS-1$
+            throw new MergeException(getString("RuntimeError.18", Short.toString(type))); //$NON-NLS-1$
         }
     }
 
-    protected void write(Document node) throws ShellException {
+    protected void write(Document node) throws MergeException {
         isXML11 = "1.1".equals(getVersion(node)); //$NON-NLS-1$
         if (isXML11) {
             printWriter.println("<?xml version=\"1.1\" encoding=\"UTF-8\"?>"); //$NON-NLS-1$
@@ -270,7 +270,7 @@ public class DomWriter {
         printWriter.println('>');
     }
 
-    protected void write(Element node) throws ShellException {
+    protected void write(Element node) throws MergeException {
         printWriter.print('<');
         printWriter.print(node.getNodeName());
         Attr[] attrs = sortAttributes(node.getAttributes());

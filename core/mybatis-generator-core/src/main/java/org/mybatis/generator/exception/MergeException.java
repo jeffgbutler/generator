@@ -18,20 +18,20 @@ package org.mybatis.generator.exception;
 import java.io.Serial;
 import java.util.List;
 
-public class XMLParserException extends MultiMessageException {
+public class MergeException extends MultiMessageException {
 
     @Serial
-    private static final long serialVersionUID = -7185689889139489370L;
+    private static final long serialVersionUID = -7091914043920657025L;
 
-    public XMLParserException(String message, List<String> extraMessages) {
+    public MergeException(String message, List<String> extraMessages) {
         super(message, extraMessages);
     }
 
-    public XMLParserException(String message, Throwable cause, List<String> extraMessages) {
-        super(message, cause, extraMessages);
+    public MergeException(String error) {
+        super(error);
     }
 
-    public XMLParserException(String message) {
-        super(message);
+    public MergeException(String error, Throwable cause) {
+        super(error, cause);
     }
 }

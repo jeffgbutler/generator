@@ -104,7 +104,7 @@ public class ConfigurationParser {
             Document document = basicParse(inputSource);
 
             if (document == null || !parseErrors.isEmpty()) {
-                throw new XMLParserException(parseErrors);
+                throw new XMLParserException(getString("RuntimeError.31"), parseErrors); //$NON-NLS-1$
             }
 
             Configuration config;
@@ -118,13 +118,12 @@ public class ConfigurationParser {
             }
 
             if (!parseErrors.isEmpty()) {
-                throw new XMLParserException(parseErrors);
+                throw new XMLParserException(getString("RuntimeError.31"), parseErrors); //$NON-NLS-1$
             }
 
             return config;
         } catch (ParserConfigurationException e) {
-            parseErrors.add(e.getMessage());
-            throw new XMLParserException(parseErrors);
+            throw new XMLParserException(e.getMessage(), e, parseErrors);
         }
     }
 
@@ -146,11 +145,10 @@ public class ConfigurationParser {
         try {
             document = builder.parse(inputSource);
         } catch (SAXParseException e) {
-            throw new XMLParserException(parseErrors);
+            throw new XMLParserException(e.getMessage(), e, parseErrors);
         } catch (SAXException e) {
-            if (e.getException() == null) {
-                parseErrors.add(e.getMessage());
-            } else {
+            parseErrors.add(e.getMessage());
+            if (e.getException() != null) {
                 parseErrors.add(e.getException().getMessage());
             }
         }

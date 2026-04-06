@@ -106,7 +106,8 @@ public class ShellRunner {
         } catch (XMLParserException e) {
             writeLine(getString("Progress.3")); //$NON-NLS-1$
             writeLine();
-            for (String error : e.getErrors()) {
+            writeLine(e.getMessage());
+            for (String error : e.getExtraMessages()) {
                 writeLine(error);
             }
             return;
@@ -115,7 +116,8 @@ public class ShellRunner {
             return;
         } catch (InvalidConfigurationException e) {
             writeLine(getString("Progress.16")); //$NON-NLS-1$
-            for (String error : e.getErrors()) {
+            writeLine(e.getMessage());
+            for (String error : e.getExtraMessages()) {
                 writeLine(error);
             }
             return;

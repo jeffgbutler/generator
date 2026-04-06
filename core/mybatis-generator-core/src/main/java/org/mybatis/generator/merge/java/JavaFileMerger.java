@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 import org.jspecify.annotations.Nullable;
-import org.mybatis.generator.exception.ShellException;
+import org.mybatis.generator.exception.MergeException;
 
 @FunctionalInterface
 public interface JavaFileMerger {
@@ -36,15 +36,15 @@ public interface JavaFileMerger {
      * @param existingFile the existing Java file
      * @param fileEncoding the file encoding for reading existing Java files
      * @return the merged source, properly formatted
-     * @throws ShellException if the file cannot be merged for some reason
+     * @throws MergeException if the file cannot be merged for some reason
      */
     default String getMergedSource(String newFileContent, File existingFile,
-                                  @Nullable String fileEncoding) throws ShellException {
+                                  @Nullable String fileEncoding) throws MergeException {
         try {
             String existingFileContent = readFileContent(existingFile, fileEncoding);
             return getMergedSource(newFileContent, existingFileContent);
         } catch (IOException e) {
-            throw new ShellException(getString("Warning.32", existingFile.getName()), e); //$NON-NLS-1$
+            throw new MergeException(getString("Warning.32", existingFile.getName()), e); //$NON-NLS-1$
         }
     }
 
@@ -54,9 +54,9 @@ public interface JavaFileMerger {
      * @param newFileContent the content of the newly generated Java file
      * @param existingFileContent the content of the existing Java file
      * @return the merged source, properly formatted
-     * @throws ShellException if the file cannot be merged for some reason
+     * @throws MergeException if the file cannot be merged for some reason
      */
-    String getMergedSource(String newFileContent, String existingFileContent) throws ShellException;
+    String getMergedSource(String newFileContent, String existingFileContent) throws MergeException;
 
     private String readFileContent(File file, @Nullable String fileEncoding) throws IOException {
         if (fileEncoding != null) {

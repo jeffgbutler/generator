@@ -32,7 +32,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.jspecify.annotations.Nullable;
 import org.mybatis.generator.config.MergeConstants;
-import org.mybatis.generator.exception.ShellException;
+import org.mybatis.generator.exception.MergeException;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
@@ -69,21 +69,21 @@ public class XmlFileMergerJaxp {
         }
     }
 
-    public static String getMergedSource(String generatedXmlFile, File existingFile) throws ShellException {
+    public static String getMergedSource(String generatedXmlFile, File existingFile) throws MergeException {
         try {
             return getMergedSource(new InputSource(new StringReader(generatedXmlFile)),
                 new InputSource(new InputStreamReader(
                         Files.newInputStream(existingFile.toPath()), StandardCharsets.UTF_8)),
                 existingFile.getName());
         } catch (IOException | SAXException | ParserConfigurationException e) {
-            throw new ShellException(getString("Warning.13", //$NON-NLS-1$
+            throw new MergeException(getString("Warning.13", //$NON-NLS-1$
                     existingFile.getName()), e);
         }
     }
 
     public static String getMergedSource(InputSource newFile,
             InputSource existingFile, String existingFileName) throws IOException, SAXException,
-            ParserConfigurationException, ShellException {
+            ParserConfigurationException, MergeException {
 
         DocumentBuilderFactory factory = DocumentBuilderFactory
                 .newInstance();
@@ -101,7 +101,7 @@ public class XmlFileMergerJaxp {
         DocumentType existingDocType = existingDocument.getDoctype();
 
         if (!newDocType.getName().equals(existingDocType.getName())) {
-            throw new ShellException(getString("Warning.12", //$NON-NLS-1$
+            throw new MergeException(getString("Warning.12", //$NON-NLS-1$
                     existingFileName));
         }
 
@@ -171,7 +171,7 @@ public class XmlFileMergerJaxp {
         return prettyPrint(existingDocument);
     }
 
-    private static String prettyPrint(Document document) throws ShellException {
+    private static String prettyPrint(Document document) throws MergeException {
         return new DomWriter(document).getFormattedDocument();
     }
 

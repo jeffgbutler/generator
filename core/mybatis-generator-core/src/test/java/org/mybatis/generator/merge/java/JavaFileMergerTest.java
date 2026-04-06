@@ -17,15 +17,16 @@ package org.mybatis.generator.merge.java;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
 import java.util.stream.Stream;
 
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mybatis.generator.exception.MultiMessageException;
-import org.mybatis.generator.exception.ShellException;
+import org.mybatis.generator.exception.MergeException;
 import org.mybatis.generator.merge.MergeTestCase;
 
 class JavaFileMergerTest {
@@ -47,10 +48,11 @@ class JavaFileMergerTest {
         JavaFileMerger javaFileMerger = JavaMergerFactory.getMerger(JavaMergerFactory.PrinterConfiguration.ECLIPSE);
         String badExistingFile = "some random text";
 
-        assertThatExceptionOfType(ShellException.class).isThrownBy(() ->
+        assertThatExceptionOfType(MergeException.class).isThrownBy(() ->
                 javaFileMerger.getMergedSource(badExistingFile, badExistingFile))
-                .withMessage("Failed to parse existing Java file during Java merge")
-                .withCauseInstanceOf(MultiMessageException.class);
+                .withMessage(getString("RuntimeError.28", "existing Java file"))
+                .extracting(MergeException::getExtraMessages).asInstanceOf(InstanceOfAssertFactories.LIST)
+                .hasSize(1);
     }
 
     @Test
@@ -59,10 +61,11 @@ class JavaFileMergerTest {
         String existingFile = "public class Foo { public int i; }";
         String badNewFile = "some random text";
 
-        assertThatExceptionOfType(ShellException.class).isThrownBy(() ->
+        assertThatExceptionOfType(MergeException.class).isThrownBy(() ->
                         javaFileMerger.getMergedSource(badNewFile, existingFile))
-                .withMessage("Failed to parse new Java file during Java merge")
-                .withCauseInstanceOf(MultiMessageException.class);
+                .withMessage(getString("RuntimeError.28", "new Java file"))
+                .extracting(MergeException::getExtraMessages).asInstanceOf(InstanceOfAssertFactories.LIST)
+                .hasSize(1);
     }
 
     @Test
@@ -70,8 +73,8 @@ class JavaFileMergerTest {
         JavaFileMerger javaFileMerger = JavaMergerFactory.getMerger(JavaMergerFactory.PrinterConfiguration.ECLIPSE);
         String existingFileNoTypes = "package foo.bar;";
 
-        assertThatExceptionOfType(ShellException.class).isThrownBy(() ->
+        assertThatExceptionOfType(MergeException.class).isThrownBy(() ->
                         javaFileMerger.getMergedSource(existingFileNoTypes, existingFileNoTypes))
-                .withMessage("Failed to find a type declaration in existing Java file during Java merge");
+                .withMessage(getString("RuntimeError.29", "existing Java file"));
     }
 }
