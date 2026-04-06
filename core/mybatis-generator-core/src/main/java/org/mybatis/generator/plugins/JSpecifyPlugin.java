@@ -80,6 +80,26 @@ public class JSpecifyPlugin extends PluginAdapter {
     }
 
     @Override
+    public boolean clientGenerated(Interface interfaze, IntrospectedTable introspectedTable) {
+        if (isEnabled(introspectedTable)) {
+            interfaze.addImportedType(NULL_MARKED_IMPORT);
+            interfaze.addAnnotation(NULL_MARKED_ANNOTATION);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean dynamicSqlSupportGenerated(TopLevelClass supportClass, IntrospectedTable introspectedTable) {
+        if (isEnabled(introspectedTable)) {
+            supportClass.addImportedType(NULL_MARKED_IMPORT);
+            supportClass.addAnnotation(NULL_MARKED_ANNOTATION);
+        }
+
+        return true;
+    }
+
+    @Override
     public boolean modelRecordGenerated(TopLevelRecord topLevelRecord, IntrospectedTable introspectedTable) {
         if (isEnabled(introspectedTable)) {
             topLevelRecord.addImportedType(NULL_MARKED_IMPORT);
@@ -110,7 +130,8 @@ public class JSpecifyPlugin extends PluginAdapter {
     @Override
     public boolean modelFieldGenerated(Field field, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn,
                                        IntrospectedTable introspectedTable, ModelClassType modelClassType) {
-        if (isEnabled(introspectedTable) && introspectedColumn.isNullable()) {
+        if (isEnabled(introspectedTable) && introspectedColumn.isNullable()
+                && !introspectedColumn.getFullyQualifiedJavaType().isPrimitive()) {
             topLevelClass.addImportedType(NULLABLE_IMPORT);
             field.addTypeAnnotation(NULLABLE_ANNOTATION);
         }
@@ -122,7 +143,8 @@ public class JSpecifyPlugin extends PluginAdapter {
     public boolean modelGetterMethodGenerated(Method method, TopLevelClass topLevelClass,
                                               IntrospectedColumn introspectedColumn,
                                               IntrospectedTable introspectedTable, ModelClassType modelClassType) {
-        if (isEnabled(introspectedTable) && introspectedColumn.isNullable()) {
+        if (isEnabled(introspectedTable) && introspectedColumn.isNullable()
+                && !introspectedColumn.getFullyQualifiedJavaType().isPrimitive()) {
             topLevelClass.addImportedType(NULLABLE_IMPORT);
             method.addReturnTypeAnnotation(NULLABLE_ANNOTATION);
         }
@@ -159,6 +181,7 @@ public class JSpecifyPlugin extends PluginAdapter {
 
     private boolean isColumnNullable(String property, IntrospectedTable introspectedTable) {
         return introspectedTable.getAllColumns().stream()
+                .filter(c -> !c.getFullyQualifiedJavaType().isPrimitive())
                 .filter(c -> c.getJavaProperty().equals(property))
                 .anyMatch(IntrospectedColumn::isNullable);
     }

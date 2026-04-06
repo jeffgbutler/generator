@@ -126,6 +126,9 @@ The plugin will create the additional Methods:
 </p>
 
 <h2>org.mybatis.generator.plugins.JSpecifyPlugin</h2>
+<p>This plugin adds a JSpecify <code>@NullMarked</code> annotation to generated mappers and DSQL support classes.
+  In addition, the plugin will add annotations to generated model classes and records as described below.
+</p>
 <p>This plugin adds JSpecify nullability annotations to generated model classes and records based on the declared
   nullability of the corresponding database columns. If you enable this plugin in a context for MyBatis Dynamic SQL,
   the plugin will also remove the following methods from a generated mapper as they don't function well when you are
