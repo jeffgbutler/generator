@@ -80,6 +80,26 @@ public class JSpecifyPlugin extends PluginAdapter {
     }
 
     @Override
+    public boolean clientGenerated(Interface interfaze, IntrospectedTable introspectedTable) {
+        if (isEnabled(introspectedTable)) {
+            interfaze.addImportedType(NULL_MARKED_IMPORT);
+            interfaze.addAnnotation(NULL_MARKED_ANNOTATION);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean dynamicSqlSupportGenerated(TopLevelClass supportClass, IntrospectedTable introspectedTable) {
+        if (isEnabled(introspectedTable)) {
+            supportClass.addImportedType(NULL_MARKED_IMPORT);
+            supportClass.addAnnotation(NULL_MARKED_ANNOTATION);
+        }
+
+        return true;
+    }
+
+    @Override
     public boolean modelRecordGenerated(TopLevelRecord topLevelRecord, IntrospectedTable introspectedTable) {
         if (isEnabled(introspectedTable)) {
             topLevelRecord.addImportedType(NULL_MARKED_IMPORT);
