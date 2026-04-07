@@ -54,7 +54,6 @@ import org.mybatis.generator.config.SqlMapGeneratorConfiguration;
 import org.mybatis.generator.config.TableConfiguration;
 import org.mybatis.generator.exception.XMLParserException;
 import org.mybatis.generator.internal.ObjectFactory;
-import org.mybatis.generator.internal.util.messages.Messages;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -184,7 +183,7 @@ public class MyBatisGeneratorConfigurationParser {
             case "modelGenerator" ->  //$NON-NLS-1$
                     builder.withModelGeneratorConfiguration(parseModelGenerator(childNode));
             case "javaModelGenerator" -> { //$NON-NLS-1$
-                warnings.add(Messages.getString("Warning.33")); //$NON-NLS-1$
+                warnings.add(getString("Warning.33")); //$NON-NLS-1$
                 builder.withModelGeneratorConfiguration(parseModelGenerator(childNode));
             }
             case "javaTypeResolver" ->  //$NON-NLS-1$
@@ -194,7 +193,7 @@ public class MyBatisGeneratorConfigurationParser {
             case "clientGenerator" ->  //$NON-NLS-1$
                     builder.withClientGeneratorConfiguration(parseClientGenerator(childNode, id));
             case "javaClientGenerator" -> { //$NON-NLS-1$
-                warnings.add(Messages.getString("Warning.34")); //$NON-NLS-1$
+                warnings.add(getString("Warning.34")); //$NON-NLS-1$
                 builder.withClientGeneratorConfiguration(parseClientGenerator(childNode, id));
             }
             case "table" ->  //$NON-NLS-1$

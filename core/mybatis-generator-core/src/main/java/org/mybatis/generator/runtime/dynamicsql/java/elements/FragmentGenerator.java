@@ -29,7 +29,6 @@ import org.jspecify.annotations.Nullable;
 import org.mybatis.generator.api.CommentGenerator;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
-import org.mybatis.generator.api.dom.OutputUtilities;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.Parameter;
@@ -90,12 +89,12 @@ public class FragmentGenerator {
             builder.withImport(column.getFullyQualifiedJavaType());
             builder.withParameter(new Parameter(column.getFullyQualifiedJavaType(), parameterName));
             if (first) {
-                builder.withBodyLine(OutputUtilities.javaIndent(1) + "c.where(" + fieldName //$NON-NLS-1$
+                builder.withBodyLine(javaIndent(1) + "c.where(" + fieldName //$NON-NLS-1$
                         + ", isEqualTo(" + parameterName //$NON-NLS-1$
                         + "))"); //$NON-NLS-1$
                 first = false;
             } else {
-                builder.withBodyLine(OutputUtilities.javaIndent(1) + ".and(" + fieldName //$NON-NLS-1$
+                builder.withBodyLine(javaIndent(1) + ".and(" + fieldName //$NON-NLS-1$
                         + ", isEqualTo(" + parameterName //$NON-NLS-1$
                         + "))"); //$NON-NLS-1$
             }

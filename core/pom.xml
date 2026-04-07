@@ -85,9 +85,6 @@
 
     <!-- Reproducible Builds -->
     <project.build.outputTimestamp>1676846560</project.build.outputTimestamp>
-
-    <!-- Disable topSiteURL -->
-    <topSiteURL />
   </properties>
 
   <dependencyManagement>
@@ -237,9 +234,14 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
         <configuration>
-          <!-- turn off deployment by default, we'll turn it back on in the core project -->
-          <skipDeploy>true</skipDeploy>
           <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-scm-publish-plugin</artifactId>
+        <configuration>
+          <content>${project.basedir}/mybatis-generator-core/target/site</content>
         </configuration>
       </plugin>
       <!-- need to allow snapshots so the maven plugin can be tested -->

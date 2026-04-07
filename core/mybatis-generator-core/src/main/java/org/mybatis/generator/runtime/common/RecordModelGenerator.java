@@ -97,7 +97,7 @@ public class RecordModelGenerator extends AbstractJavaGenerator {
     private String calculateNonBlobsConstructorBodyLine() {
         return introspectedTable.getAllColumns().stream().map(introspectedColumn -> {
             if (introspectedColumn.isBLOBColumn()) {
-                return ("null"); //$NON-NLS-1$
+                return "null"; //$NON-NLS-1$
             } else {
                 return introspectedColumn.getJavaProperty();
             }
