@@ -16,10 +16,18 @@ This library will generate code for use with MyBatis. It will introspect a datab
 
 MBG can generate code in multiple styles (or "runtimes"). MBG can generate code for Java based projects, or for Kotlin based projects.
 
-## Eclipse Update Site (Direct) ##
+MBG can be run in multiple ways - from the command line, with an Ant task, as a Maven plugin, etc.  See this page for details:
+[Running MBG](https://mybatis.org/generator/running/running.html)
 
-https://jeffgbutler.github.io/mybatis-generator-update-site/
+## Eclipse
 
-## Eclipse Update Site (Marketplace) ##
+There is an Eclipse feature for MBG as well. Here's how to install it:
 
-https://marketplace.eclipse.org/content/mybatis-generator
+### Eclipse Update Site (Marketplace)
+The easiest way to install the Eclipse feature is from the Eclipse Marketplace at this address: https://marketplace.eclipse.org/content/mybatis-generator
+
+### Eclipse Update Site (Direct)
+You can also manually configure an Eclipse update site for the generator. The update site is here: https://jeffgbutler.github.io/mybatis-generator-update-site/
+
+### From the Release Bundle
+You can manually install the plugin by downloading a zip file containing the update site from the GitHub release page here: https://github.com/mybatis/generator/releases
