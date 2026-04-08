@@ -233,6 +233,18 @@
             <content>${project.basedir}/mybatis-generator-core/target/site</content>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.sonatype.central</groupId>
+          <artifactId>central-publishing-maven-plugin</artifactId>
+          <configuration>
+            <excludeArtifacts>
+              <artifact>mybatis-generator-systests-common</artifact>
+              <artifact>mybatis-generator-systests-kotlin</artifact>
+              <artifact>mybatis-generator-systests-mybatis3</artifact>
+              <artifact>mybatis-generator-systests-mybatis3-java8</artifact>
+            </excludeArtifacts>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
 
