@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: UI Tests
 Bundle-SymbolicName: org.mybatis.generator.eclipse.ui.tests
-Bundle-Version: 2.0.0.qualifier
+Bundle-Version: 2.0.1.qualifier
 Fragment-Host: org.mybatis.generator.eclipse.ui;bundle-version="1.4.3"
 Automatic-Module-Name: org.mybatis.generator.eclipse.ui.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-17
