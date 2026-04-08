@@ -226,15 +226,22 @@
           <artifactId>kotlin-maven-plugin</artifactId>
           <version>${kotlin.version}</version>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-scm-publish-plugin</artifactId>
+          <configuration>
+            <content>${project.basedir}/mybatis-generator-core/target/site</content>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
 
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-scm-publish-plugin</artifactId>
+        <artifactId>maven-site-plugin</artifactId>
         <configuration>
-          <content>${project.basedir}/mybatis-generator-core/target/site</content>
+          <skip>true</skip>
         </configuration>
       </plugin>
       <!-- need to allow snapshots so the maven plugin can be tested -->
@@ -278,6 +285,25 @@
   </reporting>
 
   <profiles>
+    <profile>
+      <!-- Turn off site publishing as it is broken -->
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-scm-publish-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>scm-publish</id>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
     <profile>
       <id>eclipse</id>
       <activation>
