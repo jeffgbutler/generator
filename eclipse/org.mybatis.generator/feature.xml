@@ -240,15 +240,7 @@
    </url>
 
    <includes
-         id="org.mybatis.generator.dependency.commons-logging"
-         version="0.0.0"/>
-
-   <includes
-         id="org.mybatis.generator.dependency.javaparser"
-         version="0.0.0"/>
-
-   <includes
-         id="org.mybatis.generator.dependency.jspecify"
+         id="org.mybatis.generator.dependencies"
          version="0.0.0"/>
 
    <plugin

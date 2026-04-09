@@ -40,13 +40,11 @@ following projects:
 ### Runtime Dependencies
 
 Runtime dependencies for the core generator are made available through Eclipse bnd. Entries in
-[MyBatisGenerator.target](./MyBatisGenerator.target) generate a new feature for every runtime dependency.
+[MyBatisGenerator.target](./MyBatisGenerator.target) generate a dependency feature including all
+the runtime dependencies.
 They should be upgraded to match the versions used in the core project. If you update a version,
-make sure to update the MANIFEST.MF file in the related project.
-
-We also redistribute these runtime dependencies on our update site. Entries in the site project's
-`category.xml` file list the items we want to redistribute. If you add a new dependency, make
-sure to update that file accordingly.
+make sure to update the MANIFEST.MF file in the related project, and also update the version of the generated
+feature in the target definition file.
 
 We only bundle and redistribute dependencies that are not available on the Eclipse update sites.
 
