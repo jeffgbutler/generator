@@ -36,6 +36,13 @@ of the Eclipse user interface for MyBatis Generator.</p>
       will probably be on your system in your local Maven repository
       (../.m2/repository/org/hsqldb/..).
   </li>
+  <li>You will also need access to the following dependencies to avoid compile errors:
+	<ul>
+	  <li>jakarta.annotation:jakarta.annotation-api</li>
+	  <li>org.mybatis:mybatis</li>
+	  <li>org.mybatis.dynamic-sql:mybatis-dynamic-sql</li>
+	</ul>
+  </li>
   <li>Make sure that the new version of the plugin has been built.</li>
 </ol>
 
@@ -44,7 +51,7 @@ of the Eclipse user interface for MyBatis Generator.</p>
 tests build on items created in previous tests.</p>
 <h3>Installation</h3>
 <ol>
-  <li>Install a fresh version of Eclipse version 4.10 (2018-12) or later.</li>
+  <li>Install a fresh version of Eclipse version 4.33 (2024-09) or later.</li>
   <li>Open the fresh Eclipse install, and create a new (empty) workspace</li>
   <li>Configure a local update site to point to the newly generated site
       (Help&gt;Install New Software...)</li>
@@ -77,7 +84,7 @@ tests build on items created in previous tests.</p>
 <h3>New File Wizard</h3>
 <ol>
   <li>Create a new JavaProject called "MBGTest".  Make sure there is a separate source folder
-      called <code>src</code></li>
+      called <code>src</code>. Also note that it is easiest if you do not create a module-info.java file.</li>
   <li>Add an additional source folder called <code>generatedsrc</code></li>
   <li>Create a new package in the <code>src</code> folder called <code>config</code></li>
   <li>Make a new configuration file:
@@ -113,25 +120,24 @@ tests build on items created in previous tests.</p>
       connectionURL="jdbc:hsqldb:mem:aname"
       userId="sa" &gt;
     &lt;/jdbcConnection&gt;
-    &lt;javaModelGenerator targetPackage="gen.model" targetProject="MBGTest" &gt;
+    &lt;modelGenerator targetPackage="gen.model" targetProject="MBGTest" &gt;
         &lt;!--
         &lt;property name="rootClass" value="base.BaseModel" /&gt;
         --&gt; 
-    &lt;/javaModelGenerator&gt;
+    &lt;/modelGenerator&gt;
     &lt;sqlMapGenerator targetPackage="gen.mapper" targetProject="MBGTest" /&gt;
-    &lt;javaClientGenerator targetPackage="gen.mapper" targetProject="MBGTest" type="XMLMAPPER" /&gt;
+    &lt;clientGenerator targetPackage="gen.mapper" targetProject="MBGTest" type="XMLMAPPER" /&gt;
     &lt;table tableName="a" /&gt;
   &lt;/context&gt;
 
-  &lt;context id="context2" targetRuntime="MyBatis3Simple" &gt;
+  &lt;context id="context2" &gt;
     &lt;connectionFactory type="DEFAULT" &gt;
         &lt;property name="driverClass" value="org.hsqldb.jdbcDriver" /&gt;
         &lt;property name="connectionURL" value="jdbc:hsqldb:mem:aname" /&gt;
         &lt;property name="userId" value="sa" /&gt;
     &lt;/connectionFactory&gt;
-    &lt;javaModelGenerator targetPackage="gen.src.model" targetProject="MBGTest/generatedsrc" /&gt;
-    &lt;sqlMapGenerator targetPackage="gen.src.mapper" targetProject="MBGTest/generatedsrc" /&gt;
-    &lt;javaClientGenerator targetPackage="gen.src.mapper" targetProject="MBGTest/generatedsrc" type="XMLMAPPER" /&gt;
+    &lt;modelGenerator targetPackage="gen.src.model" targetProject="MBGTest/generatedsrc" /&gt;
+    &lt;clientGenerator targetPackage="gen.src.mapper" targetProject="MBGTest/generatedsrc" /&gt;
     &lt;table schema="mbgtest" tableName="%" /&gt;
   &lt;/context&gt;
 &lt;/generatorConfiguration&gt;
@@ -187,7 +193,14 @@ create table mbgtest.j (id int not null, description varchar(50), primary key(id
     <li>Run the run configuration</li>
     <li>Verify that code is generated in the two different source folders.  Code for table "a"
         should be in the "src" folder, code for tables "b" through "j" should be in the
-        "generatedsrc" folder.  Verify that there are no compilation errors or warnings.</li>
+        "generatedsrc" folder. You will need to add the following external dependencies to 
+		resolve the compilation errors:
+        <ul>
+          <li>jakarta.annotation:jakarta.annotation-api</li>
+          <li>org.mybatis:mybatis</li>
+          <li>org.mybatis.dynamic-sql:mybatis-dynamic-sql</li>
+        </ul>
+    </li>
 </ol>
 
 <h3>Java File Merger</h3>
