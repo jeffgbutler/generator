@@ -239,6 +239,18 @@
       <update label="MyBatis Generator Update Site" url="https://jeffgbutler.github.io/mybatis-generator-update-site/"/>
    </url>
 
+   <includes
+         id="org.mybatis.generator.dependency.commons-logging"
+         version="0.0.0"/>
+
+   <includes
+         id="org.mybatis.generator.dependency.javaparser"
+         version="0.0.0"/>
+
+   <includes
+         id="org.mybatis.generator.dependency.jspecify"
+         version="0.0.0"/>
+
    <plugin
          id="org.mybatis.generator.core"
          version="0.0.0"/>
