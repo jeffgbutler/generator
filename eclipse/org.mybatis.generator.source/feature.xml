@@ -20,7 +20,7 @@
 <feature
       id="org.mybatis.generator.source"
       label="MyBatis Generator Source Feature"
-      version="2.0.1.qualifier"
+      version="2.0.2.qualifier"
       provider-name="mybatis.org">
 
    <description url="https://www.mybatis.org/generator/">

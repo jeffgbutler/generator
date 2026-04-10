@@ -21,7 +21,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.mybatis.generator</groupId>
   <artifactId>org.mybatis.generator.eclipse.parent</artifactId>
-  <version>2.0.1-SNAPSHOT</version>
+  <version>2.0.2-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>MyBatis Generator - Eclipse Feature</name>
   <inceptionYear>2006</inceptionYear>
