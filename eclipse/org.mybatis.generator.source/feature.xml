@@ -21,9 +21,9 @@
       id="org.mybatis.generator.source"
       label="MyBatis Generator Source Feature"
       version="2.0.1.qualifier"
-      provider-name="MyBatis.org">
+      provider-name="mybatis.org">
 
-   <description url="http://www.mybatis.org/generator/">
+   <description url="https://www.mybatis.org/generator/">
       MyBatis Generator - a code generator for MyBatis (Source Code)
    </description>
 
@@ -31,7 +31,7 @@
       Copyright 2026 Jeff Butler
    </copyright>
 
-   <license url="http://www.apache.org/licenses/LICENSE-2.0">
+   <license url="https://www.apache.org/licenses/LICENSE-2.0.txt">
       Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
