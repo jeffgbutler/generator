@@ -123,3 +123,23 @@ If you run into issues with the publishing process, then resetting the working d
 ```shell
 sudo rm -r ~/maven-sites
 ```
+
+## Troubleshooting
+
+### Tycho Caching
+
+Tycho uses a cache to improve performance. This can cause issues if you try to release the Eclipse feature
+before the cache expires - you will notice that the "compositeArtifacts.xml" file does not reflect the entire set
+of releases on the update site. There are two ways to handle this:
+
+1. Disabling Maven caching sometimes works:
+
+   ```shell
+   ./mvnw clean verify -Prelease-composite -U
+   ```
+
+2. If this fails, then manually clear the cache:
+
+   ```shell
+   rm -r ~/.m2/repository/.cache/tycho
+   ```

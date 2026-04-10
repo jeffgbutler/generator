@@ -3,7 +3,7 @@
 <target name="MyBatis Generator">
 	<locations>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="http://download.eclipse.org/releases/2024-09"/>
+			<repository location="https://download.eclipse.org/releases/2024-09"/>
 			<unit id="org.eclipse.jdt.feature.group" version="3.19.600.v20240903-0240"/>
 			<unit id="org.eclipse.platform.feature.group" version="4.33.0.v20240903-0618"/>
 			<unit id="org.eclipse.wst.xml_ui.feature.feature.group" version="3.34.0.v202404170147"/>
